@@ -1,0 +1,114 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.19.0
+2 info using node@v24.20.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\artur\Documents\Codex\2026-09-09\files-pasted-by-the-user-crie\outputs\vertice-motos\.npmrc
+5 silly config load:file:C:\Users\artur\.npmrc
+6 silly config load:file:C:\Users\artur\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm create @openai/sites@0.3.0 . --yes --add-ons shadcn --install
+8 verbose argv "--cache" "C:\\Users\\artur\\Documents\\Codex\\2026-09-09\\files-pasted-by-the-user-crie\\work\\npm-cache" "create" "--yes" "@openai/sites@0.3.0" "." "--" "--yes" "--add-ons" "shadcn" "--install"
+9 verbose logfile logs-max:10 dir:C:\Users\artur\Documents\Codex\2026-09-09\files-pasted-by-the-user-crie\work\npm-cache\_logs\2026-09-10T00_36_23_589Z-
+10 verbose logfile C:\Users\artur\Documents\Codex\2026-09-09\files-pasted-by-the-user-crie\work\npm-cache\_logs\2026-09-10T00_36_23_589Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 http fetch GET 200 https://registry.npmjs.org/npm 456ms
+14 http fetch GET 200 https://registry.npmjs.org/@openai%2fcreate-sites 884ms (cache miss)
+15 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+16 silly idealTree buildDeps
+17 silly fetch manifest @openai/create-sites@0.3.0
+18 silly packumentCache full:https://registry.npmjs.org/@openai%2fcreate-sites cache-miss
+19 http fetch GET 200 https://registry.npmjs.org/@openai%2fcreate-sites 285ms (cache miss)
+20 silly packumentCache full:https://registry.npmjs.org/@openai%2fcreate-sites set size:undefined disposed:false
+21 silly placeDep ROOT @openai/create-sites@0.3.0 OK for:  want: 0.3.0
+22 silly fetch manifest @clack/prompts@1.7.0
+23 silly packumentCache full:https://registry.npmjs.org/@clack%2fprompts cache-miss
+24 silly fetch manifest commander@14.0.3
+25 silly packumentCache full:https://registry.npmjs.org/commander cache-miss
+26 silly fetch manifest tinyexec@1.2.2
+27 silly packumentCache full:https://registry.npmjs.org/tinyexec cache-miss
+28 http fetch GET 200 https://registry.npmjs.org/commander 95ms (cache miss)
+29 silly packumentCache full:https://registry.npmjs.org/commander set size:undefined disposed:false
+30 http fetch GET 200 https://registry.npmjs.org/@clack%2fprompts 134ms (cache miss)
+31 silly packumentCache full:https://registry.npmjs.org/@clack%2fprompts set size:undefined disposed:false
+32 http fetch GET 200 https://registry.npmjs.org/tinyexec 259ms (cache miss)
+33 silly packumentCache full:https://registry.npmjs.org/tinyexec set size:undefined disposed:false
+34 silly placeDep ROOT @clack/prompts@1.7.0 OK for: @openai/create-sites@0.3.0 want: 1.7.0
+35 silly placeDep ROOT commander@14.0.3 OK for: @openai/create-sites@0.3.0 want: 14.0.3
+36 silly placeDep ROOT tinyexec@1.2.2 OK for: @openai/create-sites@0.3.0 want: 1.2.2
+37 silly fetch manifest sisteransi@^1.0.5
+38 silly packumentCache full:https://registry.npmjs.org/sisteransi cache-miss
+39 silly fetch manifest @clack/core@1.4.3
+40 silly packumentCache full:https://registry.npmjs.org/@clack%2fcore cache-miss
+41 silly fetch manifest fast-wrap-ansi@^0.2.0
+42 silly packumentCache full:https://registry.npmjs.org/fast-wrap-ansi cache-miss
+43 silly fetch manifest fast-string-width@^3.0.2
+44 silly packumentCache full:https://registry.npmjs.org/fast-string-width cache-miss
+45 http fetch GET 200 https://registry.npmjs.org/sisteransi 80ms (cache miss)
+46 silly packumentCache full:https://registry.npmjs.org/sisteransi set size:undefined disposed:false
+47 http fetch GET 200 https://registry.npmjs.org/fast-wrap-ansi 92ms (cache miss)
+48 silly packumentCache full:https://registry.npmjs.org/fast-wrap-ansi set size:undefined disposed:false
+49 http fetch GET 200 https://registry.npmjs.org/fast-string-width 265ms (cache miss)
+50 silly packumentCache full:https://registry.npmjs.org/fast-string-width set size:undefined disposed:false
+51 http fetch GET 200 https://registry.npmjs.org/@clack%2fcore 330ms (cache miss)
+52 silly packumentCache full:https://registry.npmjs.org/@clack%2fcore set size:undefined disposed:false
+53 silly placeDep ROOT @clack/core@1.4.3 OK for: @clack/prompts@1.7.0 want: 1.4.3
+54 silly placeDep ROOT fast-string-width@3.0.2 OK for: @clack/prompts@1.7.0 want: ^3.0.2
+55 silly placeDep ROOT fast-wrap-ansi@0.2.2 OK for: @clack/prompts@1.7.0 want: ^0.2.0
+56 silly placeDep ROOT sisteransi@1.0.5 OK for: @clack/prompts@1.7.0 want: ^1.0.5
+57 silly fetch manifest fast-string-truncated-width@^3.0.2
+58 silly packumentCache full:https://registry.npmjs.org/fast-string-truncated-width cache-miss
+59 http fetch GET 200 https://registry.npmjs.org/fast-string-truncated-width 73ms (cache miss)
+60 silly packumentCache full:https://registry.npmjs.org/fast-string-truncated-width set size:undefined disposed:false
+61 silly placeDep ROOT fast-string-truncated-width@3.0.3 OK for: fast-string-width@3.0.2 want: ^3.0.2
+62 silly reify moves {}
+63 silly audit bulk request {
+63 silly audit   '@openai/create-sites': [ '0.3.0' ],
+63 silly audit   '@clack/prompts': [ '1.7.0' ],
+63 silly audit   commander: [ '14.0.3' ],
+63 silly audit   tinyexec: [ '1.2.2' ],
+63 silly audit   '@clack/core': [ '1.4.3' ],
+63 silly audit   'fast-string-width': [ '3.0.2' ],
+63 silly audit   'fast-wrap-ansi': [ '0.2.2' ],
+63 silly audit   sisteransi: [ '1.0.5' ],
+63 silly audit   'fast-string-truncated-width': [ '3.0.3' ]
+63 silly audit }
+64 http cache @clack/core@https://registry.npmjs.org/@clack/core/-/core-1.4.3.tgz 0ms (cache hit)
+65 http cache fast-string-truncated-width@https://registry.npmjs.org/fast-string-truncated-width/-/fast-string-truncated-width-3.0.3.tgz 0ms (cache hit)
+66 http cache sisteransi@https://registry.npmjs.org/sisteransi/-/sisteransi-1.0.5.tgz 0ms (cache hit)
+67 http cache fast-wrap-ansi@https://registry.npmjs.org/fast-wrap-ansi/-/fast-wrap-ansi-0.2.2.tgz 0ms (cache hit)
+68 http cache @clack/prompts@https://registry.npmjs.org/@clack/prompts/-/prompts-1.7.0.tgz 0ms (cache hit)
+69 http cache fast-string-width@https://registry.npmjs.org/fast-string-width/-/fast-string-width-3.0.2.tgz 0ms (cache hit)
+70 http cache tinyexec@https://registry.npmjs.org/tinyexec/-/tinyexec-1.2.2.tgz 0ms (cache hit)
+71 http cache commander@https://registry.npmjs.org/commander/-/commander-14.0.3.tgz 0ms (cache hit)
+72 silly tarball no local data for @clack/core@https://registry.npmjs.org/@clack/core/-/core-1.4.3.tgz. Extracting by manifest.
+73 silly tarball no local data for fast-string-truncated-width@https://registry.npmjs.org/fast-string-truncated-width/-/fast-string-truncated-width-3.0.3.tgz. Extracting by manifest.
+74 http cache @openai/create-sites@https://registry.npmjs.org/@openai/create-sites/-/create-sites-0.3.0.tgz 0ms (cache hit)
+75 silly tarball no local data for sisteransi@https://registry.npmjs.org/sisteransi/-/sisteransi-1.0.5.tgz. Extracting by manifest.
+76 silly tarball no local data for fast-wrap-ansi@https://registry.npmjs.org/fast-wrap-ansi/-/fast-wrap-ansi-0.2.2.tgz. Extracting by manifest.
+77 silly tarball no local data for @clack/prompts@https://registry.npmjs.org/@clack/prompts/-/prompts-1.7.0.tgz. Extracting by manifest.
+78 silly tarball no local data for fast-string-width@https://registry.npmjs.org/fast-string-width/-/fast-string-width-3.0.2.tgz. Extracting by manifest.
+79 silly tarball no local data for tinyexec@https://registry.npmjs.org/tinyexec/-/tinyexec-1.2.2.tgz. Extracting by manifest.
+80 silly tarball no local data for commander@https://registry.npmjs.org/commander/-/commander-14.0.3.tgz. Extracting by manifest.
+81 silly tarball no local data for @openai/create-sites@https://registry.npmjs.org/@openai/create-sites/-/create-sites-0.3.0.tgz. Extracting by manifest.
+82 http fetch GET 200 https://registry.npmjs.org/sisteransi/-/sisteransi-1.0.5.tgz 91ms (cache miss)
+83 http fetch GET 200 https://registry.npmjs.org/fast-string-truncated-width/-/fast-string-truncated-width-3.0.3.tgz 112ms (cache miss)
+84 http fetch GET 200 https://registry.npmjs.org/@clack/core/-/core-1.4.3.tgz 130ms (cache miss)
+85 http fetch GET 200 https://registry.npmjs.org/fast-string-width/-/fast-string-width-3.0.2.tgz 264ms (cache miss)
+86 http fetch GET 200 https://registry.npmjs.org/fast-wrap-ansi/-/fast-wrap-ansi-0.2.2.tgz 266ms (cache miss)
+87 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 283ms
+88 silly audit report {}
+89 http fetch GET 200 https://registry.npmjs.org/@clack/prompts/-/prompts-1.7.0.tgz 293ms (cache miss)
+90 http fetch GET 200 https://registry.npmjs.org/commander/-/commander-14.0.3.tgz 309ms (cache miss)
+91 http fetch GET 200 https://registry.npmjs.org/tinyexec/-/tinyexec-1.2.2.tgz 376ms (cache miss)
+92 http fetch GET 200 https://registry.npmjs.org/@openai/create-sites/-/create-sites-0.3.0.tgz 742ms (cache miss)
+93 verbose cwd C:\Users\artur\Documents\Codex\2026-09-09\files-pasted-by-the-user-crie\outputs\vertice-motos
+94 verbose os Windows_NT 10.0.26200
+95 verbose node v24.20.0
+96 verbose npm  v11.19.0
+97 notice
+97 notice New major version of npm available! 11.19.0 -> 12.0.2
+97 notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+97 notice To update run: npm install -g npm@12.0.2
+97 notice  { force: true, Symbol(proc-log.meta): true }
+98 verbose exit 0
+99 info ok

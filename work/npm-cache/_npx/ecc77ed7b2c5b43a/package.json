@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@openai/create-sites": "^0.3.0"
+  },
+  "_npx": {
+    "packages": [
+      "@openai/create-sites@0.3.0"
+    ]
+  }
+}
