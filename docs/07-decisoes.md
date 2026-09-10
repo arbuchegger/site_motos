@@ -216,6 +216,35 @@ vinext não suporte.
 
 ---
 
+## D9 — Direção visual prototipada em HTML puro, fora do app
+
+**Data:** 2026-09-10 · **Status:** proposta, aguardando aprovação
+
+**Contexto.** A Fase 3 precisa de uma direção visual antes de qualquer conversão
+de componente. Duas opções: mexer direto no `app/globals.css` do site, ou
+prototipar à parte.
+
+**Decisão.** Uma pasta `prototipos/` com HTML, CSS e JS puros, mais uma moldura
+(`prototipos/index.html`) que troca largura e tema. Nada entra no build do site.
+
+**Raciocínio.** Prototipar dentro do app custa caro para descartar: cada
+experimento vira commit no CSS de produção, e voltar atrás exige desfazer o que
+ficou entrelaçado. Em arquivos separados, uma direção reprovada se apaga com
+`rm -rf`. E porque abrem por clique duplo, qualquer pessoa avalia sem instalar
+`npm` — o que importa quando quem decide o visual não é quem programa.
+
+**Consequência.** Existe agora um segundo CSS no repositório, e ele **vai**
+divergir do site. É dívida aceita e datada: se a direção for aprovada, os tokens
+migram para `app/globals.css` e `prototipos/` some. Se for reprovada, some do
+mesmo jeito. O que não pode é ficar.
+
+**Do protótipo, o que já está decidido e medido:** dois tokens de destaque
+(`--ambar` preenche a 9,95:1, `--ambar-tinta` escreve a 6,42:1; o âmbar puro como
+texto dá 1,65:1 e reprova), escala tipográfica de razão 1,25 e escala de
+espaçamento base 4.
+
+---
+
 ## Decisões pendentes
 
 Registradas para não se perderem. Nenhuma foi tomada.

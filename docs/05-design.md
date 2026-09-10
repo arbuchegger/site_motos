@@ -164,6 +164,22 @@ Herdado do gerador e verificado. Não desfaça:
 
 ---
 
+## Fase 3 — a proposta já existe
+
+Uma direção visual foi prototipada em HTML puro, em `prototipos/`. Abra
+`prototipos/index.html`: ele troca entre celular, tablet e desktop, entre claro e
+escuro, e as interações funcionam de verdade.
+
+A proposta em uma linha: **o vocabulário de painel de instrumentos.** Uma moto
+informa por números grandes e legíveis sob sol forte; a página passa a fazer o
+mesmo, em três escalas — a faixa sob o hero, o mini-painel de cada cartão e a
+ficha técnica.
+
+O raciocínio completo, com os contrastes medidos e o que muda em relação ao site
+atual, está em [`../prototipos/README.md`](../prototipos/README.md).
+
+---
+
 ## Fase 3 — o que ainda falta
 
 Esta é a lista de trabalho da fase de design hi-fi, com o motivo de cada item.
