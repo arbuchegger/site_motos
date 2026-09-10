@@ -83,8 +83,14 @@ git filter-repo --force --invert-paths --path work/
 git remote add origin <url>                   # filter-repo remove o remote
 ```
 
-Resultado neste repositório: **227 MB → 1,4 MB**, com os três commits e suas
-mensagens preservados.
+Medido neste repositório: **227 MB → 1,4 MB**, com os commits e suas mensagens
+preservados.
+
+**Ainda não aplicado na `main`.** O motivo está em [`07-decisoes.md`](07-decisoes.md),
+decisão D4, e é instrutivo: reescrever o histórico deixou a branch sem ancestral
+comum com a `main` publicada, e sem ancestral comum o GitHub não abre pull
+request. Reescrita de histórico e revisão por PR competem entre si — quem
+reescrever primeiro perde a segunda.
 
 ### O preço
 

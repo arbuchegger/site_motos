@@ -82,7 +82,7 @@ perceber. Limpar na Fase 2.
 
 ## D4 — Reescrever o histórico
 
-**Data:** 2026-09-10 · **Status:** aplicada
+**Data:** 2026-09-10 · **Status:** validada localmente, pendente na `main`
 
 **Contexto.** Depois de D1 e D2, o índice estava limpo — mas `git clone` ainda
 baixava **227 MB**. Os blobs continuavam dentro do `Initial commit`. Git é
@@ -92,14 +92,25 @@ que já foi gravado.
 **Decisão.** `git filter-repo --invert-paths --path work/`, precedido de
 `git bundle create --all` como backup.
 
-**Consequência.** **227 MB → 1,4 MB.** Os três commits e suas mensagens foram
-preservados. Em troca, todos os hashes mudaram: quem tiver clonado antes precisa
-refazer o clone, e o push exige `--force`.
+**Medido.** **227 MB → 1,4 MB**, com os commits e suas mensagens preservados.
 
-**Por que o preço valeu.** Existia um commit no remote e nenhum outro clone
-conhecido. O ganho — 160× no tamanho do clone, para sempre, para todo mundo —
-não tem comparação com o custo. **Esse cálculo não se repete numa branch
-compartilhada.** Ver [`02-git-e-branches.md`](02-git-e-branches.md).
+**Por que ainda não está na `main`.** O `filter-repo` troca o hash de todo commit
+afetado, inclusive o `Initial commit`. Isso deixou a branch **sem ancestral
+comum** com a `main` publicada — e sem ancestral comum o GitHub não abre pull
+request ("There isn't anything to compare").
+
+A escolha foi entre force-push imediato na `main` e um PR revisável. Ficou o PR:
+os commits foram reaplicados sobre a `main` original, e a remoção de `work/`
+virou um commit próprio, onde as 2.758 deleções aparecem na tela de quem revisa.
+Num repositório que serve de material de mentoria, ver a limpeza acontecer vale
+mais do que tê-la pronta.
+
+**Consequência.** Até o merge, `git clone` continua baixando 227 MB. O commit de
+remoção tira do índice, não do histórico.
+
+**Passo pendente, depois do merge:** rodar o `filter-repo` na `main` e dar
+`push --force`. É ação destrutiva num repositório de terceiro — combinar com o
+dono antes, e avisar quem já clonou. Ver [`02-git-e-branches.md`](02-git-e-branches.md).
 
 ---
 
