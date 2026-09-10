@@ -224,39 +224,38 @@ vinext não suporte.
 componente, e quem aprova o visual nem sempre roda `npm`.
 
 **Decisão.** Um único HTML autocontido — fonte e imagens em base64, roteamento
-interno, três telas (home, ficha e Design System) — gerado por
-`prototipos/gerar-standalone.mjs` a partir de `prototipos/src/`. Nada entra no
-build do site.
+interno, duas telas (home e ficha) — gerado por `prototipos/gerar-standalone.mjs`
+a partir de `prototipos/src/`. Nada entra no build do site.
 
 **Por que um arquivo só.** Ele abre por clique duplo e pode ser mandado por
 e-mail ou WhatsApp. Quem avalia não instala nada, não roda servidor e não precisa
-de rede. A primeira versão eram arquivos soltos com imagens externas e fonte de
-CDN; não servia para isso.
+de rede.
 
-**Por que gerado e não escrito à mão.** 1,5 MB de base64 no meio do código
-tornaria o fonte ilegível e o diff impossível de revisar. O gerador é uma
-substituição de marcadores em Node puro, sem dependência, e falha se sobrar
-algum marcador.
+**Por que gerado.** 1,4 MB de base64 no meio do código tornaria o fonte ilegível
+e o diff impossível de revisar. O gerador é substituição de marcadores em Node
+puro, sem dependência, e falha se sobrar algum.
 
 **Por que o gerado não é versionado.** É a invariante 9 aplicada onde é tentador
-abrir exceção: 1,5 MB gravados a cada ajuste de design, e o git guarda o blob
-inteiro por versão. Vinte iterações custariam 30 MB permanentes num repositório
-de 1,7 MB. Versionado fica o que não se regenera — fonte, tipografia e gerador.
+abrir exceção: 1,4 MB a cada ajuste de design, e o git guarda o blob inteiro por
+versão. Versionado fica o que não se regenera — fonte, tipografia e gerador.
 
-**Por que prototipar fora do app.** Prototipar dentro custa caro para descartar:
-cada experimento vira commit no CSS de produção. Em arquivos separados, uma
-direção reprovada se apaga com `rm -rf`.
+**Duas direções foram tentadas.** A primeira usava vocabulário de painel de
+instrumentos: cantos retos, grade técnica, âmbar de sinalização, números
+tabulares e uma tela de Design System. Foi **reprovada** por parecer exercício de
+portfólio em vez de negócio real. A segunda segue
+[dwimoveisjp.vercel.app](https://dwimoveisjp.vercel.app), um site de imobiliária
+de bairro: foto sangrando, preço visível, selos de confiança, dúvidas, WhatsApp
+flutuante, cantos arredondados. O Design System saiu — não tinha função num
+protótipo de duas telas.
+
+**Decidido e medido:** uma cor de marca só (`#0E7A3C`), verde porque a única
+conversão é WhatsApp; 5,43:1 com branco por cima e 5,02:1 como texto, os dois
+papéis num token. Responsivo por `@container` em vez de `@media`, que é o que
+permite o seletor de largura funcionar dentro de um arquivo só, sem `iframe`.
 
 **Consequência.** Existe um segundo CSS no repositório, e ele **vai** divergir do
 site. É dívida aceita e datada: aprovada, os tokens migram para
-`app/globals.css` e `prototipos/` some; reprovada, some do mesmo jeito. O que não
-pode é ficar.
-
-**Decidido e medido no protótipo:** dois tokens de destaque (`--ambar` preenche a
-9,95:1, `--ambar-tinta` escreve a 6,42:1; o âmbar puro como texto dá 1,65:1 e
-reprova), escala tipográfica de razão 1,25, escala de espaçamento base 4, e o
-responsivo por `@container` em vez de `@media` — que é o que permite o seletor de
-largura funcionar dentro de um arquivo só, sem `iframe`.
+`app/globals.css` e `prototipos/` some; reprovada, some do mesmo jeito.
 
 ---
 
@@ -271,3 +270,4 @@ Registradas para não se perderem. Nenhuma foi tomada.
 | P3 | Podar os 58 componentes `components/ui/` não usados? Ganho de clareza contra ter que rodar o `shadcn add` de novo se precisar de um deles. | Fase 2 |
 | P4 | Expandir o `globals.css` minificado (16 KB em 22 linhas)? É pré-requisito para qualquer trabalho sério de design. | Fase 3 |
 | P5 | Adicionar Open Graph e Twitter Card? Cada link compartilhado no WhatsApp — a única conversão do site — hoje aparece sem imagem e sem título. | Fase 3 |
+| P6 | Publicar preço no site? O protótipo mostra "R$ 690 por mês"; o site atual diz "sob consulta". É decisão comercial, não de layout: preço público muda a negociação e conflita com a invariante 4 enquanto os dados forem fictícios. | Fase 3 |

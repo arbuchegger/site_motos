@@ -35,7 +35,7 @@ const comoDataUri = async (arquivo, tipo) =>
 let html = await readFile(path.join(aqui, 'src', 'vertice-hi-fi.html'), 'utf8');
 
 // Fonte: entre aspas, porque o data: URI tem ; e , que confundem url() sem aspas.
-const fonte = await comoDataUri(path.join(aqui, 'fontes', 'archivo-latin.woff2'), 'font/woff2');
+const fonte = await comoDataUri(path.join(aqui, 'fontes', 'figtree-latin.woff2'), 'font/woff2');
 html = html.replace('__FONTE__', `"${fonte}"`);
 
 for (const nome of IMAGENS) {

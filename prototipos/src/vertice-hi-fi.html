@@ -3,96 +3,89 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vértice Motos — Design System &amp; Protótipo hi-fi</title>
+    <title>Vértice Motos — protótipo hi-fi</title>
   </head>
   <body>
 <style>
 /* ============================================================
    FONTE EMBUTIDA
-   Archivo variável, subconjunto latino. Vem dentro do arquivo em
-   base64: o protótipo abre sem rede, sem CDN e sem servidor.
+   Figtree variável, subconjunto latino, em base64. O protótipo
+   abre sem rede, sem CDN e sem servidor.
    ============================================================ */
 @font-face{
-  font-family:'Archivo';
+  font-family:'Figtree';
   font-style:normal;
-  font-weight:100 900;
-  font-stretch:62% 125%;
+  font-weight:300 900;
   font-display:swap;
   src:url(__FONTE__) format('woff2');
 }
 
 /* ============================================================
    1. TOKENS
-   Direção: painel de instrumentos. Uma moto informa por números
-   grandes, legíveis a 60 km/h e sob sol forte. A página faz igual.
+   Referência: locadora de bairro. Foto grande, oferta visível,
+   preço na cara, WhatsApp sempre à mão. Carta branca sobre
+   fundo quente, canto arredondado, sombra macia.
    ============================================================ */
 :root{
-  /* Concreto e asfalto — cinzas frios. O bege quente virou o padrão
-     de toda página gerada, e não é a cor de rua nenhuma. */
-  --tinta:#14181b;
-  --asfalto-900:#171c20;
-  --asfalto-800:#1f262b;
-  --asfalto-700:#2b3238;
-  --asfalto-500:#4a545c;
-  --concreto-400:#9ba5a9;
-  --concreto-200:#d5dad8;
-  --concreto-100:#e9edea;
-  --concreto-50:#f3f6f3;
-  --branco:#fff;
+  --tinta:#1a1d21;
+  --suave:#5c6470;
+  --fundo:#f7f6f3;
+  --carta:#fff;
+  --linha:#e5e3de;
+  --linha-forte:#cfccc5;
 
-  /* Âmbar de seta. Dois tokens, e a razão é medida, não gosto:
-     #ffb300 como TEXTO no fundo claro dá 1,65:1 e reprova em AA.
-     Como PREENCHIMENTO com tinta por cima dá 9,95:1 e passa. */
-  --ambar:#ffb300;
-  --ambar-forte:#e09b00;
-  --ambar-tinta:#7a5100;
+  /* UMA cor de marca, e ela é verde por um motivo funcional: a
+     única conversão do site é WhatsApp, então o botão já diz
+     para onde leva antes de ser lido.
 
-  --fundo:var(--concreto-50);
-  --fundo-alto:var(--branco);
-  --fundo-inv:var(--asfalto-900);
-  --texto:var(--tinta);
-  --texto-suave:var(--asfalto-500);
-  --texto-inv:var(--concreto-100);
-  --linha:var(--concreto-200);
-  --linha-forte:var(--concreto-400);
-  --destaque:var(--ambar-tinta);
-  --sombra:0 1px 2px rgba(20,24,27,.04),0 8px 24px -12px rgba(20,24,27,.18);
+     O token serve aos dois papéis, e os dois passam em AA:
+       branco sobre #0E7A3C ....... 5,43:1  (botão)
+       #0E7A3C como texto no fundo  5,02:1  (link)
+     Não é preciso um token para escrever e outro para preencher. */
+  --marca:#0e7a3c;
+  --marca-escura:#0b6b34;
+  --marca-tenue:#e8f5ed;
+  --marca-texto:#fff;
 
-  /* Escala tipográfica, razão 1,25 */
-  --t12:.75rem; --t14:.875rem; --t16:1rem; --t20:1.25rem;
-  --t25:1.5625rem; --t31:1.9375rem; --t39:2.4375rem;
-  --t49:3.0625rem; --t61:3.8125rem;
+  --atencao:#8a5300; --atencao-tenue:#fcf1dc;  /* 5,65:1 */
 
-  /* Escala de espaçamento, base 4 */
+  --t12:.75rem; --t13:.8125rem; --t14:.875rem; --t15:.9375rem;
+  --t16:1rem; --t18:1.125rem; --t20:1.25rem; --t24:1.5rem;
+  --t30:1.875rem; --t38:2.375rem; --t48:3rem; --t58:3.625rem;
+
   --e1:4px; --e2:8px; --e3:12px; --e4:16px; --e5:24px;
-  --e6:32px; --e7:48px; --e8:64px; --e9:96px;
+  --e6:32px; --e7:48px; --e8:64px; --e9:88px;
 
-  --raio:3px;
-  --largura:1240px;
+  --raio:14px;
+  --raio-bt:11px;
+  --raio-pill:999px;
+  --sombra:0 1px 2px rgba(26,29,33,.05),0 10px 30px -14px rgba(26,29,33,.22);
+  --sombra-alta:0 2px 6px rgba(26,29,33,.06),0 22px 48px -18px rgba(26,29,33,.30);
+
+  --largura:1200px;
   --gutter:var(--e5);
+  --alt-cab:76px;   /* altura do cabeçalho, que flutua sobre o hero */
 
-  /* Movimento. Uma curva só para tudo que responde a toque:
-     saída rápida, chegada calma. */
   --mov:200ms;
   --curva:cubic-bezier(.22,.61,.36,1);
 
   color-scheme:light;
 }
 
-[data-tema='escuro'],
-:root[data-tema='sistema'] .palco[data-sistema-escuro='true']{ }
-
 .tela[data-tema-ativo='escuro']{
-  --fundo:var(--asfalto-900);
-  --fundo-alto:var(--asfalto-800);
-  --fundo-inv:#0e1215;
-  --texto:var(--concreto-100);
-  --texto-suave:var(--concreto-400);
-  --texto-inv:var(--concreto-100);
-  --linha:#2f373d;
-  --linha-forte:#47525a;
-  --destaque:var(--ambar);
-  --sombra:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.6);
+  --tinta:#eceef1;
+  --suave:#9aa1ac;
+  --fundo:#16181c;
+  --carta:#1e2126;
+  --linha:#2c3138;
+  --linha-forte:#414852;
+  --marca:#4ade80;            /* 10,20:1 como texto no escuro */
+  --marca-escura:#6ee7a0;
+  --marca-tenue:#12281c;
+  --marca-texto:#06200f;      /* tinta escura por cima do verde claro */
+  --atencao:#ffc46b; --atencao-tenue:#2b2113;
+  --sombra:0 1px 2px rgba(0,0,0,.35),0 10px 30px -14px rgba(0,0,0,.7);
+  --sombra-alta:0 2px 6px rgba(0,0,0,.4),0 22px 48px -18px rgba(0,0,0,.8);
   color-scheme:dark;
 }
 
@@ -100,431 +93,424 @@
 
 /* ============================================================
    2. CROMO DO PROTÓTIPO
-   Propositalmente diferente do site: quem olha precisa saber a
-   todo momento o que é moldura e o que é a tela avaliada.
    ============================================================ */
 body{
-  margin:0;
-  background:#0c0f12;
-  color:#e6eae8;
-  font-family:Archivo,system-ui,-apple-system,'Segoe UI',sans-serif;
-  font-size:14px;
-  min-height:100vh;
-  display:grid;
-  grid-template-rows:auto 1fr;
+  margin:0;background:#0d1013;color:#e7eaec;
+  font-family:Figtree,system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:14px;min-height:100vh;display:grid;grid-template-rows:auto 1fr;
 }
-
 .barra{
   display:flex;align-items:center;gap:18px;flex-wrap:wrap;
-  padding:12px 18px;
-  background:#151b20;
-  border-bottom:1px solid #262f36;
+  padding:12px 18px;background:#161b20;border-bottom:1px solid #262d34;
   position:sticky;top:0;z-index:20;
 }
-.barra-marca{
-  display:flex;align-items:center;gap:9px;margin-right:auto;
-  font-variation-settings:'wdth' 116;font-weight:700;font-size:15px;
-}
-.losango{
-  width:12px;height:12px;background:var(--ambar);
-  clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
-}
+.barra-marca{display:flex;align-items:center;gap:9px;margin-right:auto;font-weight:750;font-size:15px}
+.ponto{width:11px;height:11px;border-radius:50%;background:#4ade80}
 .barra-grupo{display:flex;align-items:center;gap:7px}
-.barra-rotulo{color:#8d989e;font-size:11px}
-
-.seg{display:flex;border:1px solid #2b353c;border-radius:7px;overflow:hidden}
+.barra-rotulo{color:#8b959c;font-size:11px}
+.seg{display:flex;border:1px solid #2b333a;border-radius:9px;overflow:hidden}
 .seg button{
-  min-height:34px;padding:6px 12px;
-  background:transparent;color:#9aa5ab;border:0;
-  border-right:1px solid #2b353c;
-  font:inherit;font-size:12.5px;cursor:pointer;
-  transition:background-color 140ms,color 140ms;
+  min-height:34px;padding:6px 13px;background:transparent;color:#98a2a9;
+  border:0;border-right:1px solid #2b333a;font:inherit;font-size:12.5px;
+  font-weight:600;cursor:pointer;transition:background-color 140ms,color 140ms;
 }
 .seg button:last-child{border-right:0}
-.seg button:hover{color:#e6eae8;background:#1c242a}
-.seg button[aria-pressed='true']{background:var(--ambar);color:#14181b;font-weight:650}
-.seg button:focus-visible{outline:2px solid var(--ambar);outline-offset:-2px}
+.seg button:hover{color:#e7eaec;background:#1d242a}
+.seg button[aria-pressed='true']{background:#4ade80;color:#06200f}
+.seg button:focus-visible{outline:2px solid #4ade80;outline-offset:-2px}
+.medida{color:#8b959c;font-variant-numeric:tabular-nums;font-size:11.5px;min-width:76px}
 
-.medida{color:#8d989e;font-variant-numeric:tabular-nums;font-size:11.5px;min-width:76px}
-
-/* Palco: o container que define a largura da tela avaliada.
-   container-type faz os @container abaixo dispararem pela largura
-   DESTE elemento, não da janela. É o que permite testar celular
-   sem iframe e sem redimensionar o navegador. */
 .palco-area{
-  padding:22px;overflow:auto;
-  display:grid;place-items:start center;
-  background:repeating-linear-gradient(45deg,#101519 0 11px,#0e1316 11px 22px);
+  padding:22px;overflow:auto;display:grid;place-items:start center;
+  background:repeating-linear-gradient(45deg,#11161a 0 11px,#0f1418 11px 22px);
 }
 .moldura{
-  background:#000;border-radius:16px;padding:9px;
-  box-shadow:0 30px 70px rgba(0,0,0,.55);
-  transition:width var(--mov) var(--curva);
+  background:#000;border-radius:22px;padding:9px;
+  box-shadow:0 30px 70px rgba(0,0,0,.6);transition:width var(--mov) var(--curva);
 }
-.moldura[data-largura='cheia']{background:transparent;padding:0;border-radius:8px;box-shadow:none}
+.moldura[data-largura='cheia']{background:transparent;padding:0;border-radius:12px;box-shadow:none}
 
+/* container-type é o que faz o seletor de largura funcionar sem
+   iframe: as regras respondem à largura DESTE elemento. */
 .palco{
-  container-type:inline-size;
-  container-name:tela;
-  overflow-y:auto;overflow-x:hidden;
-  border-radius:9px;
-  background:var(--fundo);
+  container-type:inline-size;container-name:tela;
+  overflow-y:auto;overflow-x:hidden;border-radius:14px;background:var(--fundo);
 }
-.moldura[data-largura='cheia'] .palco{border-radius:8px}
+.moldura[data-largura='cheia'] .palco{border-radius:12px}
 
-.nota-rodape{
-  padding:0 22px 22px;color:#8d989e;max-width:80ch;line-height:1.6;font-size:12.5px;
-}
-.nota-rodape code{color:#cfd6d9}
+.nota-rodape{padding:0 22px 22px;color:#8b959c;max-width:80ch;line-height:1.6;font-size:12.5px}
+.nota-rodape code{color:#ccd3d7}
 
-@media (max-width:760px){
-  .barra-marca{width:100%;margin-right:0}
-  .medida{display:none}
-}
+@media (max-width:760px){ .barra-marca{width:100%;margin-right:0} .medida{display:none} }
 
 /* ============================================================
    3. BASE DA TELA
    ============================================================ */
 .tela{
-  background:var(--fundo);
-  color:var(--texto);
-  font-size:var(--t16);
-  line-height:1.55;
-  min-height:100%;
-  font-synthesis-weight:none;
+  position:relative;background:var(--fundo);color:var(--tinta);
+  font-size:var(--t16);line-height:1.6;min-height:100%;
   -webkit-font-smoothing:antialiased;
 }
-/* A troca de tema só anima quando a pessoa clica. Sem esta guarda,
-   a página inteira faz uma transição de cor ao carregar. */
 .tela.animar-tema,.tela.animar-tema *{
   transition:background-color 260ms var(--curva),color 260ms var(--curva),border-color 260ms var(--curva);
 }
-
 .tela img{max-width:100%;display:block}
 .tela a{color:inherit}
 .tela h1,.tela h2,.tela h3,.tela p,.tela dl,.tela dd,.tela ol,.tela ul{margin:0}
-
-.tela :where(button,a,input,select,summary):focus-visible{
-  outline:3px solid var(--ambar);outline-offset:2px;border-radius:var(--raio);
+.tela :where(button,a,input,summary):focus-visible{
+  outline:3px solid var(--marca);outline-offset:2px;border-radius:var(--raio-bt);
 }
-
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-
 .container{width:min(100% - (var(--gutter) * 2),var(--largura));margin-inline:auto}
 
 /* ============================================================
    4. TIPOGRAFIA
-   O display abre o eixo de largura da Archivo em 112. Letra
-   alargada é vocabulário de placa e de sinalização — está aqui
-   por isso, não por enfeite.
+   Figtree: geométrica de altura-x alta, arredondada. Fala como
+   um negócio de bairro, não como um estúdio de design.
    ============================================================ */
-.display{
-  font-variation-settings:'wdth' 112;
-  font-weight:700;letter-spacing:-.022em;line-height:1.03;
-  text-wrap:balance;
-}
-h1.display{font-size:clamp(2.25rem,6.2cqw,var(--t61))}
-h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
-.tela h3{font-size:var(--t20);font-weight:650;letter-spacing:-.012em;line-height:1.25}
-
-.chamada{font-size:var(--t20);color:var(--texto-suave);max-width:46ch;margin-top:var(--e4);line-height:1.5}
+h1{font-size:clamp(2.1rem,5.4cqw,var(--t58));font-weight:800;letter-spacing:-.028em;line-height:1.06;text-wrap:balance}
+h2{font-size:clamp(1.65rem,3.6cqw,var(--t38));font-weight:800;letter-spacing:-.024em;line-height:1.12;text-wrap:balance}
+.tela h3{font-size:var(--t20);font-weight:750;letter-spacing:-.014em;line-height:1.25}
+.chamada{font-size:var(--t18);color:var(--suave);max-width:48ch;margin-top:var(--e4)}
 .corrido{max-width:62ch}
 
-.numero{font-variant-numeric:tabular-nums;font-variation-settings:'wdth' 108;font-weight:700;letter-spacing:-.03em}
-.unidade{font-size:.5em;font-weight:500;letter-spacing:0;color:var(--texto-suave)}
-
 /* ============================================================
-   5. BOTÕES
+   5. BOTÕES, PÍLULAS E SELOS
    ============================================================ */
 .botao{
   display:inline-flex;align-items:center;justify-content:center;gap:var(--e2);
-  min-height:48px;padding:var(--e3) var(--e5);
-  border:2px solid transparent;border-radius:var(--raio);
-  font:inherit;font-weight:620;font-size:var(--t16);
+  min-height:52px;padding:var(--e3) var(--e6);
+  border:2px solid transparent;border-radius:var(--raio-bt);
+  font:inherit;font-weight:750;font-size:var(--t16);
   text-decoration:none;cursor:pointer;
-  transition:background-color 140ms,border-color 140ms,color 140ms,transform 90ms var(--curva);
+  transition:background-color 150ms,border-color 150ms,color 150ms,transform 90ms var(--curva),box-shadow 150ms;
 }
 .botao:active{transform:scale(.978)}
-.botao-1{background:var(--ambar);color:var(--tinta)}
-.botao-1:hover{background:var(--ambar-forte)}
-.botao-2{background:transparent;color:var(--texto);border-color:var(--linha-forte)}
-.botao-2:hover{border-color:var(--texto)}
-.botao-3{background:var(--branco);color:var(--tinta)}
-.botao-3:hover{background:var(--concreto-100)}
+.botao svg{flex:none}
 
-.link{
-  display:inline-block;color:var(--destaque);font-weight:620;text-decoration:none;
-  border-bottom:2px solid currentColor;padding-bottom:1px;
-  transition:color 140ms;
+/* Verde = leva ao WhatsApp. Vale para todo botão desta cor no site.
+
+   CICATRIZ: estas regras precisam do prefixo `.tela` para ganhar de
+   `.tela a{color:inherit}` lá em cima. Sem ele o botão HERDA a cor do
+   pai em vez de usar o token, e no tema escuro isso dava verde claro
+   com texto claro — ilegível. No tema claro o bug passava despercebido
+   porque os botões estavam sobre a foto do hero, onde a cor herdada
+   por acaso era branca. */
+.tela .botao-1{background:var(--marca);color:var(--marca-texto);box-shadow:0 6px 18px -8px rgba(14,122,60,.6)}
+.tela .botao-1:hover{background:var(--marca-escura)}
+.tela .botao-2{background:var(--carta);color:var(--tinta);border-color:var(--linha)}
+.tela .botao-2:hover{border-color:var(--linha-forte)}
+/* Sobre foto: vidro, para não competir com o verde ao lado. */
+.tela .botao-3{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.45);backdrop-filter:blur(6px)}
+.tela .botao-3:hover{background:rgba(255,255,255,.26)}
+.tela .botao-fantasma{background:transparent;color:var(--marca);min-height:44px;padding:var(--e2) var(--e3)}
+.tela .botao-fantasma:hover{background:var(--marca-tenue)}
+
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 11px;border-radius:var(--raio-pill);
+  font-size:var(--t13);font-weight:700;line-height:1.3;
 }
-.link:hover{color:var(--texto)}
+.pill-ok{background:var(--marca-tenue);color:var(--marca)}
+.pill-atencao{background:var(--atencao-tenue);color:var(--atencao)}
+.pill-neutro{background:var(--fundo);color:var(--suave);border:1px solid var(--linha)}
+
+.tela .link{color:var(--marca);font-weight:700;text-decoration:none;cursor:pointer;border-bottom:2px solid transparent;transition:border-color 140ms}
+.tela .link:hover{border-bottom-color:currentColor}
 
 /* ============================================================
-   6. CABEÇALHO DO SITE
+   6. CABEÇALHO
    ============================================================ */
 .cabecalho{
-  position:sticky;top:0;z-index:12;
-  background:color-mix(in srgb,var(--fundo) 86%,transparent);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--linha);
+  position:sticky;top:0;z-index:14;
+  background:color-mix(in srgb,var(--fundo) 88%,transparent);
+  backdrop-filter:blur(14px);border-bottom:1px solid transparent;
+  transition:border-color 200ms,background-color 200ms,color 200ms;
 }
-.cab-int{display:flex;align-items:center;gap:var(--e5);height:72px}
-.marca{display:flex;align-items:center;gap:var(--e3);text-decoration:none;margin-right:auto;cursor:pointer}
-.marca-sinal{width:15px;height:15px;background:var(--ambar);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);flex:none}
-.marca-nome{font-variation-settings:'wdth' 116;font-weight:700;font-size:var(--t20);line-height:1}
-.marca-nome i{font-style:normal;color:var(--texto-suave);font-weight:500}
+.cabecalho[data-rolou='true']{border-bottom-color:var(--linha)}
+
+/* No topo da home o cabeçalho fica SOBRE a foto do hero, sem fundo
+   próprio — a foto começa na borda de cima da tela. Ao rolar ele
+   vira barra sólida. Sem isso a faixa clara corta a imagem em duas. */
+.tela[data-hero='true'] .cabecalho:not([data-rolou='true']){
+  background:transparent;backdrop-filter:none;color:#fff;
+}
+.tela[data-hero='true'] .cabecalho:not([data-rolou='true']) .nav-desk a{color:rgba(255,255,255,.82)}
+.tela[data-hero='true'] .cabecalho:not([data-rolou='true']) .nav-desk a:hover{color:#fff}
+.tela[data-hero='true'] .cabecalho:not([data-rolou='true']) .marca-nome i{color:rgba(255,255,255,.72)}
+.tela[data-hero='true'] .cabecalho:not([data-rolou='true']) .bt-menu{
+  background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.4);color:#fff;
+}
+.cab-int{display:flex;align-items:center;gap:var(--e5);height:76px}
+
+.marca{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto;cursor:pointer}
+.marca-selo{
+  width:38px;height:38px;border-radius:11px;flex:none;
+  background:var(--marca);color:var(--marca-texto);
+  display:grid;place-items:center;font-weight:900;font-size:19px;letter-spacing:-.04em;
+}
+.marca-nome{font-weight:800;font-size:var(--t18);letter-spacing:-.02em;line-height:1.1}
+.marca-nome i{display:block;font-style:normal;font-size:var(--t12);font-weight:600;color:var(--suave);letter-spacing:.02em}
 
 .nav-desk{display:flex;gap:var(--e5)}
 .nav-desk a{
-  text-decoration:none;font-weight:520;font-size:var(--t14);color:var(--texto-suave);
-  padding-block:var(--e2);border-bottom:2px solid transparent;cursor:pointer;
-  transition:color 140ms,border-color 140ms;
+  text-decoration:none;font-weight:650;font-size:var(--t15);color:var(--suave);
+  padding-block:var(--e2);cursor:pointer;position:relative;transition:color 150ms;
 }
-.nav-desk a:hover{color:var(--texto);border-bottom-color:var(--ambar)}
+.nav-desk a::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:var(--marca);transform:scaleX(0);transform-origin:left;
+  transition:transform 180ms var(--curva);
+}
+.nav-desk a:hover{color:var(--tinta)}
+.nav-desk a:hover::after{transform:scaleX(1)}
 
 .bt-menu{
-  display:none;align-items:center;justify-content:center;
-  width:48px;height:48px;background:none;color:inherit;
-  border:1px solid var(--linha-forte);border-radius:var(--raio);cursor:pointer;
+  display:none;align-items:center;justify-content:center;width:48px;height:48px;
+  background:var(--carta);color:inherit;border:1px solid var(--linha);
+  border-radius:var(--raio-bt);cursor:pointer;
 }
 
-/* Gaveta */
-.gaveta{position:absolute;inset:0;z-index:30;display:grid;grid-template-columns:1fr min(320px,84%);visibility:hidden;overflow:hidden}
+.gaveta{position:absolute;inset:0;z-index:30;display:grid;grid-template-columns:1fr min(330px,86%);visibility:hidden;overflow:hidden}
 .gaveta[data-aberta='true']{visibility:visible}
-.gaveta-fundo{background:rgba(8,11,13,.55);opacity:0;transition:opacity var(--mov);border:0;padding:0;cursor:pointer}
+.gaveta-fundo{background:rgba(10,12,14,.5);opacity:0;transition:opacity var(--mov);border:0;padding:0;cursor:pointer;backdrop-filter:blur(2px)}
 .gaveta[data-aberta='true'] .gaveta-fundo{opacity:1}
 .gaveta-painel{
-  background:var(--fundo-alto);border-left:1px solid var(--linha);
-  padding:var(--e5);display:flex;flex-direction:column;gap:var(--e5);
-  transform:translateX(100%);transition:transform 260ms var(--curva);
-  overflow-y:auto;
+  background:var(--carta);padding:var(--e5);display:flex;flex-direction:column;gap:var(--e5);
+  transform:translateX(100%);transition:transform 280ms var(--curva);overflow-y:auto;
+  box-shadow:var(--sombra-alta);
 }
 .gaveta[data-aberta='true'] .gaveta-painel{transform:none}
 .gaveta-topo{display:flex;align-items:center;justify-content:space-between}
 .gaveta nav{display:flex;flex-direction:column}
-.gaveta nav a{text-decoration:none;font-size:var(--t20);font-weight:600;padding-block:var(--e4);border-bottom:1px solid var(--linha);cursor:pointer}
+.gaveta nav a{text-decoration:none;font-size:var(--t20);font-weight:700;padding-block:var(--e4);border-bottom:1px solid var(--linha);cursor:pointer}
 
 /* ============================================================
-   7. HERO E PAINEL
+   7. HERO
+   Foto sangrando com véu escuro, texto branco por cima e a
+   oferta em carta flutuante. É assim que uma locadora mostra
+   que tem produto, e não que tem design.
    ============================================================ */
-.hero{border-bottom:1px solid var(--linha)}
-.hero-grade{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:var(--e8);align-items:center;padding-block:var(--e9) var(--e8)}
-.acoes{display:flex;flex-wrap:wrap;gap:var(--e3);margin-top:var(--e6)}
-.hero-foto{position:relative;border-radius:2px;overflow:hidden;background:var(--concreto-100);aspect-ratio:16/10}
+.hero{position:relative;isolation:isolate;overflow:hidden}
+.hero-foto{position:absolute;inset:0;z-index:-2}
 .hero-foto img{width:100%;height:100%;object-fit:cover}
+.hero-veu{
+  position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(100deg,rgba(11,13,16,.93) 0%,rgba(11,13,16,.82) 44%,rgba(11,13,16,.44) 74%,rgba(11,13,16,.3) 100%);
+}
+.hero-grade{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);
+  gap:var(--e8);align-items:center;
+  /* o topo compensa a altura do cabeçalho, que flutua por cima */
+  padding-block:calc(var(--e9) + var(--alt-cab)) var(--e9);
+  color:#fff;
+}
+.hero h1{color:#fff;max-width:15ch}
+.hero .chamada{color:rgba(255,255,255,.88);max-width:44ch}
+.acoes{display:flex;flex-wrap:wrap;gap:var(--e3);margin-top:var(--e6)}
 
-.painel{background:var(--fundo-inv);color:var(--texto-inv)}
-.painel-grade{display:grid;grid-template-columns:repeat(3,1fr)}
-.leitura{padding:var(--e5);display:flex;flex-direction:column;gap:var(--e1)}
-.leitura+.leitura{border-left:1px solid rgba(255,255,255,.12)}
-.leitura-valor{font-size:var(--t39);line-height:1;color:var(--branco)}
-.leitura-rotulo{font-size:var(--t14);color:var(--concreto-400)}
+.confianca{
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--e3) var(--e5);
+  margin-top:var(--e6);padding-top:var(--e5);
+  border-top:1px solid rgba(255,255,255,.22);
+  font-size:var(--t14);color:rgba(255,255,255,.8);
+}
+.confianca strong{color:#fff;font-weight:750}
+.confianca span{display:inline-flex;align-items:center;gap:7px}
+
+.destaque{
+  background:var(--carta);color:var(--tinta);
+  border-radius:calc(var(--raio) + 4px);padding:var(--e4);
+  box-shadow:var(--sombra-alta);
+}
+.destaque-foto{border-radius:var(--raio);overflow:hidden;aspect-ratio:16/11;background:var(--fundo)}
+.destaque-foto img{width:100%;height:100%;object-fit:cover}
+.destaque-corpo{padding:var(--e4) var(--e1) var(--e1)}
+.destaque-pills{display:flex;gap:var(--e2);flex-wrap:wrap;margin-bottom:var(--e3)}
+.destaque-local{font-size:var(--t14);color:var(--suave)}
+.destaque h3{margin-top:2px}
+.destaque-specs{font-size:var(--t15);color:var(--suave);margin-top:var(--e1)}
+
+.preco{display:flex;align-items:baseline;gap:var(--e2);flex-wrap:wrap;margin-top:var(--e3)}
+.preco-valor{font-size:var(--t30);font-weight:850;letter-spacing:-.03em;line-height:1}
+.preco-nota{font-size:var(--t14);color:var(--suave)}
 
 /* ============================================================
-   8. SEÇÕES, FILTRO E CATÁLOGO
+   8. SEÇÕES
    ============================================================ */
 .secao{padding-block:var(--e9)}
-.secao+.secao{padding-top:0}
-.secao-topo{margin-bottom:var(--e6)}
+.secao-topo{display:flex;align-items:end;justify-content:space-between;gap:var(--e5);flex-wrap:wrap;margin-bottom:var(--e6)}
+.secao-topo .chamada{margin-top:var(--e2)}
 
+/* ============================================================
+   9. FILTRO E CATÁLOGO
+   ============================================================ */
 .filtro{display:flex;gap:var(--e2);flex-wrap:wrap}
 .filtro button{
-  min-height:40px;padding:var(--e2) var(--e4);
-  background:transparent;color:var(--texto-suave);
-  border:1px solid var(--linha-forte);border-radius:100px;
-  font:inherit;font-size:var(--t14);font-weight:560;cursor:pointer;
-  transition:background-color 140ms,color 140ms,border-color 140ms,transform 90ms var(--curva);
+  min-height:42px;padding:var(--e2) var(--e4);
+  background:var(--carta);color:var(--suave);
+  border:1px solid var(--linha);border-radius:var(--raio-pill);
+  font:inherit;font-size:var(--t14);font-weight:700;cursor:pointer;
+  transition:background-color 150ms,color 150ms,border-color 150ms,transform 90ms var(--curva);
 }
-.filtro button:hover{color:var(--texto);border-color:var(--texto)}
+.filtro button:hover{color:var(--tinta);border-color:var(--linha-forte)}
 .filtro button:active{transform:scale(.96)}
 /* Selecionado nunca só por cor: entra a marca de conferido. */
-.filtro button[aria-pressed='true']{background:var(--texto);color:var(--fundo);border-color:var(--texto)}
+.filtro button[aria-pressed='true']{background:var(--tinta);color:var(--fundo);border-color:var(--tinta)}
 .filtro button[aria-pressed='true']::before{content:'✓ '}
-.contagem{font-size:var(--t14);color:var(--texto-suave);margin-top:var(--e4)}
+.contagem{font-size:var(--t14);color:var(--suave);margin-top:var(--e4)}
 
 .grade{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--e5);margin-top:var(--e5)}
 
 .cartao{
-  display:flex;flex-direction:column;
-  background:var(--fundo-alto);
-  border:1px solid var(--linha);border-radius:var(--raio);
-  overflow:hidden;
-  transition:border-color 160ms,box-shadow 160ms,transform 160ms var(--curva);
+  display:flex;flex-direction:column;background:var(--carta);
+  border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;
+  transition:border-color 180ms,box-shadow 220ms,transform 260ms var(--curva),opacity 200ms;
 }
-.cartao:hover{border-color:var(--linha-forte);box-shadow:var(--sombra);transform:translateY(-2px)}
-.cartao-foto{background:var(--concreto-100);aspect-ratio:3/2;overflow:hidden}
-.cartao-foto img{width:100%;height:100%;object-fit:cover;transition:transform 420ms var(--curva)}
-.cartao:hover .cartao-foto img{transform:scale(1.035)}
-.cartao-corpo{padding:var(--e4) var(--e4) var(--e5);display:flex;flex-direction:column;gap:var(--e3);flex:1}
-.cartao-cat{font-size:var(--t14);color:var(--texto-suave)}
+.cartao:hover{border-color:transparent;box-shadow:var(--sombra-alta);transform:translateY(-3px)}
+.cartao-topo{position:relative;background:var(--fundo);aspect-ratio:16/11;overflow:hidden}
+.cartao-topo img{width:100%;height:100%;object-fit:cover;transition:transform 480ms var(--curva)}
+.cartao:hover .cartao-topo img{transform:scale(1.04)}
+.cartao-pills{position:absolute;top:var(--e3);left:var(--e3);display:flex;gap:6px;flex-wrap:wrap}
+.cartao-pills .pill{box-shadow:0 2px 8px rgba(0,0,0,.14)}
+
+.cartao-corpo{padding:var(--e4);display:flex;flex-direction:column;gap:var(--e1);flex:1}
+.cartao-local{font-size:var(--t14);color:var(--suave)}
 .cartao h3 a{text-decoration:none;cursor:pointer}
-.cartao h3 a:hover{color:var(--destaque)}
-
-.mini{display:grid;grid-template-columns:auto auto;gap:var(--e1) var(--e5);padding-block:var(--e3);margin-block:auto var(--e1);border-block:1px solid var(--linha);justify-content:start}
-.mini dt{font-size:var(--t12);color:var(--texto-suave);grid-row:2}
-.mini dd{font-size:var(--t25);grid-row:1}
-
-/* Saída do cartão ao filtrar. A entrada é feita pelo FLIP no JS. */
+.cartao h3 a:hover{color:var(--marca)}
+.cartao-specs{font-size:var(--t15);color:var(--suave)}
+.cartao-rodape{display:flex;align-items:end;justify-content:space-between;gap:var(--e3);margin-top:auto;padding-top:var(--e4);border-top:1px solid var(--linha)}
+.cartao-rodape .preco{margin-top:0}
 .cartao.saindo{opacity:0;transform:scale(.94);pointer-events:none}
 
 /* ============================================================
-   9. PASSOS
+   10. COMO FUNCIONA
    ============================================================ */
-.passos{list-style:none;padding:0;max-width:62ch}
-.passos li{display:grid;grid-template-columns:40px 1fr;gap:var(--e4);padding-bottom:var(--e6);position:relative}
-.passos li:last-child{padding-bottom:0}
-.passos li:not(:last-child)::before{content:'';position:absolute;left:19px;top:34px;bottom:6px;width:2px;background:var(--linha)}
-.passo-n{
-  width:40px;height:40px;border-radius:50%;
-  border:2px solid var(--linha-forte);background:var(--fundo);
-  display:grid;place-items:center;
-  font-variant-numeric:tabular-nums;font-weight:700;
-  position:relative;z-index:1;
+.passos{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--e5);margin-top:var(--e6)}
+.passo{background:var(--carta);border:1px solid var(--linha);border-radius:var(--raio);padding:var(--e5)}
+.passo-icone{
+  width:46px;height:46px;border-radius:13px;background:var(--marca-tenue);color:var(--marca);
+  display:grid;place-items:center;margin-bottom:var(--e4);
 }
-.passos p{margin-top:var(--e1);color:var(--texto-suave)}
+.passo p{color:var(--suave);margin-top:var(--e2)}
 
 /* ============================================================
-   10. CONTATO E RODAPÉ
+   11. DÚVIDAS
+   <details> nativo: acessível de graça, funciona sem JS, e o
+   navegador já cuida do teclado.
    ============================================================ */
-.contato{background:var(--fundo-alto);border-block:1px solid var(--linha)}
-.contato-grade{display:grid;grid-template-columns:1.1fr 1fr;gap:var(--e8);padding-block:var(--e9)}
+.duvidas{max-width:760px;margin-top:var(--e6)}
+.duvida{background:var(--carta);border:1px solid var(--linha);border-radius:var(--raio);margin-bottom:var(--e3);overflow:hidden}
+.duvida summary{
+  list-style:none;cursor:pointer;padding:var(--e4) var(--e5);
+  display:flex;align-items:center;gap:var(--e4);font-weight:700;font-size:var(--t18);
+}
+.duvida summary::-webkit-details-marker{display:none}
+.duvida summary svg{margin-left:auto;flex:none;color:var(--suave);transition:transform 220ms var(--curva)}
+.duvida[open] summary svg{transform:rotate(180deg)}
+.duvida-corpo{padding:0 var(--e5) var(--e5);color:var(--suave);max-width:62ch}
+
+/* ============================================================
+   12. CONTATO E RODAPÉ
+   ============================================================ */
+.contato-carta{
+  background:var(--carta);border:1px solid var(--linha);border-radius:calc(var(--raio) + 6px);
+  padding:var(--e8);display:grid;grid-template-columns:1.1fr 1fr;gap:var(--e8);
+  box-shadow:var(--sombra);
+}
 .dados{display:grid;gap:var(--e5);align-content:start}
-.dados>div{display:grid;gap:var(--e1)}
-.dados dt{font-size:var(--t14);color:var(--texto-suave)}
-.dados dd,.dados address{font-size:var(--t20);font-weight:560;font-style:normal}
+.dados>div{display:grid;gap:2px}
+.dados dt{font-size:var(--t14);color:var(--suave)}
+.dados dd,.dados address{font-size:var(--t18);font-weight:700;font-style:normal}
 
-.rodape{padding-block:var(--e7);font-size:var(--t14);color:var(--texto-suave)}
-.rodape-grade{display:flex;gap:var(--e5);justify-content:space-between;flex-wrap:wrap}
-.rodape nav{display:flex;gap:var(--e4);flex-wrap:wrap}
-.rodape a{text-decoration:none;cursor:pointer}
-.rodape a:hover{color:var(--texto);text-decoration:underline}
-.aviso{margin-top:var(--e5);padding-top:var(--e4);border-top:1px solid var(--linha);max-width:68ch}
+.rodape{padding-block:var(--e8) var(--e7);border-top:1px solid var(--linha);margin-top:var(--e9)}
+.rodape-grade{display:flex;gap:var(--e5);justify-content:space-between;flex-wrap:wrap;align-items:start}
+.rodape nav{display:flex;gap:var(--e5);flex-wrap:wrap;font-size:var(--t15)}
+.rodape a{text-decoration:none;cursor:pointer;color:var(--suave);font-weight:600}
+.rodape a:hover{color:var(--tinta)}
+.aviso{margin-top:var(--e6);padding-top:var(--e5);border-top:1px solid var(--linha);max-width:70ch;font-size:var(--t14);color:var(--suave)}
 
 /* ============================================================
-   11. FICHA DA MOTO
+   13. WHATSAPP FLUTUANTE
+   Fica à mão em qualquer largura. É a única conversão que existe.
    ============================================================ */
-.trilha{padding-block:var(--e5);font-size:var(--t14);color:var(--texto-suave)}
-.trilha a{text-decoration:none;cursor:pointer}
-.trilha a:hover{text-decoration:underline}
-
-.ficha-topo{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:var(--e8);padding-bottom:var(--e8)}
-.galeria{position:relative;background:var(--concreto-100);border-radius:2px;overflow:hidden;aspect-ratio:3/2}
-/* As duas fotos ficam empilhadas e trocam por opacidade: sem pulo
-   de layout e sem recarregar imagem. */
-.galeria img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 300ms var(--curva)}
-.galeria img[data-ativa='true']{opacity:1}
-.minis{display:flex;gap:var(--e2);margin-top:var(--e2)}
-.minis button{
-  flex:1;padding:0;background:var(--concreto-100);cursor:pointer;
-  border:2px solid transparent;border-radius:2px;overflow:hidden;aspect-ratio:3/2;
-  transition:border-color 160ms,opacity 160ms;opacity:.62;
+.zap{
+  position:absolute;right:var(--e5);bottom:var(--e5);z-index:13;
+  width:60px;height:60px;border-radius:50%;
+  background:var(--marca);color:var(--marca-texto);border:0;cursor:pointer;
+  display:grid;place-items:center;
+  box-shadow:0 10px 26px -8px rgba(14,122,60,.75);
+  transition:transform 200ms var(--curva),box-shadow 200ms,background-color 150ms;
 }
+.zap:hover{transform:scale(1.07);background:var(--marca-escura)}
+.zap:active{transform:scale(.96)}
+
+/* ============================================================
+   14. FICHA DA MOTO
+   ============================================================ */
+.trilha{padding-block:var(--e5);font-size:var(--t14);color:var(--suave)}
+.trilha a{text-decoration:none;cursor:pointer}
+.trilha a:hover{color:var(--tinta)}
+
+.ficha-topo{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:var(--e8);padding-bottom:var(--e8)}
+.galeria{position:relative;background:var(--carta);border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;aspect-ratio:16/11}
+.galeria img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 320ms var(--curva)}
+.galeria img[data-ativa='true']{opacity:1}
+.minis{display:flex;gap:var(--e3);margin-top:var(--e3)}
+.minis button{
+  width:104px;flex:none;padding:0;background:var(--carta);cursor:pointer;
+  border:2px solid var(--linha);border-radius:11px;overflow:hidden;aspect-ratio:16/11;
+  transition:border-color 180ms,opacity 180ms;opacity:.62;
+}
+/* Sem isto a miniatura fica no tamanho do atributo width e sobra
+   moldura branca em volta do thumb. */
+.minis img{width:100%;height:100%;object-fit:cover}
 .minis button:hover{opacity:1}
-.minis button[aria-pressed='true']{border-color:var(--ambar);opacity:1}
-.legenda{font-size:var(--t12);color:var(--texto-suave);margin-top:var(--e3)}
+.minis button[aria-pressed='true']{border-color:var(--marca);opacity:1}
+.legenda{font-size:var(--t13);color:var(--suave);margin-top:var(--e3)}
 
-.ficha-painel{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--linha);border-radius:var(--raio);margin-block:var(--e6)}
-.ficha-painel>div{padding:var(--e4);border-right:1px solid var(--linha)}
-.ficha-painel>div:last-child{border-right:0}
-.ficha-painel dt{font-size:var(--t12);color:var(--texto-suave)}
-.ficha-painel dd{margin-top:var(--e1);font-size:var(--t31)}
+.oferta{
+  background:var(--carta);border:1px solid var(--linha);border-radius:calc(var(--raio) + 4px);
+  padding:var(--e5);box-shadow:var(--sombra);
+}
+.oferta-pills{display:flex;gap:var(--e2);flex-wrap:wrap;margin-bottom:var(--e4)}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:var(--e4);margin-block:var(--e5);padding-block:var(--e5);border-block:1px solid var(--linha)}
+.specs dt{font-size:var(--t13);color:var(--suave)}
+.specs dd{font-size:var(--t18);font-weight:750;margin-top:2px}
+.inclui{list-style:none;padding:0;display:grid;gap:var(--e2);margin-top:var(--e5)}
+.inclui li{display:flex;gap:10px;align-items:start;font-size:var(--t15)}
+.inclui svg{flex:none;margin-top:4px;color:var(--marca)}
 
-.recursos{list-style:none;padding:0;margin-top:var(--e5);display:grid;gap:var(--e4)}
-.recursos li{display:grid;grid-template-columns:22px 1fr;gap:var(--e3)}
-.recursos svg{margin-top:3px;color:var(--destaque)}
-.recursos p{margin-top:var(--e1);color:var(--texto-suave);font-size:var(--t14)}
+.recursos{list-style:none;padding:0;margin-top:var(--e6);display:grid;grid-template-columns:repeat(3,1fr);gap:var(--e5)}
+.recursos li{background:var(--carta);border:1px solid var(--linha);border-radius:var(--raio);padding:var(--e5)}
+.recursos p{margin-top:var(--e2);color:var(--suave);font-size:var(--t15)}
 
 .faixa{
-  background:var(--fundo-inv);color:var(--texto-inv);border-radius:var(--raio);
-  padding:var(--e7);display:flex;align-items:center;justify-content:space-between;
+  background:var(--tinta);color:var(--fundo);border-radius:calc(var(--raio) + 6px);
+  padding:var(--e8);display:flex;align-items:center;justify-content:space-between;
   gap:var(--e6);flex-wrap:wrap;margin-block:var(--e8);
 }
-.faixa h2{color:var(--branco)}
-.faixa p{color:var(--concreto-400);margin-top:var(--e2);max-width:52ch}
-
-.mais-motos{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--e5);margin-top:var(--e5)}
-
-/* ============================================================
-   12. BARRA FIXA DO CELULAR
-   No site atual a CTA sai da tela ao rolar. Ela é a única
-   conversão que existe; aqui ela fica.
-   ============================================================ */
-.barra-cta{
-  display:none;position:sticky;bottom:0;z-index:11;
-  padding:var(--e3) var(--gutter);
-  background:color-mix(in srgb,var(--fundo) 92%,transparent);
-  backdrop-filter:blur(12px);border-top:1px solid var(--linha);
-}
-.barra-cta .botao{width:100%}
+.faixa h2{color:var(--fundo)}
+.faixa p{color:color-mix(in srgb,var(--fundo) 72%,transparent);margin-top:var(--e2);max-width:52ch}
+.tela[data-tema-ativo='escuro'] .faixa{background:var(--carta);color:var(--tinta);border:1px solid var(--linha)}
+.tela[data-tema-ativo='escuro'] .faixa h2{color:var(--tinta)}
+.tela[data-tema-ativo='escuro'] .faixa p{color:var(--suave)}
 
 /* ============================================================
-   13. DESIGN SYSTEM
-   ============================================================ */
-.ds-cabecalho{padding-block:var(--e8) var(--e6);border-bottom:1px solid var(--linha)}
-.ds-bloco{padding-block:var(--e8);border-bottom:1px solid var(--linha)}
-.ds-bloco:last-child{border-bottom:0}
-.ds-titulo{display:flex;align-items:baseline;gap:var(--e4);flex-wrap:wrap;margin-bottom:var(--e5)}
-.ds-titulo p{color:var(--texto-suave);font-size:var(--t14);max-width:56ch}
-
-.amostras{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:var(--e4)}
-.amostra{border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;background:var(--fundo-alto)}
-.amostra-cor{height:76px}
-.amostra-info{padding:var(--e3);display:grid;gap:2px}
-.amostra-nome{font-weight:640;font-size:var(--t14)}
-.amostra-hex{font-size:var(--t12);color:var(--texto-suave);font-variant-numeric:tabular-nums}
-.selo{
-  display:inline-flex;align-items:center;gap:5px;align-self:start;margin-top:var(--e1);
-  padding:2px 7px;border-radius:100px;font-size:11px;font-weight:640;
-  border:1px solid currentColor;
-}
-.selo-ok{color:#1f7a3d}
-.selo-nao{color:#b3261e}
-.selo-neutro{color:var(--texto-suave)}
-.amostra-cor{box-shadow:inset 0 0 0 1px rgba(20,24,27,.10)}
-.tela[data-tema-ativo='escuro'] .selo-ok{color:#69d68e}
-.tela[data-tema-ativo='escuro'] .selo-nao{color:#ff9b90}
-
-.escala-linha{display:grid;grid-template-columns:64px 1fr;gap:var(--e4);align-items:baseline;padding-block:var(--e3);border-bottom:1px solid var(--linha)}
-.escala-linha:last-child{border-bottom:0}
-.escala-token{font-size:var(--t12);color:var(--texto-suave);font-variant-numeric:tabular-nums}
-.escala-amostra{line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-.espacos{display:grid;gap:var(--e2)}
-.espaco{display:grid;grid-template-columns:64px 1fr;gap:var(--e4);align-items:center}
-.espaco-barra{height:14px;background:var(--ambar);border-radius:2px}
-
-.ds-eixo{display:flex;align-items:center;gap:var(--e4);flex-wrap:wrap;margin-bottom:var(--e4)}
-.ds-eixo input[type='range']{accent-color:var(--ambar);width:min(300px,60%)}
-.ds-especime{
-  font-weight:700;letter-spacing:-.022em;line-height:1;
-  font-size:clamp(2rem,7cqw,4.2rem);
-  padding-block:var(--e4);
-}
-
-.ds-linha-comp{display:flex;gap:var(--e3);flex-wrap:wrap;align-items:center;margin-bottom:var(--e5)}
-.ds-nota{font-size:var(--t14);color:var(--texto-suave);max-width:62ch;margin-top:var(--e3)}
-
-.ds-mov{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:var(--e4)}
-.ds-cartao{border:1px solid var(--linha);border-radius:var(--raio);padding:var(--e4);background:var(--fundo-alto)}
-.ds-cartao h3{font-size:var(--t16);margin-bottom:var(--e1)}
-.ds-cartao p{font-size:var(--t14);color:var(--texto-suave)}
-
-/* ============================================================
-   14. MOVIMENTO
-   Um único movimento não pedido: o painel dá a partida. As
-   leituras acendem em sequência e os números sobem como um
-   odômetro. Todo o resto responde a uma ação da pessoa.
+   15. MOVIMENTO
+   Tudo responde a uma ação e mostra o que mudou. A única coisa
+   que a página inicia sozinha é a entrada do hero.
    ============================================================ */
 @media (prefers-reduced-motion:no-preference){
-  .painel-grade[data-partida='true'] .leitura{animation:acender 520ms var(--curva) both}
-  .painel-grade[data-partida='true'] .leitura:nth-child(2){animation-delay:100ms}
-  .painel-grade[data-partida='true'] .leitura:nth-child(3){animation-delay:200ms}
-  @keyframes acender{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+  .tela-entrando{animation:entrar 260ms var(--curva) both}
+  @keyframes entrar{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-  .tela-entrando{animation:entrar 240ms var(--curva) both}
-  @keyframes entrar{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .hero-grade>*{animation:subir 640ms var(--curva) both}
+  .hero-grade>*:nth-child(2){animation-delay:120ms}
+  @keyframes subir{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 
-  .cartao{transition:border-color 160ms,box-shadow 160ms,transform 260ms var(--curva),opacity 200ms}
+  .duvida[open] .duvida-corpo{animation:abrir 240ms var(--curva) both}
+  @keyframes abrir{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -532,55 +518,47 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
 }
 
 /* ============================================================
-   15. RESPONSIVO — por CONTAINER, não por janela
-   É isso que faz o seletor de largura funcionar de verdade: as
-   regras respondem à largura do .palco, então trocar para
-   "Celular" reflui o layout como o aparelho reflui.
+   16. RESPONSIVO — por CONTAINER
    ============================================================ */
 @container tela (max-width:1080px){
-  .grade,.mais-motos{grid-template-columns:repeat(2,1fr)}
-  .hero-grade{gap:var(--e6);padding-block:var(--e8) var(--e7)}
+  .grade,.recursos,.passos{grid-template-columns:repeat(2,1fr)}
+  .hero-grade{grid-template-columns:1fr;gap:var(--e7);padding-block:calc(var(--e8) + var(--alt-cab)) var(--e8)}
+  .destaque{max-width:420px}
   .ficha-topo{grid-template-columns:1fr;gap:var(--e6)}
+  .contato-carta{grid-template-columns:1fr;gap:var(--e6);padding:var(--e6)}
 }
 
 @container tela (max-width:860px){
   .tela{--gutter:var(--e4)}
   .nav-desk,.cta-cab{display:none}
   .bt-menu{display:inline-flex}
-  .hero-grade{grid-template-columns:1fr;grid-template-areas:'foto' 'texto';padding-block:var(--e6)}
-  .hero-texto{grid-area:texto}
-  .hero-foto{grid-area:foto;aspect-ratio:4/3}
   .secao{padding-block:var(--e8)}
-  .contato-grade{grid-template-columns:1fr;gap:var(--e6);padding-block:var(--e8)}
-  .barra-cta{display:block}
+  .hero-grade{padding-block:calc(var(--e6) + var(--alt-cab)) var(--e7)}
   .faixa{padding:var(--e5)}
+  .zap{right:var(--e4);bottom:var(--e4)}
 }
 
-@container tela (max-width:620px){
-  .grade,.mais-motos{grid-template-columns:1fr}
-  .painel-grade{grid-template-columns:1fr}
-  .leitura{flex-direction:row;align-items:baseline;gap:var(--e3);padding-block:var(--e4)}
-  .leitura+.leitura{border-left:0;border-top:1px solid rgba(255,255,255,.12)}
-  .leitura-valor{font-size:var(--t31)}
-  .leitura-rotulo{margin-left:auto;text-align:right}
-  .ficha-painel{grid-template-columns:1fr}
-  .ficha-painel>div{border-right:0;border-bottom:1px solid var(--linha);display:flex;align-items:baseline;justify-content:space-between;gap:var(--e4)}
-  .ficha-painel>div:last-child{border-bottom:0}
-  .ficha-painel dd{margin-top:0;font-size:var(--t25)}
-  .hero-texto .acoes .botao{width:100%}
-  .escala-linha,.espaco{grid-template-columns:56px 1fr}
+@container tela (max-width:640px){
+  .grade,.recursos,.passos{grid-template-columns:1fr}
+  .destaque{max-width:none}
+  .acoes .botao{width:100%}
+  .specs{grid-template-columns:1fr}
+  .rodape-grade{flex-direction:column;gap:var(--e5)}
+  .duvida summary{padding:var(--e4);font-size:var(--t16)}
+  .duvida-corpo{padding:0 var(--e4) var(--e4)}
+  .cartao-rodape{flex-direction:column;align-items:stretch;gap:var(--e4)}
+  .cartao-rodape .botao{width:100%}
 }
 </style>
 
 <header class="barra">
-  <div class="barra-marca"><span class="losango" aria-hidden="true"></span> Protótipo hi-fi — Vértice Motos</div>
+  <div class="barra-marca"><span class="ponto" aria-hidden="true"></span> Protótipo hi-fi — Vértice Motos</div>
 
   <div class="barra-grupo">
     <span class="barra-rotulo" id="r-tela">Tela</span>
     <div class="seg" role="group" aria-labelledby="r-tela" id="sel-tela">
       <button type="button" data-rota="/" aria-pressed="true">Home</button>
       <button type="button" data-rota="/moto/honda-cg-160" aria-pressed="false">Ficha da moto</button>
-      <button type="button" data-rota="/design-system" aria-pressed="false">Design System</button>
     </div>
   </div>
 
@@ -616,18 +594,14 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
   A moldura escura é a ferramenta; o protótipo é o que está dentro dela. O seletor de
   largura funciona por <code>@container</code>, não por <code>@media</code> — as regras
   respondem à largura do palco, então trocar para Celular reflui o layout do mesmo jeito
-  que o aparelho reflui, sem <code>iframe</code> e sem redimensionar a janela.
-  Este arquivo é autocontido: fonte e imagens vêm embutidas, e ele abre sem rede e sem servidor.
+  que o aparelho reflui, sem <code>iframe</code>. Este arquivo é autocontido: fonte e
+  imagens vêm embutidas, e ele abre sem rede e sem servidor.
 </p>
 
 <script>
 (function () {
   'use strict';
 
-  /* ==========================================================
-     IMAGENS
-     Substituídas por data: URI na geração do arquivo standalone.
-     ========================================================== */
   var IMG = {
     'hero': '__IMG:hero__',
     'cg-160': '__IMG:cg-160__',
@@ -646,183 +620,227 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
 
   /* ==========================================================
      CONTEÚDO
-     Mesma forma do lib/content.ts do site: nenhum texto de
-     marketing escrito dentro de um componente.
+     Mesma forma do lib/content.ts: nenhum texto de marketing
+     escrito dentro de um componente.
      ========================================================== */
   var SITE = {
-    nome: 'Vértice', descritor: 'Motos', nomeCompleto: 'Vértice Motos',
+    nome: 'Vértice', descritor: 'Aluguel de motos',
     telefone: '(00) 00000-0000',
+    cidade: 'Cidade Exemplo',
     endereco: ['Av. Horizonte, 240, Centro', 'Cidade Exemplo, BR'],
     horario: ['Segunda a sexta, 8h às 18h', 'Sábado, 8h às 12h']
   };
 
+  /* Valores ilustrativos. O site real trabalha com "sob consulta";
+     mostrar preço é mudança de postura comercial, não só de
+     layout. Está anotada como decisão pendente no README. */
   var MOTOS = [
     { slug:'honda-cg-160', nome:'Honda CG 160', modelo:'CG 160', categoria:'Urbana',
-      cc:160, cambio:'Manual', foto:'cg-160', frente:'cg-160-front',
-      cor:'vermelha',
-      resumo:'Praticidade para acompanhar o seu dia.',
-      descricao:'Uma escolha versátil para os trajetos do dia a dia. Com postura de pilotagem ereta e porte compacto, a CG 160 é uma opção para quem procura mobilidade na cidade.',
-      combinaCom:'Deslocamentos urbanos e rotina de trabalho.',
+      cc:160, cambio:'Manual', preco:690, estoque:'ok', selo:'Disponível hoje',
+      foto:'cg-160', frente:'cg-160-front', cor:'vermelha',
+      resumo:'A mais pedida para o trajeto de todo dia.',
+      descricao:'Compacta, leve e fácil de manobrar no trânsito parado. É a escolha mais comum de quem aluga para ir e voltar do trabalho e quer gastar pouco com combustível.',
       recursos:[
-        {t:'Porte compacto', d:'Uma proposta prática para circular pela cidade e estacionar em espaço curto.'},
-        {t:'Pilotagem ereta', d:'Uma posição natural para os deslocamentos cotidianos, com boa visão do trânsito.'},
-        {t:'Câmbio manual', d:'Controle das trocas de marcha ao longo do caminho.'}
-      ] },
-    { slug:'honda-bros-160', nome:'Honda Bros 160', modelo:'Bros 160', categoria:'Trail',
-      cc:160, cambio:'Manual', foto:'bros-160', frente:'bros-160-front',
-      cor:'grafite',
-      resumo:'Versatilidade para ir um pouco além.',
-      descricao:'A proposta trail combina uma posição de pilotagem elevada com versatilidade para diferentes trajetos. Uma opção para quem procura uma moto que acompanhe a rotina e novos caminhos.',
-      combinaCom:'Trajetos urbanos e caminhos de piso irregular, conforme as condições da locação.',
-      recursos:[
-        {t:'Perfil trail', d:'Uma configuração versátil para diferentes tipos de piso.'},
-        {t:'Posição elevada', d:'Postura ereta e visão ampla ao pilotar.'},
-        {t:'Rodas raiadas', d:'Um elemento característico da proposta trail ilustrada.'}
-      ] },
-    { slug:'yamaha-fazer-250', nome:'Yamaha Fazer 250', modelo:'Fazer 250', categoria:'Street',
-      cc:250, cambio:'Manual', foto:'fazer-250', frente:'fazer-250-front',
-      cor:'azul-escura',
-      resumo:'Presença e personalidade em cada trajeto.',
-      descricao:'A proposta street reúne porte maior e postura de pilotagem confortável. Uma opção para quem roda mais quilômetros por dia.',
-      combinaCom:'Rotina urbana e percursos mais longos, mediante acordo com a locadora.',
-      recursos:[
-        {t:'Motor de 250 cc', d:'A maior cilindrada do catálogo, para trajetos mais longos.'},
-        {t:'Postura confortável', d:'Uma posição pensada para tempo maior em cima da moto.'},
-        {t:'Porte street', d:'Presença visual sem abrir mão do uso urbano.'}
+        {t:'Leve no trânsito', d:'Peso baixo e raio de giro curto para andar entre carros parados e estacionar em espaço apertado.'},
+        {t:'Econômica', d:'A menor média de consumo do catálogo, o que pesa quando se roda todo dia.'},
+        {t:'Peça fácil', d:'Modelo mais comum do país: manutenção rápida e sem espera por peça.'}
       ] },
     { slug:'yamaha-factor-150', nome:'Yamaha Factor 150', modelo:'Factor 150', categoria:'Urbana',
-      cc:150, cambio:'Manual', foto:'factor-150', frente:'factor-150-front',
-      cor:'prata',
-      resumo:'Sua rotina com mais mobilidade.',
-      descricao:'Uma moto de perfil urbano, pensada para o vai e vem diário. Porte leve e comportamento previsível no trânsito.',
-      combinaCom:'Idas ao trabalho, estudo e compromissos na cidade.',
+      cc:150, cambio:'Manual', preco:650, estoque:'ok', selo:'Disponível hoje',
+      foto:'factor-150', frente:'factor-150-front', cor:'prata',
+      resumo:'A opção mais barata para começar.',
+      descricao:'Perfil urbano, porte leve e comportamento previsível. É a moto de menor valor mensal do catálogo, boa para quem está alugando pela primeira vez.',
       recursos:[
-        {t:'Porte leve', d:'Fácil de manobrar em trânsito parado e em espaço curto.'},
-        {t:'Perfil urbano', d:'Pensada para o trajeto de todo dia, não para a estrada.'},
-        {t:'Câmbio manual', d:'Controle das trocas de marcha ao longo do caminho.'}
+        {t:'Menor mensalidade', d:'O valor mais baixo do catálogo, com as mesmas condições de seguro e manutenção.'},
+        {t:'Fácil de pilotar', d:'Resposta suave, boa para quem tirou a habilitação há pouco tempo.'},
+        {t:'Porte leve', d:'Cabe em vaga apertada e é simples de tirar do cavalete.'}
       ] },
-    { slug:'honda-xre-300', nome:'Honda XRE 300', modelo:'XRE 300', categoria:'Trail',
-      cc:300, cambio:'Manual', foto:'xre-300', frente:'xre-300-front',
-      cor:'verde-oliva',
-      resumo:'Novos caminhos pedem outra perspectiva.',
-      descricao:'Trail de porte maior, com suspensão de curso longo e posição de pilotagem alta. Uma opção para quem sai do asfalto de vez em quando.',
-      combinaCom:'Percursos variados. Confirme os trajetos permitidos com a locadora.',
+    { slug:'honda-bros-160', nome:'Honda Bros 160', modelo:'Bros 160', categoria:'Trail',
+      cc:160, cambio:'Manual', preco:790, estoque:'atencao', selo:'Última unidade',
+      foto:'bros-160', frente:'bros-160-front', cor:'grafite',
+      resumo:'Aguenta rua ruim sem reclamar.',
+      descricao:'Suspensão mais alta e rodas raiadas dão folga para lombada, buraco e rua sem asfalto. Continua sendo moto de cidade, só que sem sofrer no caminho.',
       recursos:[
-        {t:'Suspensão de curso longo', d:'Absorve melhor irregularidade de piso.'},
-        {t:'Posição alta', d:'Visão ampla do trânsito e do caminho à frente.'},
-        {t:'Motor de 300 cc', d:'Fôlego para trechos de estrada dentro do combinado.'}
+        {t:'Suspensão alta', d:'Absorve buraco e lombada sem transmitir tudo para o piloto.'},
+        {t:'Posição elevada', d:'Enxerga o trânsito por cima dos carros, o que ajuda na cidade.'},
+        {t:'Rodas raiadas', d:'Mais resistentes a impacto que rodas de liga, em piso ruim.'}
       ] },
     { slug:'honda-pcx', nome:'Honda PCX', modelo:'PCX', categoria:'Scooter',
-      cc:160, cambio:'Automática', foto:'pcx', frente:'pcx-front',
-      cor:'branca',
-      resumo:'Conforto e praticidade no ritmo da cidade.',
-      descricao:'Scooter de câmbio automático, porta-objetos sob o banco e plataforma para os pés. A opção mais simples de pilotar do catálogo.',
-      combinaCom:'Deslocamentos urbanos com a praticidade de uma scooter.',
+      cc:160, cambio:'Automática', preco:850, estoque:'ok', selo:'Disponível hoje',
+      foto:'pcx', frente:'pcx-front', cor:'branca',
+      resumo:'Sem embreagem, sem marcha, com espaço para o capacete.',
+      descricao:'Câmbio automático, plataforma para os pés e porta-objetos sob o banco. É a mais confortável do catálogo e a mais simples de pilotar em trânsito de para-e-anda.',
       recursos:[
-        {t:'Câmbio automático', d:'Sem embreagem e sem trocas de marcha.'},
-        {t:'Porta-objetos', d:'Espaço sob o banco para capacete ou bagagem pequena.'},
-        {t:'Plataforma para os pés', d:'Posição relaxada, com pernas à frente.'}
+        {t:'Automática', d:'Só acelerar e frear. Nada de embreagem em subida com trânsito.'},
+        {t:'Porta-objetos', d:'Espaço sob o banco para capacete ou uma mochila pequena.'},
+        {t:'Pernas à frente', d:'Postura relaxada, sem apertar o joelho em trajeto longo.'}
+      ] },
+    { slug:'yamaha-fazer-250', nome:'Yamaha Fazer 250', modelo:'Fazer 250', categoria:'Street',
+      cc:250, cambio:'Manual', preco:920, estoque:'ok', selo:'Disponível hoje',
+      foto:'fazer-250', frente:'fazer-250-front', cor:'azul-escura',
+      resumo:'Para quem roda muito quilômetro por dia.',
+      descricao:'Porte maior, motor com mais fôlego e postura confortável. Faz diferença para quem passa horas em cima da moto ou pega trecho de rodovia dentro do combinado.',
+      recursos:[
+        {t:'Fôlego de 250 cc', d:'Ultrapassa e mantém velocidade de rodovia com folga.'},
+        {t:'Menos vibração', d:'Motor maior trabalha mais relaxado, o que cansa menos em trajeto longo.'},
+        {t:'Postura confortável', d:'Guidão e banco pensados para tempo maior de pilotagem.'}
+      ] },
+    { slug:'honda-xre-300', nome:'Honda XRE 300', modelo:'XRE 300', categoria:'Trail',
+      cc:300, cambio:'Manual', preco:990, estoque:'consulta', selo:'Sob encomenda',
+      foto:'xre-300', frente:'xre-300-front', cor:'verde-oliva',
+      resumo:'A maior do catálogo, para sair do asfalto.',
+      descricao:'Trail de porte grande, suspensão de curso longo e posição de pilotagem alta. Pede confirmação de trajeto com a locadora antes de sair da cidade.',
+      recursos:[
+        {t:'Curso longo', d:'A suspensão com maior curso do catálogo, para piso irregular de verdade.'},
+        {t:'Motor de 300 cc', d:'Torque para subida com carga e trecho de estrada.'},
+        {t:'Trajeto combinado', d:'Uso fora do asfalto precisa ser acertado antes com a locadora.'}
       ] }
   ];
 
   var CATEGORIAS = ['Urbana', 'Trail', 'Street', 'Scooter'];
 
+  var INCLUI = [
+    'Seguro contra roubo e colisão',
+    'Manutenção preventiva e revisões',
+    'Documento e licenciamento em dia',
+    'Capacete e baú, se precisar'
+  ];
+
   var PASSOS = [
-    { t:'Escolha o modelo', d:'Compare cilindrada, câmbio e o tipo de trajeto para o qual cada moto foi pensada.' },
-    { t:'Abra a conversa', d:'O botão leva a moto escolhida já escrita na mensagem. Você não precisa explicar de novo qual era.' },
-    { t:'Combine as condições', d:'Prazo, caução, documentação e retirada são acertados direto com a locadora.' }
+    { icone:'moto', t:'Escolha o modelo', d:'Compare cilindrada, câmbio e valor mensal. Cada ficha diz para que tipo de trajeto a moto serve.' },
+    { icone:'conversa', t:'Chame no WhatsApp', d:'A mensagem já vai com a moto escolhida escrita. Você não precisa explicar de novo qual era.' },
+    { icone:'chave', t:'Retire e ande', d:'Levando CNH, comprovante de residência e a caução combinada, a retirada sai no mesmo dia.' }
+  ];
+
+  var DUVIDAS = [
+    { p:'Preciso de CNH definitiva?',
+      r:'Sim, categoria A definitiva e sem suspensão. Permissão provisória não é aceita pelo seguro, e é o seguro que define essa regra, não a locadora.' },
+    { p:'O que está incluso na mensalidade?',
+      r:'Seguro contra roubo e colisão, manutenção preventiva, revisões e documentação em dia. Combustível, multas e avaria por mau uso ficam por sua conta.' },
+    { p:'Qual o prazo mínimo?',
+      r:'Um mês. Períodos menores existem, mas o valor por dia sai bem mais caro — vale conversar antes de fechar.' },
+    { p:'Precisa de caução?',
+      r:'Sim, e o valor muda por modelo. Ela é devolvida na entrega da moto, descontado o que houver de avaria ou multa.' },
+    { p:'Posso usar para trabalhar com entrega?',
+      r:'Pode, e é preciso avisar antes: uso profissional muda o plano de manutenção e a cobertura do seguro. Não avisar é o que costuma dar problema depois.' },
+    { p:'E se a moto quebrar?',
+      r:'Manutenção preventiva e defeito mecânico estão cobertos. Você avisa pelo WhatsApp e a locadora combina o reparo ou a troca do veículo.' }
   ];
 
   /* ==========================================================
      UTILITÁRIOS
      ========================================================== */
-  var $ = function (sel, raiz) { return (raiz || document).querySelector(sel); };
-  var $$ = function (sel, raiz) { return Array.prototype.slice.call((raiz || document).querySelectorAll(sel)); };
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
-  function esc(txt) {
-    return String(txt).replace(/[&<>"]/g, function (c) {
+  function esc(t) {
+    return String(t).replace(/[&<>"]/g, function (c) {
       return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c];
     });
   }
+  var semMovimento = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+  function reais(v) { return 'R$&nbsp;' + v.toLocaleString('pt-BR'); }
 
-  var semMovimento = function () {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ICONES = {
+    check: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>',
+    zap: '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-9.91 9.9c0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.39a9.86 9.86 0 0 0 4.74 1.21h.01a9.9 9.9 0 0 0 9.9-9.9A9.9 9.9 0 0 0 12.04 2Zm5.8 14.06c-.25.69-1.44 1.32-1.99 1.4-.53.08-1.2.11-1.94-.12a17.6 17.6 0 0 1-1.76-.65c-3.1-1.34-5.12-4.46-5.28-4.67-.15-.21-1.26-1.67-1.26-3.19s.8-2.26 1.08-2.57c.28-.31.61-.39.82-.39h.59c.19 0 .44-.7.69.53l.94 2.29c.8.19.13.42.02.68-.12.25-.18.41-.35.63-.17.22-.36.49-.52.66-.17.17-.35.36-.15.7.2.35.89 1.47 1.91 2.38 1.31 1.17 2.42 1.53 2.76 1.7.35.18.55.15.75-.09.2-.24.87-1.01 1.1-1.36.23-.35.46-.29.78-.17.31.12 1.99.94 2.33 1.11.34.17.57.26.65.4.08.15.08.83-.17 1.52Z"/></svg>',
+    zapPequeno: '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-9.91 9.9c0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.39a9.86 9.86 0 0 0 4.74 1.21h.01a9.9 9.9 0 0 0 9.9-9.9A9.9 9.9 0 0 0 12.04 2Zm5.8 14.06c-.25.69-1.44 1.32-1.99 1.4-.53.08-1.2.11-1.94-.12a17.6 17.6 0 0 1-1.76-.65c-3.1-1.34-5.12-4.46-5.28-4.67-.15-.21-1.26-1.67-1.26-3.19s.8-2.26 1.08-2.57c.28-.31.61-.39.82-.39h.59c.19 0 .44-.7.69.53l.94 2.29c.8.19.13.42.02.68-.12.25-.18.41-.35.63-.17.22-.36.49-.52.66-.17.17-.35.36-.15.7.2.35.89 1.47 1.91 2.38 1.31 1.17 2.42 1.53 2.76 1.7.35.18.55.15.75-.09.2-.24.87-1.01 1.1-1.36.23-.35.46-.29.78-.17.31.12 1.99.94 2.33 1.11.34.17.57.26.65.4.08.15.08.83-.17 1.52Z"/></svg>',
+    baixo: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
+    escudo: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>',
+    relogio: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
+    moto: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M8 17h8m-3.5-8H16l3 5M7 9h4l2.5 8M11 9 9.5 6H7"/></svg>',
+    conversa: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-4-1L3 20l1.1-4.4A8.9 8.9 0 0 1 3 11.5 8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5Z"/></svg>',
+    chave: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 8.3-8.3 2 2-2 2 2 2-3 3-2-2-1.5 1.5"/></svg>'
   };
 
-  var CHECK = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>';
-
+  /* ==========================================================
+     PEDAÇOS
+     ========================================================== */
   function marca() {
     return '<a class="marca" data-ir="/" role="link" tabindex="0">' +
-      '<span class="marca-sinal" aria-hidden="true"></span>' +
-      '<span class="marca-nome">' + SITE.nome + ' <i>' + SITE.descritor + '</i></span></a>';
+      '<span class="marca-selo" aria-hidden="true">V</span>' +
+      '<span class="marca-nome">' + SITE.nome + '<i>' + SITE.descritor + '</i></span></a>';
   }
 
-  /* ==========================================================
-     PEDAÇOS DE TELA
-     ========================================================== */
+  function pillEstoque(m) {
+    var classe = m.estoque === 'ok' ? 'pill-ok' : m.estoque === 'atencao' ? 'pill-atencao' : 'pill-neutro';
+    return '<span class="pill ' + classe + '">' + esc(m.selo) + '</span>';
+  }
+
+  /* Todo botão que leva ao WhatsApp é verde e carrega o ícone.
+     Cor e símbolo dizem o mesmo — quem não distingue a cor ainda
+     reconhece o ícone. */
+  function botaoZap(texto, destino, classe) {
+    return '<a class="botao ' + (classe || 'botao-1') + '" data-ir="' + destino + '">' +
+      ICONES.zapPequeno + esc(texto) + '</a>';
+  }
+
   function cabecalho(naFicha) {
     var base = naFicha ? '/' : '';
-    return '<header class="cabecalho"><div class="container cab-int">' + marca() +
+    return '<header class="cabecalho" id="cabecalho"><div class="container cab-int">' + marca() +
       '<nav class="nav-desk" aria-label="Menu principal">' +
-        '<a data-ir="' + base + '#modelos">Modelos</a>' +
+        '<a data-ir="' + base + '#motos">Motos</a>' +
         '<a data-ir="' + base + '#como-funciona">Como funciona</a>' +
+        '<a data-ir="' + base + '#duvidas">Dúvidas</a>' +
         '<a data-ir="' + base + '#contato">Contato</a>' +
       '</nav>' +
-      '<a class="botao botao-1 cta-cab" data-ir="#contato">Falar no WhatsApp</a>' +
+      '<span class="cta-cab">' + botaoZap('Falar no WhatsApp', '#contato') + '</span>' +
       '<button class="bt-menu" type="button" aria-expanded="false" aria-controls="gaveta">' +
         '<span class="sr">Abrir menu</span>' +
-        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>' +
       '</button>' +
-      '</div></header>' + gaveta(base);
-  }
-
-  function gaveta(base) {
-    return '<div class="gaveta" id="gaveta" data-aberta="false">' +
-      '<button class="gaveta-fundo" type="button" tabindex="-1" aria-hidden="true"></button>' +
-      '<div class="gaveta-painel" role="dialog" aria-label="Menu">' +
-        '<div class="gaveta-topo"><span class="marca-nome">Menu</span>' +
-          '<button class="bt-menu" type="button" data-fechar><span class="sr">Fechar menu</span>' +
-          '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
-        '</div>' +
-        '<nav aria-label="Menu do celular">' +
-          '<a data-ir="' + base + '#modelos">Modelos</a>' +
-          '<a data-ir="' + base + '#como-funciona">Como funciona</a>' +
-          '<a data-ir="' + base + '#contato">Contato</a>' +
-        '</nav>' +
-        '<a class="botao botao-1" data-ir="#contato">Falar no WhatsApp</a>' +
-      '</div></div>';
+      '</div></header>' +
+      '<div class="gaveta" id="gaveta" data-aberta="false">' +
+        '<button class="gaveta-fundo" type="button" tabindex="-1" aria-hidden="true"></button>' +
+        '<div class="gaveta-painel" role="dialog" aria-label="Menu">' +
+          '<div class="gaveta-topo">' + marca() +
+            '<button class="bt-menu" type="button" data-fechar style="display:inline-flex"><span class="sr">Fechar menu</span>' +
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
+          '</div>' +
+          '<nav aria-label="Menu do celular">' +
+            '<a data-ir="' + base + '#motos">Motos</a>' +
+            '<a data-ir="' + base + '#como-funciona">Como funciona</a>' +
+            '<a data-ir="' + base + '#duvidas">Dúvidas</a>' +
+            '<a data-ir="' + base + '#contato">Contato</a>' +
+          '</nav>' + botaoZap('Falar no WhatsApp', '#contato') +
+        '</div></div>';
   }
 
   function rodape() {
     return '<footer class="rodape"><div class="container">' +
       '<div class="rodape-grade">' + marca() +
-      '<nav aria-label="Navegação do rodapé">' +
-        '<a data-ir="/#modelos">Modelos</a>' +
-        '<a data-ir="/#como-funciona">Como funciona</a>' +
-        '<a data-ir="/#contato">Contato</a>' +
-        '<a data-ir="/design-system">Design System</a>' +
-      '</nav></div>' +
-      '<p class="aviso">Protótipo de design. Empresa, contatos e imagens são ilustrativos, e nenhum botão envia mensagem de verdade.</p>' +
+        '<nav aria-label="Navegação do rodapé">' +
+          '<a data-ir="/#motos">Motos</a>' +
+          '<a data-ir="/#como-funciona">Como funciona</a>' +
+          '<a data-ir="/#duvidas">Dúvidas</a>' +
+          '<a data-ir="/#contato">Contato</a>' +
+        '</nav>' +
+      '</div>' +
+      '<p class="aviso">Protótipo de design. Empresa, contatos, valores e imagens são ilustrativos; nenhum botão envia mensagem de verdade.</p>' +
       '</div></footer>';
   }
 
-  function barraCta(texto) {
-    return '<div class="barra-cta"><a class="botao botao-1" data-ir="#contato">' + esc(texto) + '</a></div>';
+  function zapFlutuante() {
+    return '<button class="zap" type="button" data-ir="#contato">' +
+      '<span class="sr">Falar no WhatsApp</span>' + ICONES.zap + '</button>';
   }
 
-  function cartao(moto) {
-    return '<article class="cartao" data-categoria="' + moto.categoria + '" data-slug="' + moto.slug + '">' +
-      '<div class="cartao-foto"><img src="' + IMG[moto.foto] + '" alt="Moto ' +
-        esc(moto.categoria.toLowerCase()) + ' ' + esc(moto.cor) + ' inspirada na ' + esc(moto.nome) + '." ' +
-        'width="1024" height="683" loading="lazy"></div>' +
+  function cartao(m) {
+    return '<article class="cartao" data-categoria="' + m.categoria + '" data-slug="' + m.slug + '">' +
+      '<div class="cartao-topo">' +
+        '<img src="' + IMG[m.foto] + '" alt="Moto ' + esc(m.categoria.toLowerCase()) + ' ' + esc(m.cor) +
+          ' inspirada na ' + esc(m.nome) + '." width="1024" height="683" loading="lazy">' +
+        '<div class="cartao-pills">' + pillEstoque(m) + '</div>' +
+      '</div>' +
       '<div class="cartao-corpo">' +
-        '<p class="cartao-cat">' + moto.categoria + '</p>' +
-        '<h3><a data-ir="/moto/' + moto.slug + '">' + esc(moto.nome) + '</a></h3>' +
-        '<dl class="mini">' +
-          '<dd class="numero">' + moto.cc + '<span class="unidade"> cc</span></dd><dt>cilindrada</dt>' +
-          '<dd class="numero">' + moto.cambio + '</dd><dt>câmbio</dt>' +
-        '</dl>' +
-        '<a class="link" data-ir="/moto/' + moto.slug + '">Ver ficha</a>' +
+        '<p class="cartao-local">' + m.categoria + ' · ' + SITE.cidade + '</p>' +
+        '<h3><a data-ir="/moto/' + m.slug + '">' + esc(m.nome) + '</a></h3>' +
+        '<p class="cartao-specs">' + m.cc + ' cc · Câmbio ' + m.cambio.toLowerCase() + '</p>' +
+        '<div class="cartao-rodape">' +
+          '<div><div class="preco"><span class="preco-valor">' + reais(m.preco) + '</span></div>' +
+          '<span class="preco-nota">por mês, valor ilustrativo</span></div>' +
+          '<span class="botao botao-fantasma" role="link" tabindex="0" data-ir="/moto/' + m.slug + '">Ver ficha</span>' +
+        '</div>' +
       '</div></article>';
   }
 
@@ -830,327 +848,167 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
      TELA: HOME
      ========================================================== */
   function telaHome() {
-    var ccs = MOTOS.map(function (m) { return m.cc; });
+    var destaque = MOTOS[0];
 
-    return cabecalho(false) +
-      '<main id="conteudo">' +
-      '<section class="hero"><div class="container hero-grade">' +
-        '<div class="hero-texto">' +
-          '<h1 class="display">A moto que resolve o seu trajeto.</h1>' +
-          '<p class="chamada">Seis modelos para aluguel mensal. Você escolhe o que combina com o seu dia; prazo, caução e documentação a gente acerta na conversa.</p>' +
-          '<div class="acoes">' +
-            '<a class="botao botao-1" data-ir="#modelos">Ver os modelos</a>' +
-            '<a class="botao botao-2" data-ir="#como-funciona">Como funciona</a>' +
+    return cabecalho(false) + '<main id="conteudo">' +
+
+      '<section class="hero" style="margin-top:calc(var(--alt-cab) * -1)">' +
+        '<div class="hero-foto"><img src="' + IMG.hero + '" alt="" width="1672" height="941"></div>' +
+        '<div class="hero-veu"></div>' +
+        '<div class="container hero-grade">' +
+          '<div>' +
+            '<h1>Alugue sua moto por mês, sem financiamento.</h1>' +
+            '<p class="chamada">Motos de 150 a 300 cc em ' + SITE.cidade + ', com seguro, manutenção e documento em dia. Você escolhe o modelo e combina o resto pelo WhatsApp.</p>' +
+            '<div class="acoes">' + botaoZap('Falar no WhatsApp', '#contato') +
+              '<a class="botao botao-3" data-ir="#motos">Ver as motos</a>' +
+            '</div>' +
+            '<p class="confianca">' +
+              '<span>' + ICONES.escudo + '<strong>Seguro e manutenção</strong> inclusos</span>' +
+              '<span>' + ICONES.relogio + '<strong>Retirada no mesmo dia</strong> com CNH categoria A</span>' +
+            '</p>' +
           '</div>' +
-        '</div>' +
-        '<div class="hero-foto"><img src="' + IMG.hero + '" alt="Moto urbana preta estacionada numa garagem de concreto iluminada pelo sol." width="1672" height="941"></div>' +
-      '</div>' +
-      '<div class="painel"><div class="container"><dl class="painel-grade" id="painel">' +
-        leitura([MOTOS.length], '', 'modelos disponíveis') +
-        leitura([Math.min.apply(null, ccs), Math.max.apply(null, ccs)], 'cc', 'faixa de cilindrada') +
-        leitura([CATEGORIAS.length], '', 'categorias no catálogo') +
-      '</dl></div></div></section>' +
 
-      '<section class="secao container" id="modelos">' +
-        '<div class="secao-topo">' +
-          '<h2 class="display">Modelos disponíveis</h2>' +
-          '<p class="chamada">Filtre por categoria para ver o que serve ao seu tipo de trajeto.</p>' +
+          '<article class="destaque">' +
+            '<div class="destaque-foto">' +
+              '<img src="' + IMG[destaque.foto] + '" alt="Moto urbana vermelha inspirada na Honda CG 160." width="1024" height="683">' +
+            '</div>' +
+            '<div class="destaque-corpo">' +
+              '<div class="destaque-pills">' + pillEstoque(destaque) +
+                '<span class="pill pill-neutro">' + ICONES.check + ' Capacete incluso</span></div>' +
+              '<p class="destaque-local">' + destaque.categoria + ' · ' + SITE.cidade + '</p>' +
+              '<h3>' + esc(destaque.nome) + '</h3>' +
+              '<p class="destaque-specs">' + destaque.cc + ' cc · Câmbio ' + destaque.cambio.toLowerCase() + '</p>' +
+              '<div class="preco"><span class="preco-valor">' + reais(destaque.preco) + '</span>' +
+                '<span class="preco-nota">por mês, valor ilustrativo</span></div>' +
+            '</div>' +
+          '</article>' +
         '</div>' +
-        '<div class="filtro" role="group" aria-label="Filtrar modelos por categoria">' +
+      '</section>' +
+
+      '<section class="secao container" id="motos">' +
+        '<div class="secao-topo"><div><h2>Motos disponíveis</h2>' +
+        '<p class="chamada">Seis modelos, do mais econômico ao mais parrudo. Filtre pelo tipo de trajeto que você faz.</p></div></div>' +
+        '<div class="filtro" role="group" aria-label="Filtrar motos por categoria">' +
           '<button type="button" data-cat="todas" aria-pressed="true">Todas</button>' +
           CATEGORIAS.map(function (c) {
             return '<button type="button" data-cat="' + c + '" aria-pressed="false">' + c + '</button>';
           }).join('') +
         '</div>' +
-        '<p class="contagem" role="status">' + MOTOS.length + ' modelos nesta categoria.</p>' +
+        '<p class="contagem" role="status">' + MOTOS.length + ' motos nesta categoria.</p>' +
         '<div class="grade" id="grade">' + MOTOS.map(cartao).join('') + '</div>' +
       '</section>' +
 
       '<section class="secao container" id="como-funciona">' +
-        '<h2 class="display">Como funciona</h2>' +
-        '<p class="chamada" style="margin-bottom:var(--e6)">Três passos, e o terceiro acontece fora do site.</p>' +
-        '<ol class="passos">' + PASSOS.map(function (p, i) {
-          return '<li><span class="passo-n numero" aria-hidden="true">' + (i + 1) + '</span>' +
-            '<div><h3>' + esc(p.t) + '</h3><p>' + esc(p.d) + '</p></div></li>';
-        }).join('') + '</ol>' +
+        '<div class="secao-topo"><div><h2>Como funciona</h2>' +
+        '<p class="chamada">Três passos, e o terceiro acontece na loja.</p></div></div>' +
+        '<div class="passos">' + PASSOS.map(function (p) {
+          return '<div class="passo"><div class="passo-icone">' + ICONES[p.icone] + '</div>' +
+            '<h3>' + esc(p.t) + '</h3><p>' + esc(p.d) + '</p></div>';
+        }).join('') + '</div>' +
       '</section>' +
 
-      '<section class="contato" id="contato"><div class="container contato-grade">' +
-        '<div><h2 class="display">Conte qual moto combina com você</h2>' +
-        '<p class="chamada">A conversa começa no WhatsApp e continua com a locadora. Sem cadastro, sem formulário.</p>' +
-        '<div class="acoes"><a class="botao botao-1" data-ir="#contato">Falar no WhatsApp</a></div></div>' +
-        '<dl class="dados">' +
-          '<div><dt>WhatsApp e telefone</dt><dd>' + SITE.telefone + '</dd></div>' +
-          '<div><dt>Onde estamos</dt><dd><address>' + SITE.endereco.join('<br>') + '</address></dd></div>' +
-          '<div><dt>Horário de atendimento</dt><dd>' + SITE.horario.join('<br>') + '</dd></div>' +
-        '</dl>' +
-      '</div></section>' +
-      '</main>' + rodape() + barraCta('Falar no WhatsApp');
-  }
+      '<section class="secao container" id="duvidas">' +
+        '<div class="secao-topo"><div><h2>Dúvidas</h2>' +
+        '<p class="chamada">O que mais perguntam antes de fechar.</p></div></div>' +
+        '<div class="duvidas">' + DUVIDAS.map(function (d) {
+          return '<details class="duvida"><summary>' + esc(d.p) + ICONES.baixo + '</summary>' +
+            '<div class="duvida-corpo">' + esc(d.r) + '</div></details>';
+        }).join('') + '</div>' +
+      '</section>' +
 
-  /* Aceita um valor ou uma faixa. Cada número vira um <span> próprio
-     para o odômetro poder subir os dois ao mesmo tempo. */
-  function leitura(valores, unidade, rotulo) {
-    var numeros = valores.map(function (v) {
-      return '<span data-conta="' + v + '">0</span>';
-    }).join('<span aria-hidden="true">–</span>');
+      '<section class="secao container" id="contato">' +
+        '<div class="contato-carta">' +
+          '<div><h2>Fale com a gente</h2>' +
+          '<p class="chamada">Diga qual moto te interessou e a gente responde com valor, disponibilidade e o que precisa levar na retirada.</p>' +
+          '<div class="acoes">' + botaoZap('Falar no WhatsApp', '#contato') + '</div></div>' +
+          '<dl class="dados">' +
+            '<div><dt>WhatsApp e telefone</dt><dd>' + SITE.telefone + '</dd></div>' +
+            '<div><dt>Onde estamos</dt><dd><address>' + SITE.endereco.join('<br>') + '</address></dd></div>' +
+            '<div><dt>Horário de atendimento</dt><dd>' + SITE.horario.join('<br>') + '</dd></div>' +
+          '</dl>' +
+        '</div>' +
+      '</section>' +
 
-    return '<div class="leitura">' +
-      '<dd class="leitura-valor numero">' + numeros +
-        (unidade ? '<span class="unidade"> ' + unidade + '</span>' : '') + '</dd>' +
-      '<dt class="leitura-rotulo">' + rotulo + '</dt></div>';
+      '</main>' + rodape() + zapFlutuante();
   }
 
   /* ==========================================================
      TELA: FICHA DA MOTO
      ========================================================== */
   function telaMoto(slug) {
-    var moto = MOTOS.filter(function (m) { return m.slug === slug; })[0] || MOTOS[0];
-    var outras = MOTOS.filter(function (m) { return m.slug !== moto.slug; }).slice(0, 3);
+    var m = MOTOS.filter(function (x) { return x.slug === slug; })[0] || MOTOS[0];
+    var outras = MOTOS.filter(function (x) { return x.slug !== m.slug; }).slice(0, 3);
 
     var fotos = [
-      { chave: moto.foto, alt: 'Vista lateral de uma moto ' + moto.categoria.toLowerCase() + ' ' + moto.cor + ' inspirada na ' + moto.nome + '.', legenda: 'Vista lateral. Imagem ilustrativa; o modelo real pode apresentar diferenças.' },
-      { chave: moto.frente, alt: 'Vista frontal de uma moto ' + moto.categoria.toLowerCase() + ' ' + moto.cor + ' inspirada na ' + moto.nome + '.', legenda: 'Vista frontal. Imagem ilustrativa; o modelo real pode apresentar diferenças.' }
+      { chave:m.foto, alt:'Vista lateral de uma moto ' + m.categoria.toLowerCase() + ' ' + m.cor + ' inspirada na ' + m.nome + '.', legenda:'Vista lateral. Imagem ilustrativa; o modelo real pode apresentar diferenças.' },
+      { chave:m.frente, alt:'Vista frontal de uma moto ' + m.categoria.toLowerCase() + ' ' + m.cor + ' inspirada na ' + m.nome + '.', legenda:'Vista frontal. Imagem ilustrativa; o modelo real pode apresentar diferenças.' }
     ];
 
-    return cabecalho(true) +
-      '<main id="conteudo"><div class="container">' +
-      '<nav class="trilha" aria-label="Localização"><a data-ir="/#modelos">Modelos</a>' +
-      '<span aria-hidden="true"> / </span><span aria-current="page">' + esc(moto.nome) + '</span></nav>' +
+    return cabecalho(true) + '<main id="conteudo"><div class="container">' +
+      '<nav class="trilha" aria-label="Localização"><a data-ir="/#motos">Motos</a>' +
+      '<span aria-hidden="true"> / </span><span aria-current="page">' + esc(m.nome) + '</span></nav>' +
 
       '<section class="ficha-topo">' +
         '<div>' +
           '<div class="galeria">' + fotos.map(function (f, i) {
             return '<img src="' + IMG[f.chave] + '" alt="' + esc(f.alt) + '" data-ativa="' + (i === 0) + '" width="1024" height="683">';
           }).join('') + '</div>' +
-          '<div class="minis" role="group" aria-label="Fotos da ' + esc(moto.nome) + '">' +
+          '<div class="minis" role="group" aria-label="Fotos da ' + esc(m.nome) + '">' +
             fotos.map(function (f, i) {
-              return '<button type="button" aria-pressed="' + (i === 0) + '" data-foto="' + i + '" data-legenda="' + esc(f.legenda) + '">' +
+              return '<button type="button" aria-pressed="' + (i === 0) + '" data-legenda="' + esc(f.legenda) + '">' +
                 '<span class="sr">' + (i === 0 ? 'Ver a vista lateral' : 'Ver a vista frontal') + '</span>' +
                 '<img src="' + IMG[f.chave] + '" alt="" width="150" height="100"></button>';
-            }).join('') +
-          '</div>' +
+            }).join('') + '</div>' +
           '<p class="legenda" id="legenda">' + esc(fotos[0].legenda) + '</p>' +
         '</div>' +
 
         '<div>' +
-          '<p class="cartao-cat">' + moto.categoria + '</p>' +
-          '<h1 class="display">' + esc(moto.nome) + '</h1>' +
-          '<p class="chamada">' + esc(moto.resumo) + '</p>' +
-          '<dl class="ficha-painel">' +
-            '<div><dt>Cilindrada nominal</dt><dd class="numero">' + moto.cc + '<span class="unidade"> cc</span></dd></div>' +
-            '<div><dt>Câmbio</dt><dd class="numero">' + moto.cambio + '</dd></div>' +
-            '<div><dt>Categoria</dt><dd class="numero">' + moto.categoria + '</dd></div>' +
-          '</dl>' +
-          '<p class="corrido">' + esc(moto.descricao) + '</p>' +
-          '<div class="acoes"><a class="botao botao-1" data-ir="#consulta">Consultar esta moto</a></div>' +
-          '<p class="legenda" style="margin-top:var(--e4)">Ficha ilustrativa, com cilindrada nominal. Ano, versão, equipamentos e condições são confirmados com a locadora.</p>' +
+          '<p class="cartao-local">' + m.categoria + ' · ' + SITE.cidade + '</p>' +
+          '<h1>' + esc(m.nome) + '</h1>' +
+          '<p class="chamada">' + esc(m.resumo) + '</p>' +
+
+          '<div class="oferta" style="margin-top:var(--e5)">' +
+            '<div class="oferta-pills">' + pillEstoque(m) +
+              '<span class="pill pill-neutro">' + ICONES.check + ' Capacete incluso</span></div>' +
+            '<div class="preco" style="margin-top:0"><span class="preco-valor">' + reais(m.preco) + '</span>' +
+              '<span class="preco-nota">por mês, valor ilustrativo</span></div>' +
+            '<dl class="specs">' +
+              '<div><dt>Cilindrada</dt><dd>' + m.cc + ' cc</dd></div>' +
+              '<div><dt>Câmbio</dt><dd>' + m.cambio + '</dd></div>' +
+              '<div><dt>Categoria</dt><dd>' + m.categoria + '</dd></div>' +
+              '<div><dt>Prazo mínimo</dt><dd>1 mês</dd></div>' +
+            '</dl>' +
+            '<div class="acoes" style="margin-top:0">' + botaoZap('Consultar esta moto', '#consulta') + '</div>' +
+            '<ul class="inclui">' + INCLUI.map(function (i) {
+              return '<li>' + ICONES.check + '<span>' + esc(i) + '</span></li>';
+            }).join('') + '</ul>' +
+          '</div>' +
+
+          '<p class="legenda">Ficha ilustrativa. Ano, versão, equipamentos, caução e condições são confirmados com a locadora.</p>' +
         '</div>' +
       '</section>' +
 
-      '<section style="padding-block:var(--e7);border-top:1px solid var(--linha)">' +
-        '<h2 class="display">Conheça a moto</h2>' +
-        '<p class="chamada">Combina com ' + esc(moto.combinaCom.charAt(0).toLowerCase() + moto.combinaCom.slice(1)) + '</p>' +
-        '<ul class="recursos corrido">' + moto.recursos.map(function (r) {
-          return '<li>' + CHECK + '<div><h3>' + esc(r.t) + '</h3><p>' + esc(r.d) + '</p></div></li>';
+      '<section style="padding-bottom:var(--e8)">' +
+        '<h2>Para que ela serve</h2>' +
+        '<p class="chamada">' + esc(m.descricao) + '</p>' +
+        '<ul class="recursos">' + m.recursos.map(function (r) {
+          return '<li><h3>' + esc(r.t) + '</h3><p>' + esc(r.d) + '</p></li>';
         }).join('') + '</ul>' +
       '</section>' +
 
       '<section class="faixa" id="consulta">' +
-        '<div><h2 class="display">Gostou da ' + esc(moto.modelo) + '?</h2>' +
-        '<p>A mensagem já vai com o modelo escrito. Valores, disponibilidade, documentação e prazo são combinados na conversa.</p></div>' +
-        '<a class="botao botao-3" data-ir="#consulta">Falar no WhatsApp</a>' +
+        '<div><h2>Gostou da ' + esc(m.modelo) + '?</h2>' +
+        '<p>A mensagem já vai com o modelo escrito. Valor, disponibilidade, caução e documentação são combinados na conversa.</p></div>' +
+        botaoZap('Falar no WhatsApp', '#consulta') +
       '</section>' +
 
       '<section style="padding-bottom:var(--e8)">' +
-        '<h2 class="display">Outros modelos</h2>' +
-        '<div class="mais-motos">' + outras.map(cartao).join('') + '</div>' +
+        '<div class="secao-topo"><div><h2>Outras motos</h2>' +
+        '<p class="chamada">Se essa não for a sua, talvez uma dessas seja.</p></div></div>' +
+        '<div class="grade">' + outras.map(cartao).join('') + '</div>' +
       '</section>' +
 
-      '</div></main>' + rodape() + barraCta('Consultar a ' + moto.modelo);
-  }
-
-  /* ==========================================================
-     TELA: DESIGN SYSTEM
-     Os contrastes abaixo não são digitados à mão: são calculados
-     na hora, pela fórmula da WCAG. Documentação que mente é pior
-     que documentação que falta.
-     ========================================================== */
-  function lum(hex) {
-    var n = hex.replace('#', '');
-    var c = [0, 2, 4].map(function (i) {
-      var v = parseInt(n.substr(i, 2), 16) / 255;
-      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-    });
-    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
-  }
-  function contraste(a, b) {
-    var la = lum(a), lb = lum(b);
-    return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
-  }
-  /* O selo só julga o que é TEXTO. Medir uma cor de fundo contra ela
-     mesma dá 1:1 e não quer dizer nada; medir uma borda pelo critério
-     de texto acusa um defeito que não existe. Cada papel é avaliado
-     pelo que de fato se exige dele. */
-  function seloDeTexto(cor, fundo) {
-    var r = contraste(cor, fundo);
-    var ok = r >= 4.5;
-    return '<span class="selo ' + (ok ? 'selo-ok' : 'selo-nao') + '">' +
-      r.toFixed(2) + ':1 · ' + (r >= 7 ? 'AAA' : ok ? 'AA' : 'reprova como texto') + '</span>';
-  }
-  function seloNeutro(texto) {
-    return '<span class="selo selo-neutro">' + texto + '</span>';
-  }
-  function seloDaCor(c, fundo) {
-    if (c.papel === 'texto') return seloDeTexto(c.v, fundo);
-    if (c.papel === 'preenchimento') {
-      var r = contraste('#14181b', c.v);
-      return '<span class="selo ' + (r >= 4.5 ? 'selo-ok' : 'selo-nao') + '">' +
-        r.toFixed(2) + ':1 · com tinta por cima</span>';
-    }
-    if (c.papel === 'linha') return seloNeutro(contraste(c.v, fundo).toFixed(2) + ':1 · separação, não texto');
-    return seloNeutro('base da medição');
-  }
-
-  function telaDesignSystem() {
-    var fundo = '#f3f6f3';
-
-    var cores = [
-      { n:'--tinta', v:'#14181b', u:'Texto principal', papel:'texto' },
-      { n:'--asfalto-500', v:'#4a545c', u:'Texto secundário', papel:'texto' },
-      { n:'--ambar-tinta', v:'#7a5100', u:'Texto em cor de destaque', papel:'texto' },
-      { n:'--ambar', v:'#ffb300', u:'Preenchimento de botão. Nunca texto.', papel:'preenchimento' },
-      { n:'--concreto-200', v:'#d5dad8', u:'Bordas e divisores', papel:'linha' },
-      { n:'--concreto-50', v:'#f3f6f3', u:'Fundo da página', papel:'fundo' }
-    ];
-
-    var escala = [
-      ['--t61','3.8125rem','61px'], ['--t49','3.0625rem','49px'], ['--t39','2.4375rem','39px'],
-      ['--t31','1.9375rem','31px'], ['--t25','1.5625rem','25px'], ['--t20','1.25rem','20px'],
-      ['--t16','1rem','16px'], ['--t14','.875rem','14px'], ['--t12','.75rem','12px']
-    ];
-
-    var espacos = [['--e1',4],['--e2',8],['--e3',12],['--e4',16],['--e5',24],['--e6',32],['--e7',48],['--e8',64],['--e9',96]];
-
-    return cabecalho(true) +
-      '<main id="conteudo"><div class="container">' +
-
-      '<div class="ds-cabecalho">' +
-        '<h1 class="display">Design System</h1>' +
-        '<p class="chamada">Os tokens que sustentam as duas telas. Todo número aqui é medido, não estimado — os contrastes são calculados nesta página pela fórmula da WCAG.</p>' +
-      '</div>' +
-
-      /* --- Cor --- */
-      '<section class="ds-bloco">' +
-        '<div class="ds-titulo"><h2 class="display">Cor</h2>' +
-        '<p>Concreto e asfalto como base. Âmbar de seta como destaque — a cor do pisca, e não o laranja genérico.</p></div>' +
-        '<div class="amostras">' + cores.map(function (c) {
-          return '<div class="amostra">' +
-            '<div class="amostra-cor" style="background:' + c.v + '"></div>' +
-            '<div class="amostra-info">' +
-              '<span class="amostra-nome">' + c.n + '</span>' +
-              '<span class="amostra-hex">' + c.v + ' · ' + c.u + '</span>' +
-              seloDaCor(c, fundo) +
-            '</div></div>';
-        }).join('') + '</div>' +
-        '<p class="ds-nota"><strong>Por que existem dois âmbares.</strong> O selo acima mede cada cor como <em>texto</em> sobre o fundo claro. O âmbar puro dá ' +
-        contraste('#ffb300', fundo).toFixed(2) + ':1 e reprova; o âmbar-tinta dá ' +
-        contraste('#7a5100', fundo).toFixed(2) + ':1 e passa. Mas o âmbar puro como <em>preenchimento</em>, com tinta por cima, dá ' +
-        contraste('#14181b', '#ffb300').toFixed(2) + ':1. Por isso <code>--ambar</code> preenche e <code>--ambar-tinta</code> escreve. ' +
-        'A borda fica em ' + contraste('#d5dad8', fundo).toFixed(2) + ':1 e por isso não leva selo de texto: borda é separação visual, não informação. Se precisasse ser lida, seria texto.</p>' +
-      '</section>' +
-
-      /* --- Tipografia --- */
-      '<section class="ds-bloco">' +
-        '<div class="ds-titulo"><h2 class="display">Tipografia</h2>' +
-        '<p>Archivo variável, uma família só, em dois ajustes bem distintos. O display abre o eixo de largura; o texto fica na largura normal.</p></div>' +
-
-        '<div class="ds-eixo">' +
-          '<label for="eixo">Eixo de largura (<code>wdth</code>): <strong id="eixo-valor">112</strong></label>' +
-          '<input type="range" id="eixo" min="75" max="125" value="112" step="1">' +
-        '</div>' +
-        '<div class="ds-especime" id="especime" style="font-variation-settings:\'wdth\' 112">Cilindrada 160 cc</div>' +
-        '<p class="ds-nota">Arraste. Letra alargada é vocabulário de placa e de sinalização — está no display por isso, não por enfeite. Em 75 a mesma frase vira ficha técnica; em 125, sinalização de rodovia.</p>' +
-
-        '<div style="margin-top:var(--e6)">' + escala.map(function (e) {
-          return '<div class="escala-linha">' +
-            '<span class="escala-token">' + e[0] + '<br>' + e[2] + '</span>' +
-            '<span class="escala-amostra display" style="font-size:var(' + e[0] + ')">Vértice Motos</span></div>';
-        }).join('') + '</div>' +
-        '<p class="ds-nota">Razão 1,25 — terça maior. Nove degraus cobrem da legenda ao título de hero sem que ninguém precise inventar um tamanho no meio do caminho.</p>' +
-      '</section>' +
-
-      /* --- Espaçamento --- */
-      '<section class="ds-bloco">' +
-        '<div class="ds-titulo"><h2 class="display">Espaçamento</h2>' +
-        '<p>Base 4. Fecha o vocabulário: se o valor que você quer não está aqui, provavelmente o layout é que está errado.</p></div>' +
-        '<div class="espacos">' + espacos.map(function (e) {
-          return '<div class="espaco"><span class="escala-token">' + e[0] + ' · ' + e[1] + '</span>' +
-            '<span class="espaco-barra" style="width:' + e[1] + 'px"></span></div>';
-        }).join('') + '</div>' +
-      '</section>' +
-
-      /* --- Componentes --- */
-      '<section class="ds-bloco">' +
-        '<div class="ds-titulo"><h2 class="display">Componentes</h2>' +
-        '<p>Cada um com os estados que precisam existir. Passe o mouse, use o Tab, clique.</p></div>' +
-
-        '<h3 style="margin-bottom:var(--e3)">Botões</h3>' +
-        '<div class="ds-linha-comp">' +
-          '<button class="botao botao-1" type="button">Falar no WhatsApp</button>' +
-          '<button class="botao botao-2" type="button">Como funciona</button>' +
-          '<span class="link" role="link" tabindex="0">Ver ficha</span>' +
-        '</div>' +
-
-        '<h3 style="margin-bottom:var(--e3)">Chips de filtro</h3>' +
-        '<div class="filtro" style="margin-bottom:var(--e5)" id="ds-filtro">' +
-          '<button type="button" aria-pressed="true">Todas</button>' +
-          '<button type="button" aria-pressed="false">Urbana</button>' +
-          '<button type="button" aria-pressed="false">Trail</button>' +
-        '</div>' +
-        '<p class="ds-nota" style="margin-top:0">O selecionado ganha fundo <em>e</em> marca de conferido. Estado nunca é comunicado só por cor — quem não distingue as duas cores ainda vê o ✓.</p>' +
-
-        '<h3 style="margin:var(--e6) 0 var(--e3)">Painel</h3>' +
-        '<div class="painel" style="border-radius:var(--raio);overflow:hidden"><dl class="painel-grade">' +
-          '<div class="leitura"><dd class="leitura-valor numero">160<span class="unidade"> cc</span></dd><dt class="leitura-rotulo">cilindrada</dt></div>' +
-          '<div class="leitura"><dd class="leitura-valor numero">Manual</dd><dt class="leitura-rotulo">câmbio</dt></div>' +
-          '<div class="leitura"><dd class="leitura-valor numero">Urbana</dd><dt class="leitura-rotulo">categoria</dt></div>' +
-        '</dl></div>' +
-        '<p class="ds-nota">O elemento assinatura, em três escalas: faixa sob o hero, mini-painel do cartão e ficha técnica. Algarismos tabulares para 160 e 250 alinharem em coluna.</p>' +
-
-        '<h3 style="margin:var(--e6) 0 var(--e3)">Cartão</h3>' +
-        '<div style="max-width:360px">' + cartao(MOTOS[0]) + '</div>' +
-      '</section>' +
-
-      /* --- Movimento --- */
-      '<section class="ds-bloco">' +
-        '<div class="ds-titulo"><h2 class="display">Movimento</h2>' +
-        '<p>Um único movimento não pedido pela pessoa. Todo o resto responde a uma ação e mostra o que mudou.</p></div>' +
-        '<div class="ds-mov">' +
-          '<div class="ds-cartao"><h3>Partida do painel</h3><p>520 ms, escalonado em 100 ms. As leituras acendem e os números sobem como um odômetro — é o cluster da moto na ignição. É o único movimento que a página inicia sozinha.</p></div>' +
-          '<div class="ds-cartao"><h3>Troca de tela</h3><p>240 ms, sobe 8 px. Curto o bastante para não atrasar, longo o bastante para mostrar que a tela trocou.</p></div>' +
-          '<div class="ds-cartao"><h3>Filtro do catálogo</h3><p>Os cartões que continuam deslizam para a posição nova em 260 ms; os que saem encolhem e somem. Sem isso, filtrar parece um piscar.</p></div>' +
-          '<div class="ds-cartao"><h3>Curva única</h3><p><code>cubic-bezier(.22,.61,.36,1)</code> em tudo que responde a toque: saída rápida, chegada calma.</p></div>' +
-        '</div>' +
-        '<p class="ds-nota"><strong>Tudo isso desliga.</strong> Todo o movimento vive dentro de <code>prefers-reduced-motion: no-preference</code>, e há um bloco <code>reduce</code> que zera animação e transição. Movimento involuntário provoca náusea e enxaqueca em quem tem desordem vestibular — não é preferência estética.</p>' +
-      '</section>' +
-
-      '<section class="ds-bloco">' +
-        '<div class="ds-titulo"><h2 class="display">Acessibilidade</h2>' +
-        '<p>O que já está de pé nas duas telas.</p></div>' +
-        '<ul class="recursos corrido">' +
-          ['Uma <code>h1</code> por tela, e hierarquia de heading sem pular nível.',
-           'Toda imagem com <code>alt</code> descritivo; <code>alt=""</code> nas decorativas, como as miniaturas cujo rótulo já está no botão.',
-           'Todo ícone com <code>aria-hidden</code>. Ícone é decoração; o significado está no texto ao lado.',
-           'Estado com <code>aria-pressed</code> e <code>aria-expanded</code>, trocados na mesma linha em que a cor muda.',
-           '<code>width</code> e <code>height</code> em toda imagem, contra pulo de layout.',
-           'Anel de foco visível em tudo que recebe Tab, com 3 px e afastamento.',
-           'Alvos de toque com no mínimo 48 px de altura.'
-          ].map(function (t) { return '<li>' + CHECK + '<div><p style="margin:0;color:var(--texto)">' + t + '</p></div></li>'; }).join('') +
-        '</ul>' +
-      '</section>' +
-
-      '</div></main>' + rodape();
+      '</div></main>' + rodape() + zapFlutuante();
   }
 
   /* ==========================================================
@@ -1158,33 +1016,29 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
      Sem hash e sem history: o arquivo abre por file:// e a
      navegação é estado em memória.
      ========================================================== */
-  var telaEl = $('#tela');
-  var palcoEl = $('#palco');
-  var rotaAtual = '/';
+  var telaEl = $('#tela'), palcoEl = $('#palco'), rotaAtual = '/';
 
   function render(rota, ancora) {
     rotaAtual = rota;
-    var html;
-    if (rota === '/design-system') html = telaDesignSystem();
-    else if (rota.indexOf('/moto/') === 0) html = telaMoto(rota.slice(6));
-    else html = telaHome();
+    var temHero = rota.indexOf('/moto/') !== 0;
+    var html = temHero ? telaHome() : telaMoto(rota.slice(6));
+    telaEl.dataset.hero = String(temHero);
 
     telaEl.innerHTML = '<a class="sr" href="#conteudo">Pular para o conteúdo</a>' + html;
     telaEl.classList.remove('tela-entrando');
-    void telaEl.offsetWidth;           /* força o reinício da animação */
+    void telaEl.offsetWidth;
     if (!semMovimento()) telaEl.classList.add('tela-entrando');
 
     ligarTela();
     sincronizarBarra();
 
-    if (ancora) irParaAncora(ancora);
-    else palcoEl.scrollTop = 0;
+    if (ancora) irParaAncora(ancora); else palcoEl.scrollTop = 0;
   }
 
   function irParaAncora(id) {
     var alvo = telaEl.querySelector('#' + id);
     if (!alvo) return;
-    var topo = alvo.getBoundingClientRect().top - palcoEl.getBoundingClientRect().top + palcoEl.scrollTop - 80;
+    var topo = alvo.getBoundingClientRect().top - palcoEl.getBoundingClientRect().top + palcoEl.scrollTop - 92;
     palcoEl.scrollTo({ top: topo, behavior: semMovimento() ? 'auto' : 'smooth' });
   }
 
@@ -1197,10 +1051,9 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
   }
 
   /* ==========================================================
-     LIGAÇÕES DE CADA TELA
+     LIGAÇÕES
      ========================================================== */
   function ligarTela() {
-    /* Navegação interna */
     telaEl.addEventListener('click', function (ev) {
       var alvo = ev.target.closest('[data-ir]');
       if (!alvo) return;
@@ -1219,11 +1072,9 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
     ligarGaveta();
     ligarFiltro();
     ligarGaleria();
-    ligarPainel();
-    ligarEixo();
+    ligarCabecalho();
   }
 
-  /* --- Gaveta --- */
   var gavetaEl, btMenu;
   function fecharGaveta() { if (gavetaEl) definirGaveta(false); }
   function definirGaveta(aberta) {
@@ -1242,31 +1093,32 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
       if (ev.target.closest('.gaveta-fundo,[data-fechar],a')) definirGaveta(false);
     });
   }
-  document.addEventListener('keydown', function (ev) {
-    if (ev.key === 'Escape') fecharGaveta();
-  });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') fecharGaveta(); });
 
-  /* --- Filtro com FLIP ---
-     First-Last-Invert-Play: mede onde cada cartão está, muda o
-     DOM, mede de novo, e anima a diferença. É o que faz os
-     cartões que permanecem DESLIZAREM para a posição nova em vez
-     de saltarem. */
+  /* Cabeçalho ganha borda ao rolar — mostra que virou barra fixa. */
+  function ligarCabecalho() {
+    var cab = $('#cabecalho', telaEl);
+    if (!cab) return;
+    var atualizar = function () { cab.dataset.rolou = String(palcoEl.scrollTop > 8); };
+    palcoEl.onscroll = atualizar;
+    atualizar();
+  }
+
+  /* Filtro com FLIP: mede onde cada cartão está, muda o DOM, mede
+     de novo e anima a diferença. É o que faz os cartões que ficam
+     DESLIZAREM para a posição nova em vez de saltarem. */
   function ligarFiltro() {
-    var filtro = telaEl.querySelector('#modelos .filtro');
-    var grade = $('#grade', telaEl);
+    var filtro = telaEl.querySelector('#motos .filtro'), grade = $('#grade', telaEl);
     if (!filtro || !grade) return;
 
-    var cartoes = $$('.cartao', grade);
-    var contagem = telaEl.querySelector('#modelos .contagem');
+    var cartoes = $$('.cartao', grade), contagem = telaEl.querySelector('#motos .contagem');
 
     filtro.addEventListener('click', function (ev) {
       var bt = ev.target.closest('button');
       if (!bt) return;
       var cat = bt.getAttribute('data-cat');
 
-      $$('button', filtro).forEach(function (b) {
-        b.setAttribute('aria-pressed', String(b === bt));
-      });
+      $$('button', filtro).forEach(function (b) { b.setAttribute('aria-pressed', String(b === bt)); });
 
       var antes = cartoes.map(function (c) { return c.getBoundingClientRect(); });
 
@@ -1279,9 +1131,7 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
       });
 
       if (contagem) {
-        contagem.textContent = visiveis === 1
-          ? '1 modelo nesta categoria.'
-          : visiveis + ' modelos nesta categoria.';
+        contagem.textContent = visiveis === 1 ? '1 moto nesta categoria.' : visiveis + ' motos nesta categoria.';
       }
 
       if (semMovimento()) return;
@@ -1289,28 +1139,20 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
       cartoes.forEach(function (c, i) {
         if (c.hidden) return;
         var depois = c.getBoundingClientRect();
-        var dx = antes[i].left - depois.left;
-        var dy = antes[i].top - depois.top;
+        var dx = antes[i].left - depois.left, dy = antes[i].top - depois.top;
         if (!dx && !dy) return;
         c.style.transition = 'none';
         c.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
-        requestAnimationFrame(function () {
-          c.style.transition = '';
-          c.style.transform = '';
-        });
+        requestAnimationFrame(function () { c.style.transition = ''; c.style.transform = ''; });
       });
     });
   }
 
-  /* --- Galeria --- */
   function ligarGaleria() {
-    var minis = $('.minis', telaEl);
-    var galeria = $('.galeria', telaEl);
+    var minis = $('.minis', telaEl), galeria = $('.galeria', telaEl);
     if (!minis || !galeria) return;
 
-    var fotos = $$('img', galeria);
-    var botoes = $$('button', minis);
-    var legenda = $('#legenda', telaEl);
+    var fotos = $$('img', galeria), botoes = $$('button', minis), legenda = $('#legenda', telaEl);
 
     function selecionar(i) {
       if (!botoes[i]) return;
@@ -1328,68 +1170,15 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
       var passo = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0;
       if (!passo) return;
       ev.preventDefault();
-      var atual = botoes.indexOf(ev.target.closest('button'));
-      selecionar((atual + passo + botoes.length) % botoes.length);
-    });
-  }
-
-  /* --- Partida do painel ---
-     As leituras acendem em sequência e os números sobem. É o
-     cluster da moto na ignição, e é o único movimento que a
-     página inicia por conta própria. */
-  function ligarPainel() {
-    var painel = $('#painel', telaEl);
-    if (!painel) return;
-
-    if (semMovimento()) {
-      $$('[data-conta]', painel).forEach(function (el) {
-        el.textContent = el.getAttribute('data-conta');
-      });
-      return;
-    }
-
-    painel.dataset.partida = 'true';
-    $$('[data-conta]', painel).forEach(function (el) {
-      var alvo = Number(el.getAttribute('data-conta'));
-      /* O atraso segue a leitura a que o número pertence, não a ordem
-         do span — senão os dois lados de uma faixa sobem defasados. */
-      var leituraEl = el.closest('.leitura');
-      var atraso = 100 * $$('.leitura', painel).indexOf(leituraEl);
-      var inicio = null;
-      var duracao = 760;
-
-      function passo(t) {
-        if (inicio === null) inicio = t;
-        var p = Math.min(1, Math.max(0, (t - inicio - atraso) / duracao));
-        /* Desaceleração: o odômetro chega devagar, não freia seco. */
-        var suave = 1 - Math.pow(1 - p, 3);
-        el.textContent = String(Math.round(alvo * suave));
-        if (p < 1) requestAnimationFrame(passo);
-      }
-      requestAnimationFrame(passo);
-    });
-  }
-
-  /* --- Eixo de largura do Design System --- */
-  function ligarEixo() {
-    var eixo = $('#eixo', telaEl);
-    var especime = $('#especime', telaEl);
-    var valor = $('#eixo-valor', telaEl);
-    if (!eixo || !especime) return;
-    eixo.addEventListener('input', function () {
-      especime.style.fontVariationSettings = "'wdth' " + eixo.value;
-      if (valor) valor.textContent = eixo.value;
+      selecionar((botoes.indexOf(ev.target.closest('button')) + passo + botoes.length) % botoes.length);
     });
   }
 
   /* ==========================================================
-     CROMO: largura e tema
+     CROMO
      ========================================================== */
-  var moldura = $('#moldura');
-  var medida = $('#medida');
-  var larguraAtual = 'cheia';
-  var temaAtual = 'sistema';
-
+  var moldura = $('#moldura'), medida = $('#medida');
+  var larguraAtual = 'cheia', temaAtual = 'sistema';
   var mqEscuro = window.matchMedia('(prefers-color-scheme: dark)');
 
   function aplicarTema(animar) {
@@ -1417,40 +1206,28 @@ h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
   }
 
   function marcarSeg(grupo, escolhido) {
-    $$('button', grupo).forEach(function (b) {
-      b.setAttribute('aria-pressed', String(b === escolhido));
-    });
+    $$('button', grupo).forEach(function (b) { b.setAttribute('aria-pressed', String(b === escolhido)); });
   }
 
   function sincronizarBarra() {
-    var grupo = $('#sel-tela');
-    $$('button', grupo).forEach(function (b) {
+    $$('button', $('#sel-tela')).forEach(function (b) {
       var r = b.getAttribute('data-rota');
-      var casa = r === rotaAtual || (r.indexOf('/moto/') === 0 && rotaAtual.indexOf('/moto/') === 0);
-      b.setAttribute('aria-pressed', String(casa));
+      b.setAttribute('aria-pressed', String(r === rotaAtual || (r.indexOf('/moto/') === 0 && rotaAtual.indexOf('/moto/') === 0)));
     });
   }
 
   $('#sel-tela').addEventListener('click', function (ev) {
-    var b = ev.target.closest('button'); if (!b) return;
-    navegar(b.getAttribute('data-rota'));
+    var b = ev.target.closest('button'); if (b) navegar(b.getAttribute('data-rota'));
   });
-
   $('#sel-largura').addEventListener('click', function (ev) {
     var b = ev.target.closest('button'); if (!b) return;
-    larguraAtual = b.getAttribute('data-largura');
-    marcarSeg(this, b);
-    aplicarLargura();
+    larguraAtual = b.getAttribute('data-largura'); marcarSeg(this, b); aplicarLargura();
   });
-
   $('#sel-tema').addEventListener('click', function (ev) {
     var b = ev.target.closest('button'); if (!b) return;
-    temaAtual = b.getAttribute('data-tema');
-    marcarSeg(this, b);
-    aplicarTema(true);
+    temaAtual = b.getAttribute('data-tema'); marcarSeg(this, b); aplicarTema(true);
   });
 
-  /* Partida */
   aplicarLargura();
   render('/');
   aplicarTema(false);

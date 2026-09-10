@@ -170,15 +170,18 @@ Uma direção visual foi prototipada em HTML puro, em `prototipos/`. Rode
 `node prototipos/gerar-standalone.mjs` e abra o arquivo que ele produz: **um
 arquivo só**, com fonte e imagens embutidas, que troca entre celular, tablet e
 desktop, entre claro e escuro, e onde as interações funcionam de verdade.
-Inclui uma tela de Design System que calcula os contrastes na hora.
 
-A proposta em uma linha: **o vocabulário de painel de instrumentos.** Uma moto
-informa por números grandes e legíveis sob sol forte; a página passa a fazer o
-mesmo, em três escalas — a faixa sob o hero, o mini-painel de cada cartão e a
-ficha técnica.
+A proposta em uma linha: **site de negócio local, não de estúdio de design.**
+Foto sangrando com o cabeçalho flutuando por cima, carta de oferta com preço
+visível, selos de confiança, badges de disponibilidade, seção de dúvidas e
+WhatsApp flutuante. A referência é
+[dwimoveisjp.vercel.app](https://dwimoveisjp.vercel.app).
 
-O raciocínio completo, com os contrastes medidos e o que muda em relação ao site
-atual, está em [`../prototipos/README.md`](../prototipos/README.md).
+Uma cor de marca só, e verde por motivo funcional: a única conversão do site é
+WhatsApp, então o botão já diz para onde leva. `#0E7A3C` dá 5,43:1 com branco por
+cima e 5,02:1 como texto — os dois papéis num token.
+
+O raciocínio completo está em [`../prototipos/README.md`](../prototipos/README.md).
 
 ---
 
