@@ -1,0 +1,1460 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vértice Motos — Design System &amp; Protótipo hi-fi</title>
+  </head>
+  <body>
+<style>
+/* ============================================================
+   FONTE EMBUTIDA
+   Archivo variável, subconjunto latino. Vem dentro do arquivo em
+   base64: o protótipo abre sem rede, sem CDN e sem servidor.
+   ============================================================ */
+@font-face{
+  font-family:'Archivo';
+  font-style:normal;
+  font-weight:100 900;
+  font-stretch:62% 125%;
+  font-display:swap;
+  src:url(__FONTE__) format('woff2');
+}
+
+/* ============================================================
+   1. TOKENS
+   Direção: painel de instrumentos. Uma moto informa por números
+   grandes, legíveis a 60 km/h e sob sol forte. A página faz igual.
+   ============================================================ */
+:root{
+  /* Concreto e asfalto — cinzas frios. O bege quente virou o padrão
+     de toda página gerada, e não é a cor de rua nenhuma. */
+  --tinta:#14181b;
+  --asfalto-900:#171c20;
+  --asfalto-800:#1f262b;
+  --asfalto-700:#2b3238;
+  --asfalto-500:#4a545c;
+  --concreto-400:#9ba5a9;
+  --concreto-200:#d5dad8;
+  --concreto-100:#e9edea;
+  --concreto-50:#f3f6f3;
+  --branco:#fff;
+
+  /* Âmbar de seta. Dois tokens, e a razão é medida, não gosto:
+     #ffb300 como TEXTO no fundo claro dá 1,65:1 e reprova em AA.
+     Como PREENCHIMENTO com tinta por cima dá 9,95:1 e passa. */
+  --ambar:#ffb300;
+  --ambar-forte:#e09b00;
+  --ambar-tinta:#7a5100;
+
+  --fundo:var(--concreto-50);
+  --fundo-alto:var(--branco);
+  --fundo-inv:var(--asfalto-900);
+  --texto:var(--tinta);
+  --texto-suave:var(--asfalto-500);
+  --texto-inv:var(--concreto-100);
+  --linha:var(--concreto-200);
+  --linha-forte:var(--concreto-400);
+  --destaque:var(--ambar-tinta);
+  --sombra:0 1px 2px rgba(20,24,27,.04),0 8px 24px -12px rgba(20,24,27,.18);
+
+  /* Escala tipográfica, razão 1,25 */
+  --t12:.75rem; --t14:.875rem; --t16:1rem; --t20:1.25rem;
+  --t25:1.5625rem; --t31:1.9375rem; --t39:2.4375rem;
+  --t49:3.0625rem; --t61:3.8125rem;
+
+  /* Escala de espaçamento, base 4 */
+  --e1:4px; --e2:8px; --e3:12px; --e4:16px; --e5:24px;
+  --e6:32px; --e7:48px; --e8:64px; --e9:96px;
+
+  --raio:3px;
+  --largura:1240px;
+  --gutter:var(--e5);
+
+  /* Movimento. Uma curva só para tudo que responde a toque:
+     saída rápida, chegada calma. */
+  --mov:200ms;
+  --curva:cubic-bezier(.22,.61,.36,1);
+
+  color-scheme:light;
+}
+
+[data-tema='escuro'],
+:root[data-tema='sistema'] .palco[data-sistema-escuro='true']{ }
+
+.tela[data-tema-ativo='escuro']{
+  --fundo:var(--asfalto-900);
+  --fundo-alto:var(--asfalto-800);
+  --fundo-inv:#0e1215;
+  --texto:var(--concreto-100);
+  --texto-suave:var(--concreto-400);
+  --texto-inv:var(--concreto-100);
+  --linha:#2f373d;
+  --linha-forte:#47525a;
+  --destaque:var(--ambar);
+  --sombra:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+/* ============================================================
+   2. CROMO DO PROTÓTIPO
+   Propositalmente diferente do site: quem olha precisa saber a
+   todo momento o que é moldura e o que é a tela avaliada.
+   ============================================================ */
+body{
+  margin:0;
+  background:#0c0f12;
+  color:#e6eae8;
+  font-family:Archivo,system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:14px;
+  min-height:100vh;
+  display:grid;
+  grid-template-rows:auto 1fr;
+}
+
+.barra{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  padding:12px 18px;
+  background:#151b20;
+  border-bottom:1px solid #262f36;
+  position:sticky;top:0;z-index:20;
+}
+.barra-marca{
+  display:flex;align-items:center;gap:9px;margin-right:auto;
+  font-variation-settings:'wdth' 116;font-weight:700;font-size:15px;
+}
+.losango{
+  width:12px;height:12px;background:var(--ambar);
+  clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+}
+.barra-grupo{display:flex;align-items:center;gap:7px}
+.barra-rotulo{color:#8d989e;font-size:11px}
+
+.seg{display:flex;border:1px solid #2b353c;border-radius:7px;overflow:hidden}
+.seg button{
+  min-height:34px;padding:6px 12px;
+  background:transparent;color:#9aa5ab;border:0;
+  border-right:1px solid #2b353c;
+  font:inherit;font-size:12.5px;cursor:pointer;
+  transition:background-color 140ms,color 140ms;
+}
+.seg button:last-child{border-right:0}
+.seg button:hover{color:#e6eae8;background:#1c242a}
+.seg button[aria-pressed='true']{background:var(--ambar);color:#14181b;font-weight:650}
+.seg button:focus-visible{outline:2px solid var(--ambar);outline-offset:-2px}
+
+.medida{color:#8d989e;font-variant-numeric:tabular-nums;font-size:11.5px;min-width:76px}
+
+/* Palco: o container que define a largura da tela avaliada.
+   container-type faz os @container abaixo dispararem pela largura
+   DESTE elemento, não da janela. É o que permite testar celular
+   sem iframe e sem redimensionar o navegador. */
+.palco-area{
+  padding:22px;overflow:auto;
+  display:grid;place-items:start center;
+  background:repeating-linear-gradient(45deg,#101519 0 11px,#0e1316 11px 22px);
+}
+.moldura{
+  background:#000;border-radius:16px;padding:9px;
+  box-shadow:0 30px 70px rgba(0,0,0,.55);
+  transition:width var(--mov) var(--curva);
+}
+.moldura[data-largura='cheia']{background:transparent;padding:0;border-radius:8px;box-shadow:none}
+
+.palco{
+  container-type:inline-size;
+  container-name:tela;
+  overflow-y:auto;overflow-x:hidden;
+  border-radius:9px;
+  background:var(--fundo);
+}
+.moldura[data-largura='cheia'] .palco{border-radius:8px}
+
+.nota-rodape{
+  padding:0 22px 22px;color:#8d989e;max-width:80ch;line-height:1.6;font-size:12.5px;
+}
+.nota-rodape code{color:#cfd6d9}
+
+@media (max-width:760px){
+  .barra-marca{width:100%;margin-right:0}
+  .medida{display:none}
+}
+
+/* ============================================================
+   3. BASE DA TELA
+   ============================================================ */
+.tela{
+  background:var(--fundo);
+  color:var(--texto);
+  font-size:var(--t16);
+  line-height:1.55;
+  min-height:100%;
+  font-synthesis-weight:none;
+  -webkit-font-smoothing:antialiased;
+}
+/* A troca de tema só anima quando a pessoa clica. Sem esta guarda,
+   a página inteira faz uma transição de cor ao carregar. */
+.tela.animar-tema,.tela.animar-tema *{
+  transition:background-color 260ms var(--curva),color 260ms var(--curva),border-color 260ms var(--curva);
+}
+
+.tela img{max-width:100%;display:block}
+.tela a{color:inherit}
+.tela h1,.tela h2,.tela h3,.tela p,.tela dl,.tela dd,.tela ol,.tela ul{margin:0}
+
+.tela :where(button,a,input,select,summary):focus-visible{
+  outline:3px solid var(--ambar);outline-offset:2px;border-radius:var(--raio);
+}
+
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+.container{width:min(100% - (var(--gutter) * 2),var(--largura));margin-inline:auto}
+
+/* ============================================================
+   4. TIPOGRAFIA
+   O display abre o eixo de largura da Archivo em 112. Letra
+   alargada é vocabulário de placa e de sinalização — está aqui
+   por isso, não por enfeite.
+   ============================================================ */
+.display{
+  font-variation-settings:'wdth' 112;
+  font-weight:700;letter-spacing:-.022em;line-height:1.03;
+  text-wrap:balance;
+}
+h1.display{font-size:clamp(2.25rem,6.2cqw,var(--t61))}
+h2.display{font-size:clamp(1.75rem,4.2cqw,var(--t39))}
+.tela h3{font-size:var(--t20);font-weight:650;letter-spacing:-.012em;line-height:1.25}
+
+.chamada{font-size:var(--t20);color:var(--texto-suave);max-width:46ch;margin-top:var(--e4);line-height:1.5}
+.corrido{max-width:62ch}
+
+.numero{font-variant-numeric:tabular-nums;font-variation-settings:'wdth' 108;font-weight:700;letter-spacing:-.03em}
+.unidade{font-size:.5em;font-weight:500;letter-spacing:0;color:var(--texto-suave)}
+
+/* ============================================================
+   5. BOTÕES
+   ============================================================ */
+.botao{
+  display:inline-flex;align-items:center;justify-content:center;gap:var(--e2);
+  min-height:48px;padding:var(--e3) var(--e5);
+  border:2px solid transparent;border-radius:var(--raio);
+  font:inherit;font-weight:620;font-size:var(--t16);
+  text-decoration:none;cursor:pointer;
+  transition:background-color 140ms,border-color 140ms,color 140ms,transform 90ms var(--curva);
+}
+.botao:active{transform:scale(.978)}
+.botao-1{background:var(--ambar);color:var(--tinta)}
+.botao-1:hover{background:var(--ambar-forte)}
+.botao-2{background:transparent;color:var(--texto);border-color:var(--linha-forte)}
+.botao-2:hover{border-color:var(--texto)}
+.botao-3{background:var(--branco);color:var(--tinta)}
+.botao-3:hover{background:var(--concreto-100)}
+
+.link{
+  display:inline-block;color:var(--destaque);font-weight:620;text-decoration:none;
+  border-bottom:2px solid currentColor;padding-bottom:1px;
+  transition:color 140ms;
+}
+.link:hover{color:var(--texto)}
+
+/* ============================================================
+   6. CABEÇALHO DO SITE
+   ============================================================ */
+.cabecalho{
+  position:sticky;top:0;z-index:12;
+  background:color-mix(in srgb,var(--fundo) 86%,transparent);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--linha);
+}
+.cab-int{display:flex;align-items:center;gap:var(--e5);height:72px}
+.marca{display:flex;align-items:center;gap:var(--e3);text-decoration:none;margin-right:auto;cursor:pointer}
+.marca-sinal{width:15px;height:15px;background:var(--ambar);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);flex:none}
+.marca-nome{font-variation-settings:'wdth' 116;font-weight:700;font-size:var(--t20);line-height:1}
+.marca-nome i{font-style:normal;color:var(--texto-suave);font-weight:500}
+
+.nav-desk{display:flex;gap:var(--e5)}
+.nav-desk a{
+  text-decoration:none;font-weight:520;font-size:var(--t14);color:var(--texto-suave);
+  padding-block:var(--e2);border-bottom:2px solid transparent;cursor:pointer;
+  transition:color 140ms,border-color 140ms;
+}
+.nav-desk a:hover{color:var(--texto);border-bottom-color:var(--ambar)}
+
+.bt-menu{
+  display:none;align-items:center;justify-content:center;
+  width:48px;height:48px;background:none;color:inherit;
+  border:1px solid var(--linha-forte);border-radius:var(--raio);cursor:pointer;
+}
+
+/* Gaveta */
+.gaveta{position:absolute;inset:0;z-index:30;display:grid;grid-template-columns:1fr min(320px,84%);visibility:hidden;overflow:hidden}
+.gaveta[data-aberta='true']{visibility:visible}
+.gaveta-fundo{background:rgba(8,11,13,.55);opacity:0;transition:opacity var(--mov);border:0;padding:0;cursor:pointer}
+.gaveta[data-aberta='true'] .gaveta-fundo{opacity:1}
+.gaveta-painel{
+  background:var(--fundo-alto);border-left:1px solid var(--linha);
+  padding:var(--e5);display:flex;flex-direction:column;gap:var(--e5);
+  transform:translateX(100%);transition:transform 260ms var(--curva);
+  overflow-y:auto;
+}
+.gaveta[data-aberta='true'] .gaveta-painel{transform:none}
+.gaveta-topo{display:flex;align-items:center;justify-content:space-between}
+.gaveta nav{display:flex;flex-direction:column}
+.gaveta nav a{text-decoration:none;font-size:var(--t20);font-weight:600;padding-block:var(--e4);border-bottom:1px solid var(--linha);cursor:pointer}
+
+/* ============================================================
+   7. HERO E PAINEL
+   ============================================================ */
+.hero{border-bottom:1px solid var(--linha)}
+.hero-grade{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:var(--e8);align-items:center;padding-block:var(--e9) var(--e8)}
+.acoes{display:flex;flex-wrap:wrap;gap:var(--e3);margin-top:var(--e6)}
+.hero-foto{position:relative;border-radius:2px;overflow:hidden;background:var(--concreto-100);aspect-ratio:16/10}
+.hero-foto img{width:100%;height:100%;object-fit:cover}
+
+.painel{background:var(--fundo-inv);color:var(--texto-inv)}
+.painel-grade{display:grid;grid-template-columns:repeat(3,1fr)}
+.leitura{padding:var(--e5);display:flex;flex-direction:column;gap:var(--e1)}
+.leitura+.leitura{border-left:1px solid rgba(255,255,255,.12)}
+.leitura-valor{font-size:var(--t39);line-height:1;color:var(--branco)}
+.leitura-rotulo{font-size:var(--t14);color:var(--concreto-400)}
+
+/* ============================================================
+   8. SEÇÕES, FILTRO E CATÁLOGO
+   ============================================================ */
+.secao{padding-block:var(--e9)}
+.secao+.secao{padding-top:0}
+.secao-topo{margin-bottom:var(--e6)}
+
+.filtro{display:flex;gap:var(--e2);flex-wrap:wrap}
+.filtro button{
+  min-height:40px;padding:var(--e2) var(--e4);
+  background:transparent;color:var(--texto-suave);
+  border:1px solid var(--linha-forte);border-radius:100px;
+  font:inherit;font-size:var(--t14);font-weight:560;cursor:pointer;
+  transition:background-color 140ms,color 140ms,border-color 140ms,transform 90ms var(--curva);
+}
+.filtro button:hover{color:var(--texto);border-color:var(--texto)}
+.filtro button:active{transform:scale(.96)}
+/* Selecionado nunca só por cor: entra a marca de conferido. */
+.filtro button[aria-pressed='true']{background:var(--texto);color:var(--fundo);border-color:var(--texto)}
+.filtro button[aria-pressed='true']::before{content:'✓ '}
+.contagem{font-size:var(--t14);color:var(--texto-suave);margin-top:var(--e4)}
+
+.grade{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--e5);margin-top:var(--e5)}
+
+.cartao{
+  display:flex;flex-direction:column;
+  background:var(--fundo-alto);
+  border:1px solid var(--linha);border-radius:var(--raio);
+  overflow:hidden;
+  transition:border-color 160ms,box-shadow 160ms,transform 160ms var(--curva);
+}
+.cartao:hover{border-color:var(--linha-forte);box-shadow:var(--sombra);transform:translateY(-2px)}
+.cartao-foto{background:var(--concreto-100);aspect-ratio:3/2;overflow:hidden}
+.cartao-foto img{width:100%;height:100%;object-fit:cover;transition:transform 420ms var(--curva)}
+.cartao:hover .cartao-foto img{transform:scale(1.035)}
+.cartao-corpo{padding:var(--e4) var(--e4) var(--e5);display:flex;flex-direction:column;gap:var(--e3);flex:1}
+.cartao-cat{font-size:var(--t14);color:var(--texto-suave)}
+.cartao h3 a{text-decoration:none;cursor:pointer}
+.cartao h3 a:hover{color:var(--destaque)}
+
+.mini{display:grid;grid-template-columns:auto auto;gap:var(--e1) var(--e5);padding-block:var(--e3);margin-block:auto var(--e1);border-block:1px solid var(--linha);justify-content:start}
+.mini dt{font-size:var(--t12);color:var(--texto-suave);grid-row:2}
+.mini dd{font-size:var(--t25);grid-row:1}
+
+/* Saída do cartão ao filtrar. A entrada é feita pelo FLIP no JS. */
+.cartao.saindo{opacity:0;transform:scale(.94);pointer-events:none}
+
+/* ============================================================
+   9. PASSOS
+   ============================================================ */
+.passos{list-style:none;padding:0;max-width:62ch}
+.passos li{display:grid;grid-template-columns:40px 1fr;gap:var(--e4);padding-bottom:var(--e6);position:relative}
+.passos li:last-child{padding-bottom:0}
+.passos li:not(:last-child)::before{content:'';position:absolute;left:19px;top:34px;bottom:6px;width:2px;background:var(--linha)}
+.passo-n{
+  width:40px;height:40px;border-radius:50%;
+  border:2px solid var(--linha-forte);background:var(--fundo);
+  display:grid;place-items:center;
+  font-variant-numeric:tabular-nums;font-weight:700;
+  position:relative;z-index:1;
+}
+.passos p{margin-top:var(--e1);color:var(--texto-suave)}
+
+/* ============================================================
+   10. CONTATO E RODAPÉ
+   ============================================================ */
+.contato{background:var(--fundo-alto);border-block:1px solid var(--linha)}
+.contato-grade{display:grid;grid-template-columns:1.1fr 1fr;gap:var(--e8);padding-block:var(--e9)}
+.dados{display:grid;gap:var(--e5);align-content:start}
+.dados>div{display:grid;gap:var(--e1)}
+.dados dt{font-size:var(--t14);color:var(--texto-suave)}
+.dados dd,.dados address{font-size:var(--t20);font-weight:560;font-style:normal}
+
+.rodape{padding-block:var(--e7);font-size:var(--t14);color:var(--texto-suave)}
+.rodape-grade{display:flex;gap:var(--e5);justify-content:space-between;flex-wrap:wrap}
+.rodape nav{display:flex;gap:var(--e4);flex-wrap:wrap}
+.rodape a{text-decoration:none;cursor:pointer}
+.rodape a:hover{color:var(--texto);text-decoration:underline}
+.aviso{margin-top:var(--e5);padding-top:var(--e4);border-top:1px solid var(--linha);max-width:68ch}
+
+/* ============================================================
+   11. FICHA DA MOTO
+   ============================================================ */
+.trilha{padding-block:var(--e5);font-size:var(--t14);color:var(--texto-suave)}
+.trilha a{text-decoration:none;cursor:pointer}
+.trilha a:hover{text-decoration:underline}
+
+.ficha-topo{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:var(--e8);padding-bottom:var(--e8)}
+.galeria{position:relative;background:var(--concreto-100);border-radius:2px;overflow:hidden;aspect-ratio:3/2}
+/* As duas fotos ficam empilhadas e trocam por opacidade: sem pulo
+   de layout e sem recarregar imagem. */
+.galeria img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 300ms var(--curva)}
+.galeria img[data-ativa='true']{opacity:1}
+.minis{display:flex;gap:var(--e2);margin-top:var(--e2)}
+.minis button{
+  flex:1;padding:0;background:var(--concreto-100);cursor:pointer;
+  border:2px solid transparent;border-radius:2px;overflow:hidden;aspect-ratio:3/2;
+  transition:border-color 160ms,opacity 160ms;opacity:.62;
+}
+.minis button:hover{opacity:1}
+.minis button[aria-pressed='true']{border-color:var(--ambar);opacity:1}
+.legenda{font-size:var(--t12);color:var(--texto-suave);margin-top:var(--e3)}
+
+.ficha-painel{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--linha);border-radius:var(--raio);margin-block:var(--e6)}
+.ficha-painel>div{padding:var(--e4);border-right:1px solid var(--linha)}
+.ficha-painel>div:last-child{border-right:0}
+.ficha-painel dt{font-size:var(--t12);color:var(--texto-suave)}
+.ficha-painel dd{margin-top:var(--e1);font-size:var(--t31)}
+
+.recursos{list-style:none;padding:0;margin-top:var(--e5);display:grid;gap:var(--e4)}
+.recursos li{display:grid;grid-template-columns:22px 1fr;gap:var(--e3)}
+.recursos svg{margin-top:3px;color:var(--destaque)}
+.recursos p{margin-top:var(--e1);color:var(--texto-suave);font-size:var(--t14)}
+
+.faixa{
+  background:var(--fundo-inv);color:var(--texto-inv);border-radius:var(--raio);
+  padding:var(--e7);display:flex;align-items:center;justify-content:space-between;
+  gap:var(--e6);flex-wrap:wrap;margin-block:var(--e8);
+}
+.faixa h2{color:var(--branco)}
+.faixa p{color:var(--concreto-400);margin-top:var(--e2);max-width:52ch}
+
+.mais-motos{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--e5);margin-top:var(--e5)}
+
+/* ============================================================
+   12. BARRA FIXA DO CELULAR
+   No site atual a CTA sai da tela ao rolar. Ela é a única
+   conversão que existe; aqui ela fica.
+   ============================================================ */
+.barra-cta{
+  display:none;position:sticky;bottom:0;z-index:11;
+  padding:var(--e3) var(--gutter);
+  background:color-mix(in srgb,var(--fundo) 92%,transparent);
+  backdrop-filter:blur(12px);border-top:1px solid var(--linha);
+}
+.barra-cta .botao{width:100%}
+
+/* ============================================================
+   13. DESIGN SYSTEM
+   ============================================================ */
+.ds-cabecalho{padding-block:var(--e8) var(--e6);border-bottom:1px solid var(--linha)}
+.ds-bloco{padding-block:var(--e8);border-bottom:1px solid var(--linha)}
+.ds-bloco:last-child{border-bottom:0}
+.ds-titulo{display:flex;align-items:baseline;gap:var(--e4);flex-wrap:wrap;margin-bottom:var(--e5)}
+.ds-titulo p{color:var(--texto-suave);font-size:var(--t14);max-width:56ch}
+
+.amostras{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:var(--e4)}
+.amostra{border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;background:var(--fundo-alto)}
+.amostra-cor{height:76px}
+.amostra-info{padding:var(--e3);display:grid;gap:2px}
+.amostra-nome{font-weight:640;font-size:var(--t14)}
+.amostra-hex{font-size:var(--t12);color:var(--texto-suave);font-variant-numeric:tabular-nums}
+.selo{
+  display:inline-flex;align-items:center;gap:5px;align-self:start;margin-top:var(--e1);
+  padding:2px 7px;border-radius:100px;font-size:11px;font-weight:640;
+  border:1px solid currentColor;
+}
+.selo-ok{color:#1f7a3d}
+.selo-nao{color:#b3261e}
+.selo-neutro{color:var(--texto-suave)}
+.amostra-cor{box-shadow:inset 0 0 0 1px rgba(20,24,27,.10)}
+.tela[data-tema-ativo='escuro'] .selo-ok{color:#69d68e}
+.tela[data-tema-ativo='escuro'] .selo-nao{color:#ff9b90}
+
+.escala-linha{display:grid;grid-template-columns:64px 1fr;gap:var(--e4);align-items:baseline;padding-block:var(--e3);border-bottom:1px solid var(--linha)}
+.escala-linha:last-child{border-bottom:0}
+.escala-token{font-size:var(--t12);color:var(--texto-suave);font-variant-numeric:tabular-nums}
+.escala-amostra{line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.espacos{display:grid;gap:var(--e2)}
+.espaco{display:grid;grid-template-columns:64px 1fr;gap:var(--e4);align-items:center}
+.espaco-barra{height:14px;background:var(--ambar);border-radius:2px}
+
+.ds-eixo{display:flex;align-items:center;gap:var(--e4);flex-wrap:wrap;margin-bottom:var(--e4)}
+.ds-eixo input[type='range']{accent-color:var(--ambar);width:min(300px,60%)}
+.ds-especime{
+  font-weight:700;letter-spacing:-.022em;line-height:1;
+  font-size:clamp(2rem,7cqw,4.2rem);
+  padding-block:var(--e4);
+}
+
+.ds-linha-comp{display:flex;gap:var(--e3);flex-wrap:wrap;align-items:center;margin-bottom:var(--e5)}
+.ds-nota{font-size:var(--t14);color:var(--texto-suave);max-width:62ch;margin-top:var(--e3)}
+
+.ds-mov{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:var(--e4)}
+.ds-cartao{border:1px solid var(--linha);border-radius:var(--raio);padding:var(--e4);background:var(--fundo-alto)}
+.ds-cartao h3{font-size:var(--t16);margin-bottom:var(--e1)}
+.ds-cartao p{font-size:var(--t14);color:var(--texto-suave)}
+
+/* ============================================================
+   14. MOVIMENTO
+   Um único movimento não pedido: o painel dá a partida. As
+   leituras acendem em sequência e os números sobem como um
+   odômetro. Todo o resto responde a uma ação da pessoa.
+   ============================================================ */
+@media (prefers-reduced-motion:no-preference){
+  .painel-grade[data-partida='true'] .leitura{animation:acender 520ms var(--curva) both}
+  .painel-grade[data-partida='true'] .leitura:nth-child(2){animation-delay:100ms}
+  .painel-grade[data-partida='true'] .leitura:nth-child(3){animation-delay:200ms}
+  @keyframes acender{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+
+  .tela-entrando{animation:entrar 240ms var(--curva) both}
+  @keyframes entrar{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .cartao{transition:border-color 160ms,box-shadow 160ms,transform 260ms var(--curva),opacity 200ms}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+
+/* ============================================================
+   15. RESPONSIVO — por CONTAINER, não por janela
+   É isso que faz o seletor de largura funcionar de verdade: as
+   regras respondem à largura do .palco, então trocar para
+   "Celular" reflui o layout como o aparelho reflui.
+   ============================================================ */
+@container tela (max-width:1080px){
+  .grade,.mais-motos{grid-template-columns:repeat(2,1fr)}
+  .hero-grade{gap:var(--e6);padding-block:var(--e8) var(--e7)}
+  .ficha-topo{grid-template-columns:1fr;gap:var(--e6)}
+}
+
+@container tela (max-width:860px){
+  .tela{--gutter:var(--e4)}
+  .nav-desk,.cta-cab{display:none}
+  .bt-menu{display:inline-flex}
+  .hero-grade{grid-template-columns:1fr;grid-template-areas:'foto' 'texto';padding-block:var(--e6)}
+  .hero-texto{grid-area:texto}
+  .hero-foto{grid-area:foto;aspect-ratio:4/3}
+  .secao{padding-block:var(--e8)}
+  .contato-grade{grid-template-columns:1fr;gap:var(--e6);padding-block:var(--e8)}
+  .barra-cta{display:block}
+  .faixa{padding:var(--e5)}
+}
+
+@container tela (max-width:620px){
+  .grade,.mais-motos{grid-template-columns:1fr}
+  .painel-grade{grid-template-columns:1fr}
+  .leitura{flex-direction:row;align-items:baseline;gap:var(--e3);padding-block:var(--e4)}
+  .leitura+.leitura{border-left:0;border-top:1px solid rgba(255,255,255,.12)}
+  .leitura-valor{font-size:var(--t31)}
+  .leitura-rotulo{margin-left:auto;text-align:right}
+  .ficha-painel{grid-template-columns:1fr}
+  .ficha-painel>div{border-right:0;border-bottom:1px solid var(--linha);display:flex;align-items:baseline;justify-content:space-between;gap:var(--e4)}
+  .ficha-painel>div:last-child{border-bottom:0}
+  .ficha-painel dd{margin-top:0;font-size:var(--t25)}
+  .hero-texto .acoes .botao{width:100%}
+  .escala-linha,.espaco{grid-template-columns:56px 1fr}
+}
+</style>
+
+<header class="barra">
+  <div class="barra-marca"><span class="losango" aria-hidden="true"></span> Protótipo hi-fi — Vértice Motos</div>
+
+  <div class="barra-grupo">
+    <span class="barra-rotulo" id="r-tela">Tela</span>
+    <div class="seg" role="group" aria-labelledby="r-tela" id="sel-tela">
+      <button type="button" data-rota="/" aria-pressed="true">Home</button>
+      <button type="button" data-rota="/moto/honda-cg-160" aria-pressed="false">Ficha da moto</button>
+      <button type="button" data-rota="/design-system" aria-pressed="false">Design System</button>
+    </div>
+  </div>
+
+  <div class="barra-grupo">
+    <span class="barra-rotulo" id="r-larg">Largura</span>
+    <div class="seg" role="group" aria-labelledby="r-larg" id="sel-largura">
+      <button type="button" data-largura="390" aria-pressed="false">Celular</button>
+      <button type="button" data-largura="834" aria-pressed="false">Tablet</button>
+      <button type="button" data-largura="cheia" aria-pressed="true">Desktop</button>
+    </div>
+    <span class="medida" id="medida" role="status"></span>
+  </div>
+
+  <div class="barra-grupo">
+    <span class="barra-rotulo" id="r-tema">Tema</span>
+    <div class="seg" role="group" aria-labelledby="r-tema" id="sel-tema">
+      <button type="button" data-tema="sistema" aria-pressed="true">Sistema</button>
+      <button type="button" data-tema="claro" aria-pressed="false">Claro</button>
+      <button type="button" data-tema="escuro" aria-pressed="false">Escuro</button>
+    </div>
+  </div>
+</header>
+
+<div class="palco-area">
+  <div class="moldura" id="moldura" data-largura="cheia">
+    <div class="palco" id="palco">
+      <div class="tela" id="tela"></div>
+    </div>
+  </div>
+</div>
+
+<p class="nota-rodape">
+  A moldura escura é a ferramenta; o protótipo é o que está dentro dela. O seletor de
+  largura funciona por <code>@container</code>, não por <code>@media</code> — as regras
+  respondem à largura do palco, então trocar para Celular reflui o layout do mesmo jeito
+  que o aparelho reflui, sem <code>iframe</code> e sem redimensionar a janela.
+  Este arquivo é autocontido: fonte e imagens vêm embutidas, e ele abre sem rede e sem servidor.
+</p>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ==========================================================
+     IMAGENS
+     Substituídas por data: URI na geração do arquivo standalone.
+     ========================================================== */
+  var IMG = {
+    'hero': '__IMG:hero__',
+    'cg-160': '__IMG:cg-160__',
+    'cg-160-front': '__IMG:cg-160-front__',
+    'bros-160': '__IMG:bros-160__',
+    'bros-160-front': '__IMG:bros-160-front__',
+    'fazer-250': '__IMG:fazer-250__',
+    'fazer-250-front': '__IMG:fazer-250-front__',
+    'factor-150': '__IMG:factor-150__',
+    'factor-150-front': '__IMG:factor-150-front__',
+    'xre-300': '__IMG:xre-300__',
+    'xre-300-front': '__IMG:xre-300-front__',
+    'pcx': '__IMG:pcx__',
+    'pcx-front': '__IMG:pcx-front__'
+  };
+
+  /* ==========================================================
+     CONTEÚDO
+     Mesma forma do lib/content.ts do site: nenhum texto de
+     marketing escrito dentro de um componente.
+     ========================================================== */
+  var SITE = {
+    nome: 'Vértice', descritor: 'Motos', nomeCompleto: 'Vértice Motos',
+    telefone: '(00) 00000-0000',
+    endereco: ['Av. Horizonte, 240, Centro', 'Cidade Exemplo, BR'],
+    horario: ['Segunda a sexta, 8h às 18h', 'Sábado, 8h às 12h']
+  };
+
+  var MOTOS = [
+    { slug:'honda-cg-160', nome:'Honda CG 160', modelo:'CG 160', categoria:'Urbana',
+      cc:160, cambio:'Manual', foto:'cg-160', frente:'cg-160-front',
+      cor:'vermelha',
+      resumo:'Praticidade para acompanhar o seu dia.',
+      descricao:'Uma escolha versátil para os trajetos do dia a dia. Com postura de pilotagem ereta e porte compacto, a CG 160 é uma opção para quem procura mobilidade na cidade.',
+      combinaCom:'Deslocamentos urbanos e rotina de trabalho.',
+      recursos:[
+        {t:'Porte compacto', d:'Uma proposta prática para circular pela cidade e estacionar em espaço curto.'},
+        {t:'Pilotagem ereta', d:'Uma posição natural para os deslocamentos cotidianos, com boa visão do trânsito.'},
+        {t:'Câmbio manual', d:'Controle das trocas de marcha ao longo do caminho.'}
+      ] },
+    { slug:'honda-bros-160', nome:'Honda Bros 160', modelo:'Bros 160', categoria:'Trail',
+      cc:160, cambio:'Manual', foto:'bros-160', frente:'bros-160-front',
+      cor:'grafite',
+      resumo:'Versatilidade para ir um pouco além.',
+      descricao:'A proposta trail combina uma posição de pilotagem elevada com versatilidade para diferentes trajetos. Uma opção para quem procura uma moto que acompanhe a rotina e novos caminhos.',
+      combinaCom:'Trajetos urbanos e caminhos de piso irregular, conforme as condições da locação.',
+      recursos:[
+        {t:'Perfil trail', d:'Uma configuração versátil para diferentes tipos de piso.'},
+        {t:'Posição elevada', d:'Postura ereta e visão ampla ao pilotar.'},
+        {t:'Rodas raiadas', d:'Um elemento característico da proposta trail ilustrada.'}
+      ] },
+    { slug:'yamaha-fazer-250', nome:'Yamaha Fazer 250', modelo:'Fazer 250', categoria:'Street',
+      cc:250, cambio:'Manual', foto:'fazer-250', frente:'fazer-250-front',
+      cor:'azul-escura',
+      resumo:'Presença e personalidade em cada trajeto.',
+      descricao:'A proposta street reúne porte maior e postura de pilotagem confortável. Uma opção para quem roda mais quilômetros por dia.',
+      combinaCom:'Rotina urbana e percursos mais longos, mediante acordo com a locadora.',
+      recursos:[
+        {t:'Motor de 250 cc', d:'A maior cilindrada do catálogo, para trajetos mais longos.'},
+        {t:'Postura confortável', d:'Uma posição pensada para tempo maior em cima da moto.'},
+        {t:'Porte street', d:'Presença visual sem abrir mão do uso urbano.'}
+      ] },
+    { slug:'yamaha-factor-150', nome:'Yamaha Factor 150', modelo:'Factor 150', categoria:'Urbana',
+      cc:150, cambio:'Manual', foto:'factor-150', frente:'factor-150-front',
+      cor:'prata',
+      resumo:'Sua rotina com mais mobilidade.',
+      descricao:'Uma moto de perfil urbano, pensada para o vai e vem diário. Porte leve e comportamento previsível no trânsito.',
+      combinaCom:'Idas ao trabalho, estudo e compromissos na cidade.',
+      recursos:[
+        {t:'Porte leve', d:'Fácil de manobrar em trânsito parado e em espaço curto.'},
+        {t:'Perfil urbano', d:'Pensada para o trajeto de todo dia, não para a estrada.'},
+        {t:'Câmbio manual', d:'Controle das trocas de marcha ao longo do caminho.'}
+      ] },
+    { slug:'honda-xre-300', nome:'Honda XRE 300', modelo:'XRE 300', categoria:'Trail',
+      cc:300, cambio:'Manual', foto:'xre-300', frente:'xre-300-front',
+      cor:'verde-oliva',
+      resumo:'Novos caminhos pedem outra perspectiva.',
+      descricao:'Trail de porte maior, com suspensão de curso longo e posição de pilotagem alta. Uma opção para quem sai do asfalto de vez em quando.',
+      combinaCom:'Percursos variados. Confirme os trajetos permitidos com a locadora.',
+      recursos:[
+        {t:'Suspensão de curso longo', d:'Absorve melhor irregularidade de piso.'},
+        {t:'Posição alta', d:'Visão ampla do trânsito e do caminho à frente.'},
+        {t:'Motor de 300 cc', d:'Fôlego para trechos de estrada dentro do combinado.'}
+      ] },
+    { slug:'honda-pcx', nome:'Honda PCX', modelo:'PCX', categoria:'Scooter',
+      cc:160, cambio:'Automática', foto:'pcx', frente:'pcx-front',
+      cor:'branca',
+      resumo:'Conforto e praticidade no ritmo da cidade.',
+      descricao:'Scooter de câmbio automático, porta-objetos sob o banco e plataforma para os pés. A opção mais simples de pilotar do catálogo.',
+      combinaCom:'Deslocamentos urbanos com a praticidade de uma scooter.',
+      recursos:[
+        {t:'Câmbio automático', d:'Sem embreagem e sem trocas de marcha.'},
+        {t:'Porta-objetos', d:'Espaço sob o banco para capacete ou bagagem pequena.'},
+        {t:'Plataforma para os pés', d:'Posição relaxada, com pernas à frente.'}
+      ] }
+  ];
+
+  var CATEGORIAS = ['Urbana', 'Trail', 'Street', 'Scooter'];
+
+  var PASSOS = [
+    { t:'Escolha o modelo', d:'Compare cilindrada, câmbio e o tipo de trajeto para o qual cada moto foi pensada.' },
+    { t:'Abra a conversa', d:'O botão leva a moto escolhida já escrita na mensagem. Você não precisa explicar de novo qual era.' },
+    { t:'Combine as condições', d:'Prazo, caução, documentação e retirada são acertados direto com a locadora.' }
+  ];
+
+  /* ==========================================================
+     UTILITÁRIOS
+     ========================================================== */
+  var $ = function (sel, raiz) { return (raiz || document).querySelector(sel); };
+  var $$ = function (sel, raiz) { return Array.prototype.slice.call((raiz || document).querySelectorAll(sel)); };
+
+  function esc(txt) {
+    return String(txt).replace(/[&<>"]/g, function (c) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c];
+    });
+  }
+
+  var semMovimento = function () {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  };
+
+  var CHECK = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>';
+
+  function marca() {
+    return '<a class="marca" data-ir="/" role="link" tabindex="0">' +
+      '<span class="marca-sinal" aria-hidden="true"></span>' +
+      '<span class="marca-nome">' + SITE.nome + ' <i>' + SITE.descritor + '</i></span></a>';
+  }
+
+  /* ==========================================================
+     PEDAÇOS DE TELA
+     ========================================================== */
+  function cabecalho(naFicha) {
+    var base = naFicha ? '/' : '';
+    return '<header class="cabecalho"><div class="container cab-int">' + marca() +
+      '<nav class="nav-desk" aria-label="Menu principal">' +
+        '<a data-ir="' + base + '#modelos">Modelos</a>' +
+        '<a data-ir="' + base + '#como-funciona">Como funciona</a>' +
+        '<a data-ir="' + base + '#contato">Contato</a>' +
+      '</nav>' +
+      '<a class="botao botao-1 cta-cab" data-ir="#contato">Falar no WhatsApp</a>' +
+      '<button class="bt-menu" type="button" aria-expanded="false" aria-controls="gaveta">' +
+        '<span class="sr">Abrir menu</span>' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>' +
+      '</button>' +
+      '</div></header>' + gaveta(base);
+  }
+
+  function gaveta(base) {
+    return '<div class="gaveta" id="gaveta" data-aberta="false">' +
+      '<button class="gaveta-fundo" type="button" tabindex="-1" aria-hidden="true"></button>' +
+      '<div class="gaveta-painel" role="dialog" aria-label="Menu">' +
+        '<div class="gaveta-topo"><span class="marca-nome">Menu</span>' +
+          '<button class="bt-menu" type="button" data-fechar><span class="sr">Fechar menu</span>' +
+          '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
+        '</div>' +
+        '<nav aria-label="Menu do celular">' +
+          '<a data-ir="' + base + '#modelos">Modelos</a>' +
+          '<a data-ir="' + base + '#como-funciona">Como funciona</a>' +
+          '<a data-ir="' + base + '#contato">Contato</a>' +
+        '</nav>' +
+        '<a class="botao botao-1" data-ir="#contato">Falar no WhatsApp</a>' +
+      '</div></div>';
+  }
+
+  function rodape() {
+    return '<footer class="rodape"><div class="container">' +
+      '<div class="rodape-grade">' + marca() +
+      '<nav aria-label="Navegação do rodapé">' +
+        '<a data-ir="/#modelos">Modelos</a>' +
+        '<a data-ir="/#como-funciona">Como funciona</a>' +
+        '<a data-ir="/#contato">Contato</a>' +
+        '<a data-ir="/design-system">Design System</a>' +
+      '</nav></div>' +
+      '<p class="aviso">Protótipo de design. Empresa, contatos e imagens são ilustrativos, e nenhum botão envia mensagem de verdade.</p>' +
+      '</div></footer>';
+  }
+
+  function barraCta(texto) {
+    return '<div class="barra-cta"><a class="botao botao-1" data-ir="#contato">' + esc(texto) + '</a></div>';
+  }
+
+  function cartao(moto) {
+    return '<article class="cartao" data-categoria="' + moto.categoria + '" data-slug="' + moto.slug + '">' +
+      '<div class="cartao-foto"><img src="' + IMG[moto.foto] + '" alt="Moto ' +
+        esc(moto.categoria.toLowerCase()) + ' ' + esc(moto.cor) + ' inspirada na ' + esc(moto.nome) + '." ' +
+        'width="1024" height="683" loading="lazy"></div>' +
+      '<div class="cartao-corpo">' +
+        '<p class="cartao-cat">' + moto.categoria + '</p>' +
+        '<h3><a data-ir="/moto/' + moto.slug + '">' + esc(moto.nome) + '</a></h3>' +
+        '<dl class="mini">' +
+          '<dd class="numero">' + moto.cc + '<span class="unidade"> cc</span></dd><dt>cilindrada</dt>' +
+          '<dd class="numero">' + moto.cambio + '</dd><dt>câmbio</dt>' +
+        '</dl>' +
+        '<a class="link" data-ir="/moto/' + moto.slug + '">Ver ficha</a>' +
+      '</div></article>';
+  }
+
+  /* ==========================================================
+     TELA: HOME
+     ========================================================== */
+  function telaHome() {
+    var ccs = MOTOS.map(function (m) { return m.cc; });
+
+    return cabecalho(false) +
+      '<main id="conteudo">' +
+      '<section class="hero"><div class="container hero-grade">' +
+        '<div class="hero-texto">' +
+          '<h1 class="display">A moto que resolve o seu trajeto.</h1>' +
+          '<p class="chamada">Seis modelos para aluguel mensal. Você escolhe o que combina com o seu dia; prazo, caução e documentação a gente acerta na conversa.</p>' +
+          '<div class="acoes">' +
+            '<a class="botao botao-1" data-ir="#modelos">Ver os modelos</a>' +
+            '<a class="botao botao-2" data-ir="#como-funciona">Como funciona</a>' +
+          '</div>' +
+        '</div>' +
+        '<div class="hero-foto"><img src="' + IMG.hero + '" alt="Moto urbana preta estacionada numa garagem de concreto iluminada pelo sol." width="1672" height="941"></div>' +
+      '</div>' +
+      '<div class="painel"><div class="container"><dl class="painel-grade" id="painel">' +
+        leitura([MOTOS.length], '', 'modelos disponíveis') +
+        leitura([Math.min.apply(null, ccs), Math.max.apply(null, ccs)], 'cc', 'faixa de cilindrada') +
+        leitura([CATEGORIAS.length], '', 'categorias no catálogo') +
+      '</dl></div></div></section>' +
+
+      '<section class="secao container" id="modelos">' +
+        '<div class="secao-topo">' +
+          '<h2 class="display">Modelos disponíveis</h2>' +
+          '<p class="chamada">Filtre por categoria para ver o que serve ao seu tipo de trajeto.</p>' +
+        '</div>' +
+        '<div class="filtro" role="group" aria-label="Filtrar modelos por categoria">' +
+          '<button type="button" data-cat="todas" aria-pressed="true">Todas</button>' +
+          CATEGORIAS.map(function (c) {
+            return '<button type="button" data-cat="' + c + '" aria-pressed="false">' + c + '</button>';
+          }).join('') +
+        '</div>' +
+        '<p class="contagem" role="status">' + MOTOS.length + ' modelos nesta categoria.</p>' +
+        '<div class="grade" id="grade">' + MOTOS.map(cartao).join('') + '</div>' +
+      '</section>' +
+
+      '<section class="secao container" id="como-funciona">' +
+        '<h2 class="display">Como funciona</h2>' +
+        '<p class="chamada" style="margin-bottom:var(--e6)">Três passos, e o terceiro acontece fora do site.</p>' +
+        '<ol class="passos">' + PASSOS.map(function (p, i) {
+          return '<li><span class="passo-n numero" aria-hidden="true">' + (i + 1) + '</span>' +
+            '<div><h3>' + esc(p.t) + '</h3><p>' + esc(p.d) + '</p></div></li>';
+        }).join('') + '</ol>' +
+      '</section>' +
+
+      '<section class="contato" id="contato"><div class="container contato-grade">' +
+        '<div><h2 class="display">Conte qual moto combina com você</h2>' +
+        '<p class="chamada">A conversa começa no WhatsApp e continua com a locadora. Sem cadastro, sem formulário.</p>' +
+        '<div class="acoes"><a class="botao botao-1" data-ir="#contato">Falar no WhatsApp</a></div></div>' +
+        '<dl class="dados">' +
+          '<div><dt>WhatsApp e telefone</dt><dd>' + SITE.telefone + '</dd></div>' +
+          '<div><dt>Onde estamos</dt><dd><address>' + SITE.endereco.join('<br>') + '</address></dd></div>' +
+          '<div><dt>Horário de atendimento</dt><dd>' + SITE.horario.join('<br>') + '</dd></div>' +
+        '</dl>' +
+      '</div></section>' +
+      '</main>' + rodape() + barraCta('Falar no WhatsApp');
+  }
+
+  /* Aceita um valor ou uma faixa. Cada número vira um <span> próprio
+     para o odômetro poder subir os dois ao mesmo tempo. */
+  function leitura(valores, unidade, rotulo) {
+    var numeros = valores.map(function (v) {
+      return '<span data-conta="' + v + '">0</span>';
+    }).join('<span aria-hidden="true">–</span>');
+
+    return '<div class="leitura">' +
+      '<dd class="leitura-valor numero">' + numeros +
+        (unidade ? '<span class="unidade"> ' + unidade + '</span>' : '') + '</dd>' +
+      '<dt class="leitura-rotulo">' + rotulo + '</dt></div>';
+  }
+
+  /* ==========================================================
+     TELA: FICHA DA MOTO
+     ========================================================== */
+  function telaMoto(slug) {
+    var moto = MOTOS.filter(function (m) { return m.slug === slug; })[0] || MOTOS[0];
+    var outras = MOTOS.filter(function (m) { return m.slug !== moto.slug; }).slice(0, 3);
+
+    var fotos = [
+      { chave: moto.foto, alt: 'Vista lateral de uma moto ' + moto.categoria.toLowerCase() + ' ' + moto.cor + ' inspirada na ' + moto.nome + '.', legenda: 'Vista lateral. Imagem ilustrativa; o modelo real pode apresentar diferenças.' },
+      { chave: moto.frente, alt: 'Vista frontal de uma moto ' + moto.categoria.toLowerCase() + ' ' + moto.cor + ' inspirada na ' + moto.nome + '.', legenda: 'Vista frontal. Imagem ilustrativa; o modelo real pode apresentar diferenças.' }
+    ];
+
+    return cabecalho(true) +
+      '<main id="conteudo"><div class="container">' +
+      '<nav class="trilha" aria-label="Localização"><a data-ir="/#modelos">Modelos</a>' +
+      '<span aria-hidden="true"> / </span><span aria-current="page">' + esc(moto.nome) + '</span></nav>' +
+
+      '<section class="ficha-topo">' +
+        '<div>' +
+          '<div class="galeria">' + fotos.map(function (f, i) {
+            return '<img src="' + IMG[f.chave] + '" alt="' + esc(f.alt) + '" data-ativa="' + (i === 0) + '" width="1024" height="683">';
+          }).join('') + '</div>' +
+          '<div class="minis" role="group" aria-label="Fotos da ' + esc(moto.nome) + '">' +
+            fotos.map(function (f, i) {
+              return '<button type="button" aria-pressed="' + (i === 0) + '" data-foto="' + i + '" data-legenda="' + esc(f.legenda) + '">' +
+                '<span class="sr">' + (i === 0 ? 'Ver a vista lateral' : 'Ver a vista frontal') + '</span>' +
+                '<img src="' + IMG[f.chave] + '" alt="" width="150" height="100"></button>';
+            }).join('') +
+          '</div>' +
+          '<p class="legenda" id="legenda">' + esc(fotos[0].legenda) + '</p>' +
+        '</div>' +
+
+        '<div>' +
+          '<p class="cartao-cat">' + moto.categoria + '</p>' +
+          '<h1 class="display">' + esc(moto.nome) + '</h1>' +
+          '<p class="chamada">' + esc(moto.resumo) + '</p>' +
+          '<dl class="ficha-painel">' +
+            '<div><dt>Cilindrada nominal</dt><dd class="numero">' + moto.cc + '<span class="unidade"> cc</span></dd></div>' +
+            '<div><dt>Câmbio</dt><dd class="numero">' + moto.cambio + '</dd></div>' +
+            '<div><dt>Categoria</dt><dd class="numero">' + moto.categoria + '</dd></div>' +
+          '</dl>' +
+          '<p class="corrido">' + esc(moto.descricao) + '</p>' +
+          '<div class="acoes"><a class="botao botao-1" data-ir="#consulta">Consultar esta moto</a></div>' +
+          '<p class="legenda" style="margin-top:var(--e4)">Ficha ilustrativa, com cilindrada nominal. Ano, versão, equipamentos e condições são confirmados com a locadora.</p>' +
+        '</div>' +
+      '</section>' +
+
+      '<section style="padding-block:var(--e7);border-top:1px solid var(--linha)">' +
+        '<h2 class="display">Conheça a moto</h2>' +
+        '<p class="chamada">Combina com ' + esc(moto.combinaCom.charAt(0).toLowerCase() + moto.combinaCom.slice(1)) + '</p>' +
+        '<ul class="recursos corrido">' + moto.recursos.map(function (r) {
+          return '<li>' + CHECK + '<div><h3>' + esc(r.t) + '</h3><p>' + esc(r.d) + '</p></div></li>';
+        }).join('') + '</ul>' +
+      '</section>' +
+
+      '<section class="faixa" id="consulta">' +
+        '<div><h2 class="display">Gostou da ' + esc(moto.modelo) + '?</h2>' +
+        '<p>A mensagem já vai com o modelo escrito. Valores, disponibilidade, documentação e prazo são combinados na conversa.</p></div>' +
+        '<a class="botao botao-3" data-ir="#consulta">Falar no WhatsApp</a>' +
+      '</section>' +
+
+      '<section style="padding-bottom:var(--e8)">' +
+        '<h2 class="display">Outros modelos</h2>' +
+        '<div class="mais-motos">' + outras.map(cartao).join('') + '</div>' +
+      '</section>' +
+
+      '</div></main>' + rodape() + barraCta('Consultar a ' + moto.modelo);
+  }
+
+  /* ==========================================================
+     TELA: DESIGN SYSTEM
+     Os contrastes abaixo não são digitados à mão: são calculados
+     na hora, pela fórmula da WCAG. Documentação que mente é pior
+     que documentação que falta.
+     ========================================================== */
+  function lum(hex) {
+    var n = hex.replace('#', '');
+    var c = [0, 2, 4].map(function (i) {
+      var v = parseInt(n.substr(i, 2), 16) / 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  }
+  function contraste(a, b) {
+    var la = lum(a), lb = lum(b);
+    return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+  }
+  /* O selo só julga o que é TEXTO. Medir uma cor de fundo contra ela
+     mesma dá 1:1 e não quer dizer nada; medir uma borda pelo critério
+     de texto acusa um defeito que não existe. Cada papel é avaliado
+     pelo que de fato se exige dele. */
+  function seloDeTexto(cor, fundo) {
+    var r = contraste(cor, fundo);
+    var ok = r >= 4.5;
+    return '<span class="selo ' + (ok ? 'selo-ok' : 'selo-nao') + '">' +
+      r.toFixed(2) + ':1 · ' + (r >= 7 ? 'AAA' : ok ? 'AA' : 'reprova como texto') + '</span>';
+  }
+  function seloNeutro(texto) {
+    return '<span class="selo selo-neutro">' + texto + '</span>';
+  }
+  function seloDaCor(c, fundo) {
+    if (c.papel === 'texto') return seloDeTexto(c.v, fundo);
+    if (c.papel === 'preenchimento') {
+      var r = contraste('#14181b', c.v);
+      return '<span class="selo ' + (r >= 4.5 ? 'selo-ok' : 'selo-nao') + '">' +
+        r.toFixed(2) + ':1 · com tinta por cima</span>';
+    }
+    if (c.papel === 'linha') return seloNeutro(contraste(c.v, fundo).toFixed(2) + ':1 · separação, não texto');
+    return seloNeutro('base da medição');
+  }
+
+  function telaDesignSystem() {
+    var fundo = '#f3f6f3';
+
+    var cores = [
+      { n:'--tinta', v:'#14181b', u:'Texto principal', papel:'texto' },
+      { n:'--asfalto-500', v:'#4a545c', u:'Texto secundário', papel:'texto' },
+      { n:'--ambar-tinta', v:'#7a5100', u:'Texto em cor de destaque', papel:'texto' },
+      { n:'--ambar', v:'#ffb300', u:'Preenchimento de botão. Nunca texto.', papel:'preenchimento' },
+      { n:'--concreto-200', v:'#d5dad8', u:'Bordas e divisores', papel:'linha' },
+      { n:'--concreto-50', v:'#f3f6f3', u:'Fundo da página', papel:'fundo' }
+    ];
+
+    var escala = [
+      ['--t61','3.8125rem','61px'], ['--t49','3.0625rem','49px'], ['--t39','2.4375rem','39px'],
+      ['--t31','1.9375rem','31px'], ['--t25','1.5625rem','25px'], ['--t20','1.25rem','20px'],
+      ['--t16','1rem','16px'], ['--t14','.875rem','14px'], ['--t12','.75rem','12px']
+    ];
+
+    var espacos = [['--e1',4],['--e2',8],['--e3',12],['--e4',16],['--e5',24],['--e6',32],['--e7',48],['--e8',64],['--e9',96]];
+
+    return cabecalho(true) +
+      '<main id="conteudo"><div class="container">' +
+
+      '<div class="ds-cabecalho">' +
+        '<h1 class="display">Design System</h1>' +
+        '<p class="chamada">Os tokens que sustentam as duas telas. Todo número aqui é medido, não estimado — os contrastes são calculados nesta página pela fórmula da WCAG.</p>' +
+      '</div>' +
+
+      /* --- Cor --- */
+      '<section class="ds-bloco">' +
+        '<div class="ds-titulo"><h2 class="display">Cor</h2>' +
+        '<p>Concreto e asfalto como base. Âmbar de seta como destaque — a cor do pisca, e não o laranja genérico.</p></div>' +
+        '<div class="amostras">' + cores.map(function (c) {
+          return '<div class="amostra">' +
+            '<div class="amostra-cor" style="background:' + c.v + '"></div>' +
+            '<div class="amostra-info">' +
+              '<span class="amostra-nome">' + c.n + '</span>' +
+              '<span class="amostra-hex">' + c.v + ' · ' + c.u + '</span>' +
+              seloDaCor(c, fundo) +
+            '</div></div>';
+        }).join('') + '</div>' +
+        '<p class="ds-nota"><strong>Por que existem dois âmbares.</strong> O selo acima mede cada cor como <em>texto</em> sobre o fundo claro. O âmbar puro dá ' +
+        contraste('#ffb300', fundo).toFixed(2) + ':1 e reprova; o âmbar-tinta dá ' +
+        contraste('#7a5100', fundo).toFixed(2) + ':1 e passa. Mas o âmbar puro como <em>preenchimento</em>, com tinta por cima, dá ' +
+        contraste('#14181b', '#ffb300').toFixed(2) + ':1. Por isso <code>--ambar</code> preenche e <code>--ambar-tinta</code> escreve. ' +
+        'A borda fica em ' + contraste('#d5dad8', fundo).toFixed(2) + ':1 e por isso não leva selo de texto: borda é separação visual, não informação. Se precisasse ser lida, seria texto.</p>' +
+      '</section>' +
+
+      /* --- Tipografia --- */
+      '<section class="ds-bloco">' +
+        '<div class="ds-titulo"><h2 class="display">Tipografia</h2>' +
+        '<p>Archivo variável, uma família só, em dois ajustes bem distintos. O display abre o eixo de largura; o texto fica na largura normal.</p></div>' +
+
+        '<div class="ds-eixo">' +
+          '<label for="eixo">Eixo de largura (<code>wdth</code>): <strong id="eixo-valor">112</strong></label>' +
+          '<input type="range" id="eixo" min="75" max="125" value="112" step="1">' +
+        '</div>' +
+        '<div class="ds-especime" id="especime" style="font-variation-settings:\'wdth\' 112">Cilindrada 160 cc</div>' +
+        '<p class="ds-nota">Arraste. Letra alargada é vocabulário de placa e de sinalização — está no display por isso, não por enfeite. Em 75 a mesma frase vira ficha técnica; em 125, sinalização de rodovia.</p>' +
+
+        '<div style="margin-top:var(--e6)">' + escala.map(function (e) {
+          return '<div class="escala-linha">' +
+            '<span class="escala-token">' + e[0] + '<br>' + e[2] + '</span>' +
+            '<span class="escala-amostra display" style="font-size:var(' + e[0] + ')">Vértice Motos</span></div>';
+        }).join('') + '</div>' +
+        '<p class="ds-nota">Razão 1,25 — terça maior. Nove degraus cobrem da legenda ao título de hero sem que ninguém precise inventar um tamanho no meio do caminho.</p>' +
+      '</section>' +
+
+      /* --- Espaçamento --- */
+      '<section class="ds-bloco">' +
+        '<div class="ds-titulo"><h2 class="display">Espaçamento</h2>' +
+        '<p>Base 4. Fecha o vocabulário: se o valor que você quer não está aqui, provavelmente o layout é que está errado.</p></div>' +
+        '<div class="espacos">' + espacos.map(function (e) {
+          return '<div class="espaco"><span class="escala-token">' + e[0] + ' · ' + e[1] + '</span>' +
+            '<span class="espaco-barra" style="width:' + e[1] + 'px"></span></div>';
+        }).join('') + '</div>' +
+      '</section>' +
+
+      /* --- Componentes --- */
+      '<section class="ds-bloco">' +
+        '<div class="ds-titulo"><h2 class="display">Componentes</h2>' +
+        '<p>Cada um com os estados que precisam existir. Passe o mouse, use o Tab, clique.</p></div>' +
+
+        '<h3 style="margin-bottom:var(--e3)">Botões</h3>' +
+        '<div class="ds-linha-comp">' +
+          '<button class="botao botao-1" type="button">Falar no WhatsApp</button>' +
+          '<button class="botao botao-2" type="button">Como funciona</button>' +
+          '<span class="link" role="link" tabindex="0">Ver ficha</span>' +
+        '</div>' +
+
+        '<h3 style="margin-bottom:var(--e3)">Chips de filtro</h3>' +
+        '<div class="filtro" style="margin-bottom:var(--e5)" id="ds-filtro">' +
+          '<button type="button" aria-pressed="true">Todas</button>' +
+          '<button type="button" aria-pressed="false">Urbana</button>' +
+          '<button type="button" aria-pressed="false">Trail</button>' +
+        '</div>' +
+        '<p class="ds-nota" style="margin-top:0">O selecionado ganha fundo <em>e</em> marca de conferido. Estado nunca é comunicado só por cor — quem não distingue as duas cores ainda vê o ✓.</p>' +
+
+        '<h3 style="margin:var(--e6) 0 var(--e3)">Painel</h3>' +
+        '<div class="painel" style="border-radius:var(--raio);overflow:hidden"><dl class="painel-grade">' +
+          '<div class="leitura"><dd class="leitura-valor numero">160<span class="unidade"> cc</span></dd><dt class="leitura-rotulo">cilindrada</dt></div>' +
+          '<div class="leitura"><dd class="leitura-valor numero">Manual</dd><dt class="leitura-rotulo">câmbio</dt></div>' +
+          '<div class="leitura"><dd class="leitura-valor numero">Urbana</dd><dt class="leitura-rotulo">categoria</dt></div>' +
+        '</dl></div>' +
+        '<p class="ds-nota">O elemento assinatura, em três escalas: faixa sob o hero, mini-painel do cartão e ficha técnica. Algarismos tabulares para 160 e 250 alinharem em coluna.</p>' +
+
+        '<h3 style="margin:var(--e6) 0 var(--e3)">Cartão</h3>' +
+        '<div style="max-width:360px">' + cartao(MOTOS[0]) + '</div>' +
+      '</section>' +
+
+      /* --- Movimento --- */
+      '<section class="ds-bloco">' +
+        '<div class="ds-titulo"><h2 class="display">Movimento</h2>' +
+        '<p>Um único movimento não pedido pela pessoa. Todo o resto responde a uma ação e mostra o que mudou.</p></div>' +
+        '<div class="ds-mov">' +
+          '<div class="ds-cartao"><h3>Partida do painel</h3><p>520 ms, escalonado em 100 ms. As leituras acendem e os números sobem como um odômetro — é o cluster da moto na ignição. É o único movimento que a página inicia sozinha.</p></div>' +
+          '<div class="ds-cartao"><h3>Troca de tela</h3><p>240 ms, sobe 8 px. Curto o bastante para não atrasar, longo o bastante para mostrar que a tela trocou.</p></div>' +
+          '<div class="ds-cartao"><h3>Filtro do catálogo</h3><p>Os cartões que continuam deslizam para a posição nova em 260 ms; os que saem encolhem e somem. Sem isso, filtrar parece um piscar.</p></div>' +
+          '<div class="ds-cartao"><h3>Curva única</h3><p><code>cubic-bezier(.22,.61,.36,1)</code> em tudo que responde a toque: saída rápida, chegada calma.</p></div>' +
+        '</div>' +
+        '<p class="ds-nota"><strong>Tudo isso desliga.</strong> Todo o movimento vive dentro de <code>prefers-reduced-motion: no-preference</code>, e há um bloco <code>reduce</code> que zera animação e transição. Movimento involuntário provoca náusea e enxaqueca em quem tem desordem vestibular — não é preferência estética.</p>' +
+      '</section>' +
+
+      '<section class="ds-bloco">' +
+        '<div class="ds-titulo"><h2 class="display">Acessibilidade</h2>' +
+        '<p>O que já está de pé nas duas telas.</p></div>' +
+        '<ul class="recursos corrido">' +
+          ['Uma <code>h1</code> por tela, e hierarquia de heading sem pular nível.',
+           'Toda imagem com <code>alt</code> descritivo; <code>alt=""</code> nas decorativas, como as miniaturas cujo rótulo já está no botão.',
+           'Todo ícone com <code>aria-hidden</code>. Ícone é decoração; o significado está no texto ao lado.',
+           'Estado com <code>aria-pressed</code> e <code>aria-expanded</code>, trocados na mesma linha em que a cor muda.',
+           '<code>width</code> e <code>height</code> em toda imagem, contra pulo de layout.',
+           'Anel de foco visível em tudo que recebe Tab, com 3 px e afastamento.',
+           'Alvos de toque com no mínimo 48 px de altura.'
+          ].map(function (t) { return '<li>' + CHECK + '<div><p style="margin:0;color:var(--texto)">' + t + '</p></div></li>'; }).join('') +
+        '</ul>' +
+      '</section>' +
+
+      '</div></main>' + rodape();
+  }
+
+  /* ==========================================================
+     ROTEADOR
+     Sem hash e sem history: o arquivo abre por file:// e a
+     navegação é estado em memória.
+     ========================================================== */
+  var telaEl = $('#tela');
+  var palcoEl = $('#palco');
+  var rotaAtual = '/';
+
+  function render(rota, ancora) {
+    rotaAtual = rota;
+    var html;
+    if (rota === '/design-system') html = telaDesignSystem();
+    else if (rota.indexOf('/moto/') === 0) html = telaMoto(rota.slice(6));
+    else html = telaHome();
+
+    telaEl.innerHTML = '<a class="sr" href="#conteudo">Pular para o conteúdo</a>' + html;
+    telaEl.classList.remove('tela-entrando');
+    void telaEl.offsetWidth;           /* força o reinício da animação */
+    if (!semMovimento()) telaEl.classList.add('tela-entrando');
+
+    ligarTela();
+    sincronizarBarra();
+
+    if (ancora) irParaAncora(ancora);
+    else palcoEl.scrollTop = 0;
+  }
+
+  function irParaAncora(id) {
+    var alvo = telaEl.querySelector('#' + id);
+    if (!alvo) return;
+    var topo = alvo.getBoundingClientRect().top - palcoEl.getBoundingClientRect().top + palcoEl.scrollTop - 80;
+    palcoEl.scrollTo({ top: topo, behavior: semMovimento() ? 'auto' : 'smooth' });
+  }
+
+  function navegar(destino) {
+    if (destino.charAt(0) === '#') { irParaAncora(destino.slice(1)); return; }
+    var partes = destino.split('#');
+    var rota = partes[0] || '/';
+    if (rota === rotaAtual && partes[1]) { irParaAncora(partes[1]); return; }
+    render(rota, partes[1]);
+  }
+
+  /* ==========================================================
+     LIGAÇÕES DE CADA TELA
+     ========================================================== */
+  function ligarTela() {
+    /* Navegação interna */
+    telaEl.addEventListener('click', function (ev) {
+      var alvo = ev.target.closest('[data-ir]');
+      if (!alvo) return;
+      ev.preventDefault();
+      fecharGaveta();
+      navegar(alvo.getAttribute('data-ir'));
+    });
+    telaEl.addEventListener('keydown', function (ev) {
+      if (ev.key !== 'Enter' && ev.key !== ' ') return;
+      var alvo = ev.target.closest('[data-ir][role="link"]');
+      if (!alvo) return;
+      ev.preventDefault();
+      navegar(alvo.getAttribute('data-ir'));
+    });
+
+    ligarGaveta();
+    ligarFiltro();
+    ligarGaleria();
+    ligarPainel();
+    ligarEixo();
+  }
+
+  /* --- Gaveta --- */
+  var gavetaEl, btMenu;
+  function fecharGaveta() { if (gavetaEl) definirGaveta(false); }
+  function definirGaveta(aberta) {
+    if (!gavetaEl || !btMenu) return;
+    gavetaEl.dataset.aberta = String(aberta);
+    btMenu.setAttribute('aria-expanded', String(aberta));
+    palcoEl.style.overflow = aberta ? 'hidden' : '';
+    if (aberta) { var p = gavetaEl.querySelector('a,button:not([tabindex="-1"])'); if (p) p.focus(); }
+  }
+  function ligarGaveta() {
+    gavetaEl = $('#gaveta', telaEl);
+    btMenu = telaEl.querySelector('.cab-int .bt-menu');
+    if (!gavetaEl || !btMenu) return;
+    btMenu.addEventListener('click', function () { definirGaveta(gavetaEl.dataset.aberta !== 'true'); });
+    gavetaEl.addEventListener('click', function (ev) {
+      if (ev.target.closest('.gaveta-fundo,[data-fechar],a')) definirGaveta(false);
+    });
+  }
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape') fecharGaveta();
+  });
+
+  /* --- Filtro com FLIP ---
+     First-Last-Invert-Play: mede onde cada cartão está, muda o
+     DOM, mede de novo, e anima a diferença. É o que faz os
+     cartões que permanecem DESLIZAREM para a posição nova em vez
+     de saltarem. */
+  function ligarFiltro() {
+    var filtro = telaEl.querySelector('#modelos .filtro');
+    var grade = $('#grade', telaEl);
+    if (!filtro || !grade) return;
+
+    var cartoes = $$('.cartao', grade);
+    var contagem = telaEl.querySelector('#modelos .contagem');
+
+    filtro.addEventListener('click', function (ev) {
+      var bt = ev.target.closest('button');
+      if (!bt) return;
+      var cat = bt.getAttribute('data-cat');
+
+      $$('button', filtro).forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b === bt));
+      });
+
+      var antes = cartoes.map(function (c) { return c.getBoundingClientRect(); });
+
+      var visiveis = 0;
+      cartoes.forEach(function (c) {
+        var mostra = cat === 'todas' || c.dataset.categoria === cat;
+        c.hidden = !mostra;
+        c.classList.toggle('saindo', !mostra);
+        if (mostra) visiveis++;
+      });
+
+      if (contagem) {
+        contagem.textContent = visiveis === 1
+          ? '1 modelo nesta categoria.'
+          : visiveis + ' modelos nesta categoria.';
+      }
+
+      if (semMovimento()) return;
+
+      cartoes.forEach(function (c, i) {
+        if (c.hidden) return;
+        var depois = c.getBoundingClientRect();
+        var dx = antes[i].left - depois.left;
+        var dy = antes[i].top - depois.top;
+        if (!dx && !dy) return;
+        c.style.transition = 'none';
+        c.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+        requestAnimationFrame(function () {
+          c.style.transition = '';
+          c.style.transform = '';
+        });
+      });
+    });
+  }
+
+  /* --- Galeria --- */
+  function ligarGaleria() {
+    var minis = $('.minis', telaEl);
+    var galeria = $('.galeria', telaEl);
+    if (!minis || !galeria) return;
+
+    var fotos = $$('img', galeria);
+    var botoes = $$('button', minis);
+    var legenda = $('#legenda', telaEl);
+
+    function selecionar(i) {
+      if (!botoes[i]) return;
+      fotos.forEach(function (f, j) { f.dataset.ativa = String(j === i); });
+      botoes.forEach(function (b, j) { b.setAttribute('aria-pressed', String(j === i)); });
+      if (legenda) legenda.textContent = botoes[i].getAttribute('data-legenda');
+      botoes[i].focus();
+    }
+
+    minis.addEventListener('click', function (ev) {
+      var b = ev.target.closest('button');
+      if (b) selecionar(botoes.indexOf(b));
+    });
+    minis.addEventListener('keydown', function (ev) {
+      var passo = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0;
+      if (!passo) return;
+      ev.preventDefault();
+      var atual = botoes.indexOf(ev.target.closest('button'));
+      selecionar((atual + passo + botoes.length) % botoes.length);
+    });
+  }
+
+  /* --- Partida do painel ---
+     As leituras acendem em sequência e os números sobem. É o
+     cluster da moto na ignição, e é o único movimento que a
+     página inicia por conta própria. */
+  function ligarPainel() {
+    var painel = $('#painel', telaEl);
+    if (!painel) return;
+
+    if (semMovimento()) {
+      $$('[data-conta]', painel).forEach(function (el) {
+        el.textContent = el.getAttribute('data-conta');
+      });
+      return;
+    }
+
+    painel.dataset.partida = 'true';
+    $$('[data-conta]', painel).forEach(function (el) {
+      var alvo = Number(el.getAttribute('data-conta'));
+      /* O atraso segue a leitura a que o número pertence, não a ordem
+         do span — senão os dois lados de uma faixa sobem defasados. */
+      var leituraEl = el.closest('.leitura');
+      var atraso = 100 * $$('.leitura', painel).indexOf(leituraEl);
+      var inicio = null;
+      var duracao = 760;
+
+      function passo(t) {
+        if (inicio === null) inicio = t;
+        var p = Math.min(1, Math.max(0, (t - inicio - atraso) / duracao));
+        /* Desaceleração: o odômetro chega devagar, não freia seco. */
+        var suave = 1 - Math.pow(1 - p, 3);
+        el.textContent = String(Math.round(alvo * suave));
+        if (p < 1) requestAnimationFrame(passo);
+      }
+      requestAnimationFrame(passo);
+    });
+  }
+
+  /* --- Eixo de largura do Design System --- */
+  function ligarEixo() {
+    var eixo = $('#eixo', telaEl);
+    var especime = $('#especime', telaEl);
+    var valor = $('#eixo-valor', telaEl);
+    if (!eixo || !especime) return;
+    eixo.addEventListener('input', function () {
+      especime.style.fontVariationSettings = "'wdth' " + eixo.value;
+      if (valor) valor.textContent = eixo.value;
+    });
+  }
+
+  /* ==========================================================
+     CROMO: largura e tema
+     ========================================================== */
+  var moldura = $('#moldura');
+  var medida = $('#medida');
+  var larguraAtual = 'cheia';
+  var temaAtual = 'sistema';
+
+  var mqEscuro = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function aplicarTema(animar) {
+    var efetivo = temaAtual === 'sistema' ? (mqEscuro.matches ? 'escuro' : 'claro') : temaAtual;
+    if (animar) {
+      telaEl.classList.add('animar-tema');
+      setTimeout(function () { telaEl.classList.remove('animar-tema'); }, 320);
+    }
+    telaEl.dataset.temaAtivo = efetivo;
+    palcoEl.style.background = getComputedStyle(telaEl).backgroundColor;
+  }
+  mqEscuro.addEventListener('change', function () { aplicarTema(true); });
+
+  function aplicarLargura() {
+    moldura.dataset.largura = larguraAtual;
+    if (larguraAtual === 'cheia') {
+      moldura.style.width = '100%';
+      palcoEl.style.height = 'calc(100vh - 168px)';
+      medida.textContent = 'largura da janela';
+    } else {
+      moldura.style.width = larguraAtual + 'px';
+      palcoEl.style.height = (larguraAtual === '390' ? 844 : 1000) + 'px';
+      medida.textContent = larguraAtual + ' px';
+    }
+  }
+
+  function marcarSeg(grupo, escolhido) {
+    $$('button', grupo).forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b === escolhido));
+    });
+  }
+
+  function sincronizarBarra() {
+    var grupo = $('#sel-tela');
+    $$('button', grupo).forEach(function (b) {
+      var r = b.getAttribute('data-rota');
+      var casa = r === rotaAtual || (r.indexOf('/moto/') === 0 && rotaAtual.indexOf('/moto/') === 0);
+      b.setAttribute('aria-pressed', String(casa));
+    });
+  }
+
+  $('#sel-tela').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    navegar(b.getAttribute('data-rota'));
+  });
+
+  $('#sel-largura').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    larguraAtual = b.getAttribute('data-largura');
+    marcarSeg(this, b);
+    aplicarLargura();
+  });
+
+  $('#sel-tema').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    temaAtual = b.getAttribute('data-tema');
+    marcarSeg(this, b);
+    aplicarTema(true);
+  });
+
+  /* Partida */
+  aplicarLargura();
+  render('/');
+  aplicarTema(false);
+})();
+</script>
+  </body>
+</html>

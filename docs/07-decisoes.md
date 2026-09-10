@@ -216,32 +216,47 @@ vinext não suporte.
 
 ---
 
-## D9 — Direção visual prototipada em HTML puro, fora do app
+## D9 — Protótipo hi-fi como um arquivo só, gerado, fora do build
 
 **Data:** 2026-09-10 · **Status:** proposta, aguardando aprovação
 
-**Contexto.** A Fase 3 precisa de uma direção visual antes de qualquer conversão
-de componente. Duas opções: mexer direto no `app/globals.css` do site, ou
-prototipar à parte.
+**Contexto.** A Fase 3 precisa de uma direção visual antes de converter qualquer
+componente, e quem aprova o visual nem sempre roda `npm`.
 
-**Decisão.** Uma pasta `prototipos/` com HTML, CSS e JS puros, mais uma moldura
-(`prototipos/index.html`) que troca largura e tema. Nada entra no build do site.
+**Decisão.** Um único HTML autocontido — fonte e imagens em base64, roteamento
+interno, três telas (home, ficha e Design System) — gerado por
+`prototipos/gerar-standalone.mjs` a partir de `prototipos/src/`. Nada entra no
+build do site.
 
-**Raciocínio.** Prototipar dentro do app custa caro para descartar: cada
-experimento vira commit no CSS de produção, e voltar atrás exige desfazer o que
-ficou entrelaçado. Em arquivos separados, uma direção reprovada se apaga com
-`rm -rf`. E porque abrem por clique duplo, qualquer pessoa avalia sem instalar
-`npm` — o que importa quando quem decide o visual não é quem programa.
+**Por que um arquivo só.** Ele abre por clique duplo e pode ser mandado por
+e-mail ou WhatsApp. Quem avalia não instala nada, não roda servidor e não precisa
+de rede. A primeira versão eram arquivos soltos com imagens externas e fonte de
+CDN; não servia para isso.
 
-**Consequência.** Existe agora um segundo CSS no repositório, e ele **vai**
-divergir do site. É dívida aceita e datada: se a direção for aprovada, os tokens
-migram para `app/globals.css` e `prototipos/` some. Se for reprovada, some do
-mesmo jeito. O que não pode é ficar.
+**Por que gerado e não escrito à mão.** 1,5 MB de base64 no meio do código
+tornaria o fonte ilegível e o diff impossível de revisar. O gerador é uma
+substituição de marcadores em Node puro, sem dependência, e falha se sobrar
+algum marcador.
 
-**Do protótipo, o que já está decidido e medido:** dois tokens de destaque
-(`--ambar` preenche a 9,95:1, `--ambar-tinta` escreve a 6,42:1; o âmbar puro como
-texto dá 1,65:1 e reprova), escala tipográfica de razão 1,25 e escala de
-espaçamento base 4.
+**Por que o gerado não é versionado.** É a invariante 9 aplicada onde é tentador
+abrir exceção: 1,5 MB gravados a cada ajuste de design, e o git guarda o blob
+inteiro por versão. Vinte iterações custariam 30 MB permanentes num repositório
+de 1,7 MB. Versionado fica o que não se regenera — fonte, tipografia e gerador.
+
+**Por que prototipar fora do app.** Prototipar dentro custa caro para descartar:
+cada experimento vira commit no CSS de produção. Em arquivos separados, uma
+direção reprovada se apaga com `rm -rf`.
+
+**Consequência.** Existe um segundo CSS no repositório, e ele **vai** divergir do
+site. É dívida aceita e datada: aprovada, os tokens migram para
+`app/globals.css` e `prototipos/` some; reprovada, some do mesmo jeito. O que não
+pode é ficar.
+
+**Decidido e medido no protótipo:** dois tokens de destaque (`--ambar` preenche a
+9,95:1, `--ambar-tinta` escreve a 6,42:1; o âmbar puro como texto dá 1,65:1 e
+reprova), escala tipográfica de razão 1,25, escala de espaçamento base 4, e o
+responsivo por `@container` em vez de `@media` — que é o que permite o seletor de
+largura funcionar dentro de um arquivo só, sem `iframe`.
 
 ---
 

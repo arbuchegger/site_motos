@@ -77,6 +77,11 @@ desktop.ini
 !.vscode/settings.json
 !.vscode/extensions.json
 
+# Protótipo hi-fi montado. 1,5 MB gerados por
+# `node prototipos/gerar-standalone.mjs` a partir de prototipos/src/.
+# O motivo de ele não entrar está em prototipos/README.md.
+prototipos/*-standalone.html
+
 # Rascunho local — use para qualquer coisa que não deve ser versionada
 /tmp/
 /scratch/

@@ -166,9 +166,11 @@ Herdado do gerador e verificado. Não desfaça:
 
 ## Fase 3 — a proposta já existe
 
-Uma direção visual foi prototipada em HTML puro, em `prototipos/`. Abra
-`prototipos/index.html`: ele troca entre celular, tablet e desktop, entre claro e
-escuro, e as interações funcionam de verdade.
+Uma direção visual foi prototipada em HTML puro, em `prototipos/`. Rode
+`node prototipos/gerar-standalone.mjs` e abra o arquivo que ele produz: **um
+arquivo só**, com fonte e imagens embutidas, que troca entre celular, tablet e
+desktop, entre claro e escuro, e onde as interações funcionam de verdade.
+Inclui uma tela de Design System que calcula os contrastes na hora.
 
 A proposta em uma linha: **o vocabulário de painel de instrumentos.** Uma moto
 informa por números grandes e legíveis sob sol forte; a página passa a fazer o

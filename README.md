@@ -196,7 +196,7 @@ Convenções de branch, PR e o que fazer com histórico sujo estão em
 | [`docs/05-design.md`](docs/05-design.md) | Tokens, breakpoints, tipografia, acessibilidade |
 | [`docs/06-pagamentos.md`](docs/06-pagamentos.md) | Como conectar uma API de pagamento — e por que não conectamos |
 | [`docs/07-decisoes.md`](docs/07-decisoes.md) | Registro de decisões, com contexto e consequência |
-| [`prototipos/README.md`](prototipos/README.md) | Protótipos hi-fi da Fase 3 — abra `prototipos/index.html` |
+| [`prototipos/README.md`](prototipos/README.md) | Protótipo hi-fi da Fase 3 — `node prototipos/gerar-standalone.mjs` e abra o arquivo |
 
 ---
 
