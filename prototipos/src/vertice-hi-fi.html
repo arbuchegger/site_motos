@@ -1,0 +1,1270 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Vértice Motos — aluguel mensal de motos</title>
+  </head>
+  <body>
+<style>
+/* ============================================================
+   FONTE EMBUTIDA
+   Figtree variável, subconjunto latino, em base64. O arquivo abre
+   sem rede, sem CDN e sem servidor.
+   ============================================================ */
+@font-face{
+  font-family:'Figtree';
+  font-style:normal;
+  font-weight:300 900;
+  font-display:swap;
+  src:url(__FONTE__) format('woff2');
+}
+
+/* ============================================================
+   1. TOKENS
+   ============================================================ */
+:root{
+  --tinta:#1a1d21;
+  --suave:#5c6470;
+  --fundo:#f5f3ef;
+  --carta:#fff;
+  --linha:#e5e2dc;
+  --linha-forte:#cbc7bf;
+
+  /* UMA cor de marca, e ela é verde por motivo funcional: a única
+     conversão do site é WhatsApp, então o botão já diz para onde
+     leva antes de ser lido.
+
+     Serve aos dois papéis, e os dois passam em AA:
+       branco sobre #0E7A3C ....... 5,43:1  (botão)
+       #0E7A3C como texto no fundo  5,02:1  (link) */
+  --marca:#0e7a3c;
+  --marca-escura:#0b6b34;
+  --marca-tenue:#e6f3ec;
+  --marca-texto:#fff;
+
+  --atencao:#8a5300; --atencao-tenue:#fbf0da;
+
+  --t12:.75rem; --t13:.8125rem; --t14:.875rem; --t15:.9375rem;
+  --t16:1rem; --t18:1.125rem; --t20:1.25rem; --t24:1.5rem;
+  --t30:1.875rem; --t38:2.375rem; --t48:3rem; --t58:3.625rem;
+
+  --e1:4px; --e2:8px; --e3:12px; --e4:16px; --e5:24px;
+  --e6:32px; --e7:48px; --e8:64px; --e9:88px; --e10:120px;
+
+  --raio:16px;
+  --raio-bt:11px;
+  --raio-pill:999px;
+  --sombra:0 1px 2px rgba(26,29,33,.05),0 12px 28px -16px rgba(26,29,33,.28);
+  --sombra-alta:0 2px 8px rgba(26,29,33,.07),0 28px 56px -22px rgba(26,29,33,.38);
+
+  --largura:1180px;
+  --gutter:var(--e5);
+  --alt-cab:76px;
+
+  --mov:200ms;
+  --curva:cubic-bezier(.22,.61,.36,1);
+  --mola:cubic-bezier(.34,1.4,.64,1);
+
+  color-scheme:light;
+}
+
+@media (prefers-color-scheme:dark){
+  :root{
+    --tinta:#eceef1;
+    --suave:#9aa1ac;
+    --fundo:#15171b;
+    --carta:#1d2025;
+    --linha:#2b3037;
+    --linha-forte:#414852;
+    --marca:#4ade80;          /* 10,20:1 como texto no escuro */
+    --marca-escura:#6ee7a0;
+    --marca-tenue:#12281c;
+    --marca-texto:#06200f;    /* tinta escura sobre o verde claro */
+    --atencao:#ffc46b; --atencao-tenue:#2b2113;
+    --sombra:0 1px 2px rgba(0,0,0,.4),0 12px 28px -16px rgba(0,0,0,.75);
+    --sombra-alta:0 2px 8px rgba(0,0,0,.45),0 28px 56px -22px rgba(0,0,0,.85);
+    color-scheme:dark;
+  }
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--alt-cab) + var(--e4))}
+
+body{
+  margin:0;background:var(--fundo);color:var(--tinta);
+  font-family:Figtree,system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:var(--t16);line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3,p,dl,dd,ol,ul{margin:0}
+
+:where(button,a,input,summary):focus-visible{
+  outline:3px solid var(--marca);outline-offset:3px;border-radius:var(--raio-bt);
+}
+
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+.pular{
+  position:fixed;left:var(--e4);top:-100px;z-index:60;
+  background:var(--marca);color:var(--marca-texto);
+  padding:var(--e3) var(--e5);border-radius:var(--raio-bt);
+  font-weight:750;text-decoration:none;transition:top 160ms var(--curva);
+}
+.pular:focus{top:var(--e4)}
+
+.container{width:min(100% - (var(--gutter) * 2),var(--largura));margin-inline:auto}
+
+/* ============================================================
+   3. TIPOGRAFIA
+   Figtree: geométrica de altura-x alta, arredondada. Fala como
+   negócio de bairro, não como estúdio de design.
+   ============================================================ */
+h1{font-size:clamp(2.1rem,5.2vw,var(--t58));font-weight:800;letter-spacing:-.03em;line-height:1.05;text-wrap:balance}
+h2{font-size:clamp(1.7rem,3.4vw,var(--t38));font-weight:800;letter-spacing:-.026em;line-height:1.12;text-wrap:balance}
+h3{font-size:var(--t20);font-weight:750;letter-spacing:-.014em;line-height:1.3}
+
+/* Um respiro depois de todo título, sempre o mesmo. Antes cada bloco
+   inventava o seu e a página ficava sem ritmo. */
+.chamada{font-size:var(--t18);color:var(--suave);max-width:48ch;line-height:1.55;margin-top:var(--e4)}
+h2 + .chamada{margin-top:var(--e3)}
+.corrido{max-width:62ch}
+
+/* ============================================================
+   4. BOTÕES, PÍLULAS
+   ============================================================ */
+.botao{
+  display:inline-flex;align-items:center;justify-content:center;gap:var(--e2);
+  min-height:52px;padding:var(--e3) var(--e6);
+  border:2px solid transparent;border-radius:var(--raio-bt);
+  font:inherit;font-weight:750;font-size:var(--t16);
+  text-decoration:none;cursor:pointer;
+  transition:background-color 160ms,border-color 160ms,color 160ms,
+             transform 120ms var(--curva),box-shadow 220ms;
+}
+.botao:active{transform:scale(.975)}
+.botao svg{flex:none}
+
+/* Verde = leva ao WhatsApp. Nenhum outro botão do site usa essa cor,
+   então ela continua significando uma coisa só. */
+.botao-1{background:var(--marca);color:var(--marca-texto);box-shadow:0 8px 20px -10px rgba(14,122,60,.85)}
+.botao-1:hover{background:var(--marca-escura);box-shadow:0 12px 26px -10px rgba(14,122,60,.95);transform:translateY(-1px)}
+.botao-2{background:var(--carta);color:var(--tinta);border-color:var(--linha)}
+.botao-2:hover{border-color:var(--linha-forte);transform:translateY(-1px)}
+/* Sobre foto: vidro, para não competir com o verde ao lado. */
+.botao-3{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.42);backdrop-filter:blur(8px)}
+.botao-3:hover{background:rgba(255,255,255,.26);transform:translateY(-1px)}
+
+/* Navegar dentro do site usa contraste neutro, nunca verde. */
+.botao-ficha{
+  background:var(--tinta);color:var(--fundo);
+  min-height:46px;padding:var(--e2) var(--e5);font-size:var(--t15);
+  white-space:nowrap;
+}
+.botao-ficha:hover{background:var(--suave);transform:translateY(-1px)}
+.botao-ficha svg{transition:transform 220ms var(--curva)}
+.botao-ficha:hover svg{transform:translateX(4px)}
+
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 12px;border-radius:var(--raio-pill);
+  font-size:var(--t13);font-weight:750;line-height:1.3;
+}
+.pill-ok{background:var(--marca-tenue);color:var(--marca)}
+.pill-atencao{background:var(--atencao-tenue);color:var(--atencao)}
+.pill-neutro{background:var(--fundo);color:var(--suave);border:1px solid var(--linha)}
+
+/* ============================================================
+   5. CABEÇALHO
+   ============================================================ */
+.cabecalho{
+  position:sticky;top:0;z-index:40;
+  background:color-mix(in srgb,var(--fundo) 86%,transparent);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid transparent;
+  transition:border-color 240ms,background-color 240ms,color 240ms;
+}
+.cabecalho[data-rolou='true']{border-bottom-color:var(--linha)}
+.cab-int{display:flex;align-items:center;gap:var(--e5);height:var(--alt-cab)}
+
+/* No topo da home o cabeçalho fica SOBRE a foto, sem fundo próprio —
+   a imagem começa na borda de cima da tela. Ao rolar vira barra
+   sólida. Sem isso a faixa clara corta a foto em duas. */
+body[data-hero='true'] .cabecalho:not([data-rolou='true']){
+  background:transparent;backdrop-filter:none;color:#fff;
+}
+body[data-hero='true'] .cabecalho:not([data-rolou='true']) .nav-desk a{color:rgba(255,255,255,.84)}
+body[data-hero='true'] .cabecalho:not([data-rolou='true']) .nav-desk a:hover{color:#fff}
+body[data-hero='true'] .cabecalho:not([data-rolou='true']) .marca-nome i{color:rgba(255,255,255,.74)}
+body[data-hero='true'] .cabecalho:not([data-rolou='true']) .bt-menu{
+  background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.4);color:#fff;
+}
+
+.marca{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto;cursor:pointer}
+.marca-selo{
+  width:40px;height:40px;border-radius:12px;flex:none;
+  background:var(--marca);color:var(--marca-texto);
+  display:grid;place-items:center;font-weight:900;font-size:20px;letter-spacing:-.04em;
+  transition:transform 260ms var(--mola);
+}
+.marca:hover .marca-selo{transform:rotate(-8deg) scale(1.06)}
+.marca-nome{font-weight:800;font-size:var(--t18);letter-spacing:-.02em;line-height:1.15}
+.marca-nome i{display:block;font-style:normal;font-size:var(--t12);font-weight:600;color:var(--suave);letter-spacing:.01em}
+
+.nav-desk{display:flex;gap:var(--e5)}
+.nav-desk a{
+  text-decoration:none;font-weight:650;font-size:var(--t15);color:var(--suave);
+  padding-block:var(--e2);cursor:pointer;position:relative;transition:color 160ms;
+}
+.nav-desk a::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:var(--marca);transform:scaleX(0);transform-origin:left;
+  transition:transform 220ms var(--curva);
+}
+.nav-desk a:hover{color:var(--tinta)}
+.nav-desk a:hover::after{transform:scaleX(1)}
+
+.bt-menu{
+  display:none;align-items:center;justify-content:center;width:48px;height:48px;
+  background:var(--carta);color:inherit;border:1px solid var(--linha);
+  border-radius:var(--raio-bt);cursor:pointer;transition:background-color 160ms}
+
+.gaveta{position:fixed;inset:0;z-index:50;display:grid;grid-template-columns:1fr min(340px,86%);visibility:hidden;overflow:hidden}
+.gaveta[data-aberta='true']{visibility:visible}
+.gaveta-fundo{background:rgba(10,12,14,.5);opacity:0;transition:opacity var(--mov);border:0;padding:0;cursor:pointer;backdrop-filter:blur(3px)}
+.gaveta[data-aberta='true'] .gaveta-fundo{opacity:1}
+.gaveta-painel{
+  background:var(--carta);padding:var(--e5);display:flex;flex-direction:column;gap:var(--e5);
+  transform:translateX(100%);transition:transform 320ms var(--curva);overflow-y:auto;
+  box-shadow:var(--sombra-alta);
+}
+.gaveta[data-aberta='true'] .gaveta-painel{transform:none}
+.gaveta-topo{display:flex;align-items:center;justify-content:space-between}
+.gaveta nav{display:flex;flex-direction:column}
+.gaveta nav a{text-decoration:none;font-size:var(--t20);font-weight:700;padding-block:var(--e4);border-bottom:1px solid var(--linha);cursor:pointer}
+/* Os itens entram em cascata quando a gaveta abre. */
+.gaveta[data-aberta='true'] nav a{animation:entraItem 340ms var(--curva) both}
+.gaveta[data-aberta='true'] nav a:nth-child(2){animation-delay:50ms}
+.gaveta[data-aberta='true'] nav a:nth-child(3){animation-delay:100ms}
+.gaveta[data-aberta='true'] nav a:nth-child(4){animation-delay:150ms}
+@keyframes entraItem{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
+
+/* ============================================================
+   6. HERO
+   ============================================================ */
+.hero{position:relative;isolation:isolate;overflow:hidden;margin-top:calc(var(--alt-cab) * -1)}
+.hero-foto{position:absolute;inset:-8% 0;z-index:-2;will-change:transform}
+.hero-foto img{width:100%;height:100%;object-fit:cover}
+.hero-veu{
+  position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(100deg,rgba(11,13,16,.9) 0%,rgba(11,13,16,.74) 46%,rgba(11,13,16,.34) 76%,rgba(11,13,16,.18) 100%);
+}
+.hero-grade{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,390px);
+  gap:var(--e8);align-items:center;
+  padding-block:calc(var(--e10) + var(--alt-cab)) var(--e10);
+  color:#fff;
+}
+.hero h1{color:#fff;max-width:15ch}
+.hero .chamada{color:rgba(255,255,255,.88);max-width:44ch;margin-top:var(--e5)}
+.acoes{display:flex;flex-wrap:wrap;gap:var(--e3);margin-top:var(--e7)}
+
+.confianca{
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--e3) var(--e6);
+  margin-top:var(--e7);padding-top:var(--e5);
+  border-top:1px solid rgba(255,255,255,.22);
+  font-size:var(--t14);color:rgba(255,255,255,.8);
+}
+.confianca strong{color:#fff;font-weight:750}
+.confianca span{display:inline-flex;align-items:center;gap:8px}
+
+/* Carta de oferta: mostra que existe produto, com preço, antes de
+   qualquer rolagem. É clicável inteira. */
+.destaque{
+  display:block;width:100%;text-align:left;border:0;font:inherit;cursor:pointer;
+  background:var(--carta);color:var(--tinta);
+  border-radius:calc(var(--raio) + 4px);padding:var(--e4);
+  box-shadow:var(--sombra-alta);
+  transition:transform 300ms var(--curva),box-shadow 300ms;
+}
+.destaque:hover{transform:translateY(-5px);box-shadow:0 6px 14px rgba(0,0,0,.12),0 40px 70px -24px rgba(0,0,0,.55)}
+.destaque-foto{border-radius:var(--raio);overflow:hidden;aspect-ratio:16/11;background:var(--fundo)}
+.destaque-foto img{width:100%;height:100%;object-fit:cover;transition:transform 560ms var(--curva)}
+.destaque:hover .destaque-foto img{transform:scale(1.05)}
+.destaque-corpo{padding:var(--e5) var(--e1) var(--e1)}
+.destaque-pills{display:flex;gap:var(--e2);flex-wrap:wrap;margin-bottom:var(--e3)}
+.destaque-local{font-size:var(--t14);color:var(--suave)}
+.destaque h3{margin-top:3px}
+.destaque-specs{font-size:var(--t15);color:var(--suave);margin-top:var(--e1)}
+
+.preco{display:flex;align-items:baseline;gap:var(--e2);flex-wrap:wrap;margin-top:var(--e4)}
+.preco-valor{font-size:var(--t30);font-weight:850;letter-spacing:-.035em;line-height:1}
+.preco-nota{font-size:var(--t14);color:var(--suave)}
+
+/* ============================================================
+   7. SEÇÕES E FAIXAS
+   A página alterna fundo para ganhar ritmo: escuro (hero), quente
+   (catálogo), escuro (como funciona), branco (dúvidas), quente
+   (contato). Sem isso tudo vira um bloco só e o olho não encontra
+   onde uma seção termina.
+   ============================================================ */
+.secao{padding-block:var(--e10)}
+.secao-topo{display:flex;align-items:end;justify-content:space-between;gap:var(--e5);flex-wrap:wrap;margin-bottom:var(--e7)}
+
+.faixa-branca{background:var(--carta);border-block:1px solid var(--linha)}
+.faixa-escura{background:#14171b;color:#f3f4f2}
+.faixa-escura h2{color:#fff}
+.faixa-escura .chamada{color:rgba(243,244,242,.66)}
+
+/* ============================================================
+   8. CATÁLOGO
+   ============================================================ */
+/* Filtro e contagem numa barra só, com régua embaixo. Antes eram
+   três blocos empilhados quase encostados. */
+.barra-catalogo{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:var(--e4);flex-wrap:wrap;
+  padding-bottom:var(--e5);border-bottom:1px solid var(--linha);
+}
+.filtro{display:flex;gap:var(--e2);flex-wrap:wrap}
+.filtro button{
+  min-height:44px;padding:var(--e2) var(--e5);
+  background:var(--carta);color:var(--suave);
+  border:1px solid var(--linha);border-radius:var(--raio-pill);
+  font:inherit;font-size:var(--t15);font-weight:700;cursor:pointer;
+  transition:background-color 180ms,color 180ms,border-color 180ms,transform 120ms var(--curva),box-shadow 180ms;
+}
+.filtro button:hover{color:var(--tinta);border-color:var(--linha-forte);transform:translateY(-1px);box-shadow:var(--sombra)}
+.filtro button:active{transform:scale(.96)}
+/* Selecionado nunca só por cor: entra a marca de conferido. */
+.filtro button[aria-pressed='true']{background:var(--tinta);color:var(--fundo);border-color:var(--tinta);box-shadow:var(--sombra)}
+.filtro button[aria-pressed='true']::before{content:'✓ ';font-weight:800}
+.contagem{font-size:var(--t14);color:var(--suave);font-weight:650;white-space:nowrap}
+
+.grade{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--e5);margin-top:var(--e7)}
+
+.cartao{
+  display:flex;flex-direction:column;background:var(--carta);
+  border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;
+  /* Relevo em REPOUSO. Sem sombra parada o cartão não descola do
+     fundo e a grade vira tabela. */
+  box-shadow:var(--sombra);
+  transition:border-color 200ms,box-shadow 300ms,transform 300ms var(--curva),opacity 220ms;
+}
+.cartao:hover{border-color:transparent;box-shadow:var(--sombra-alta);transform:translateY(-5px)}
+.cartao-topo{position:relative;background:var(--fundo);aspect-ratio:16/11;overflow:hidden}
+.cartao-topo img{width:100%;height:100%;object-fit:cover;transition:transform 560ms var(--curva)}
+.cartao:hover .cartao-topo img{transform:scale(1.05)}
+.cartao-pills{position:absolute;top:var(--e3);left:var(--e3);display:flex;gap:6px;flex-wrap:wrap}
+.cartao-pills .pill{box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.cartao-pills .pill-neutro{background:rgba(255,255,255,.94);color:#1a1d21;border-color:transparent}
+
+.cartao-corpo{padding:var(--e5);display:flex;flex-direction:column;gap:var(--e2);flex:1}
+.cartao-local{font-size:var(--t14);color:var(--suave)}
+.cartao h3 a{text-decoration:none;cursor:pointer;transition:color 160ms}
+.cartao h3 a:hover{color:var(--marca)}
+.cartao-specs{font-size:var(--t15);color:var(--suave)}
+.cartao-rodape{
+  display:flex;align-items:end;justify-content:space-between;gap:var(--e4);
+  margin-top:auto;padding-top:var(--e5);border-top:1px solid var(--linha);
+}
+.cartao-rodape .preco{margin-top:0}
+.cartao.saindo{opacity:0;transform:scale(.93);pointer-events:none}
+
+/* ============================================================
+   9. COMO FUNCIONA
+   ============================================================ */
+.passos{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--e5);margin-top:var(--e7)}
+.passo{
+  position:relative;background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.12);border-radius:var(--raio);
+  padding:var(--e6) var(--e5) var(--e5);
+  transition:background-color 260ms,border-color 260ms,transform 300ms var(--curva);
+}
+.passo:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2);transform:translateY(-4px)}
+.passo-icone{
+  width:48px;height:48px;border-radius:14px;
+  background:rgba(255,255,255,.1);color:var(--marca);
+  display:grid;place-items:center;margin-bottom:var(--e5);
+  transition:transform 300ms var(--mola);
+}
+.passo:hover .passo-icone{transform:scale(1.08) rotate(-6deg)}
+/* É uma sequência de verdade — o número é informação, não enfeite. */
+.passo-n{
+  position:absolute;top:var(--e5);right:var(--e5);
+  font-size:var(--t38);font-weight:850;line-height:1;letter-spacing:-.05em;
+  color:rgba(255,255,255,.13);
+}
+.passo p{color:rgba(243,244,242,.66);margin-top:var(--e2)}
+
+/* ============================================================
+   10. DÚVIDAS
+   Duas colunas: a chamada fixa à esquerda, as perguntas à direita.
+   Antes era um bloco de 760 px encostado na margem esquerda, com
+   metade da largura vazia do lado.
+   ============================================================ */
+.duvidas-grade{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:var(--e8);align-items:start}
+.duvidas-intro{position:sticky;top:calc(var(--alt-cab) + var(--e6))}
+.duvidas-intro .acoes{margin-top:var(--e6)}
+.duvidas{min-width:0;display:grid;gap:var(--e3)}
+
+.duvida{
+  background:var(--fundo);border:1px solid var(--linha);border-radius:var(--raio);
+  overflow:hidden;transition:border-color 200ms,box-shadow 260ms,background-color 200ms;
+}
+.duvida:hover{border-color:var(--linha-forte)}
+.duvida[open]{background:var(--carta);border-color:transparent;box-shadow:var(--sombra)}
+.duvida summary{
+  list-style:none;cursor:pointer;padding:var(--e5);
+  display:flex;align-items:center;gap:var(--e4);
+  font-weight:750;font-size:var(--t18);line-height:1.35;
+}
+.duvida summary::-webkit-details-marker{display:none}
+.duvida summary svg{
+  margin-left:auto;flex:none;color:var(--suave);
+  transition:transform 300ms var(--curva),color 200ms;
+}
+.duvida[open] summary svg{transform:rotate(180deg);color:var(--marca)}
+.duvida-corpo{padding:0 var(--e5) var(--e5);color:var(--suave);max-width:62ch}
+
+/* ============================================================
+   11. CONTATO E RODAPÉ
+   ============================================================ */
+.contato-carta{
+  background:var(--carta);border:1px solid var(--linha);border-radius:calc(var(--raio) + 8px);
+  padding:var(--e8);display:grid;grid-template-columns:1.1fr 1fr;gap:var(--e8);
+  box-shadow:var(--sombra);
+}
+.dados{display:grid;gap:var(--e5);align-content:start}
+.dados>div{display:grid;gap:3px}
+.dados dt{font-size:var(--t14);color:var(--suave)}
+.dados dd,.dados address{font-size:var(--t18);font-weight:700;font-style:normal;line-height:1.45}
+
+.rodape{padding-block:var(--e8) var(--e7);border-top:1px solid var(--linha)}
+.rodape-grade{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:var(--e7);align-items:start}
+.rodape-col h3{font-size:var(--t14);font-weight:750;margin-bottom:var(--e4)}
+.rodape-col p,.rodape-col address{font-style:normal;color:var(--suave);font-size:var(--t15)}
+.rodape-marca p{margin-top:var(--e4);max-width:34ch;color:var(--suave);font-size:var(--t15)}
+.rodape nav{display:grid;gap:var(--e3);font-size:var(--t15)}
+.rodape nav a{text-decoration:none;cursor:pointer;color:var(--suave);font-weight:600;transition:color 160ms}
+.rodape nav a:hover{color:var(--tinta)}
+.aviso{margin-top:var(--e7);padding-top:var(--e5);border-top:1px solid var(--linha);max-width:70ch;font-size:var(--t14);color:var(--suave)}
+
+/* ============================================================
+   12. WHATSAPP FLUTUANTE
+   ============================================================ */
+.zap{
+  position:fixed;right:var(--e6);bottom:var(--e6);z-index:45;
+  width:62px;height:62px;border-radius:50%;
+  background:var(--marca);color:var(--marca-texto);border:0;cursor:pointer;
+  display:grid;place-items:center;
+  box-shadow:0 12px 30px -8px rgba(14,122,60,.8);
+  opacity:0;transform:scale(.5) translateY(14px);
+  transition:opacity 360ms var(--curva),transform 460ms var(--mola),background-color 160ms;
+}
+.zap[data-pronto='true']{opacity:1;transform:none}
+.zap:hover{background:var(--marca-escura);transform:scale(1.08)}
+.zap:active{transform:scale(.95)}
+/* Um anel que pulsa uma vez, para o olho encontrar o botão. */
+.zap::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  border:2px solid var(--marca);opacity:0;
+}
+.zap[data-pronto='true']::after{animation:anel 2.4s var(--curva) .5s 2 both}
+@keyframes anel{
+  0%{opacity:.6;transform:scale(1)}
+  70%,100%{opacity:0;transform:scale(1.7)}
+}
+
+/* ============================================================
+   13. FICHA DA MOTO
+   ============================================================ */
+.trilha{padding-block:var(--e6);font-size:var(--t14);color:var(--suave)}
+.trilha a{text-decoration:none;cursor:pointer;font-weight:600;transition:color 160ms}
+.trilha a:hover{color:var(--tinta)}
+
+.ficha-topo{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:var(--e8);padding-bottom:var(--e9)}
+.galeria{position:relative;background:var(--carta);border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;aspect-ratio:16/11;box-shadow:var(--sombra)}
+.galeria img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.02);transition:opacity 380ms var(--curva),transform 620ms var(--curva)}
+.galeria img[data-ativa='true']{opacity:1;transform:none}
+.minis{display:flex;gap:var(--e3);margin-top:var(--e4)}
+.minis button{
+  width:108px;flex:none;padding:0;background:var(--carta);cursor:pointer;
+  border:2px solid var(--linha);border-radius:12px;overflow:hidden;aspect-ratio:16/11;
+  transition:border-color 200ms,opacity 200ms,transform 220ms var(--curva);opacity:.6;
+}
+/* Sem isto a miniatura fica no tamanho do atributo width e sobra
+   moldura branca em volta. */
+.minis img{width:100%;height:100%;object-fit:cover}
+.minis button:hover{opacity:1;transform:translateY(-2px)}
+.minis button[aria-pressed='true']{border-color:var(--marca);opacity:1}
+.legenda{font-size:var(--t13);color:var(--suave);margin-top:var(--e4)}
+
+.oferta{
+  background:var(--carta);border:1px solid var(--linha);
+  border-radius:calc(var(--raio) + 4px);
+  padding:var(--e6);box-shadow:var(--sombra);
+}
+.oferta-pills{display:flex;gap:var(--e2);flex-wrap:wrap;margin-bottom:var(--e5)}
+.oferta .preco{margin-top:0}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:var(--e5);margin-block:var(--e5);padding-block:var(--e5);border-block:1px solid var(--linha)}
+.specs dt{font-size:var(--t13);color:var(--suave)}
+.specs dd{font-size:var(--t18);font-weight:750;margin-top:3px}
+/* O botão fica logo depois da ficha e ocupa a largura toda — é a
+   ação principal da tela, não um item da lista. */
+.oferta .botao-1{width:100%}
+.inclui-titulo{font-size:var(--t13);color:var(--suave);font-weight:750;margin-top:var(--e6);padding-top:var(--e5);border-top:1px solid var(--linha)}
+.inclui{list-style:none;padding:0;display:grid;gap:var(--e3);margin-top:var(--e4)}
+.inclui li{display:flex;gap:11px;align-items:start;font-size:var(--t15)}
+.inclui svg{flex:none;margin-top:4px;color:var(--marca)}
+
+.recursos{list-style:none;padding:0;margin-top:var(--e7);display:grid;grid-template-columns:repeat(3,1fr);gap:var(--e5)}
+.recursos li{
+  background:var(--carta);border:1px solid var(--linha);border-radius:var(--raio);
+  padding:var(--e6);box-shadow:var(--sombra);
+  transition:transform 300ms var(--curva),box-shadow 300ms;
+}
+.recursos li:hover{transform:translateY(-4px);box-shadow:var(--sombra-alta)}
+.recursos p{margin-top:var(--e3);color:var(--suave);font-size:var(--t15)}
+
+.faixa-cta{
+  background:#14171b;color:#f3f4f2;border-radius:calc(var(--raio) + 8px);
+  padding:var(--e8);display:flex;align-items:center;justify-content:space-between;
+  gap:var(--e6);flex-wrap:wrap;margin-block:var(--e9);
+}
+.faixa-cta h2{color:#fff}
+.faixa-cta p{color:rgba(243,244,242,.68);margin-top:var(--e3);max-width:52ch}
+
+/* ============================================================
+   14. MOVIMENTO
+   ============================================================ */
+@media (prefers-reduced-motion:no-preference){
+  /* Entrada do hero: a única coisa que a página inicia sozinha. */
+  .hero-grade>*{animation:subir 720ms var(--curva) both}
+  .hero-grade>*:nth-child(2){animation-delay:140ms}
+  @keyframes subir{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+  /* Revelação ao rolar: uma vez por elemento, e só nos blocos que o
+     olho procura — cartão, passo, pergunta, título.
+
+     O estado escondido só existe quando o JS já assumiu o controle
+     (html[data-anima]). Sem script, ou se algo falhar antes de
+     marcar, tudo aparece normalmente: nenhum conteúdo depende de
+     uma animação para ser lido. */
+  html[data-anima] .revela:not([data-visivel='true']){opacity:0;transform:translateY(20px)}
+  .revela{transition:opacity 700ms var(--curva),transform 700ms var(--curva)}
+
+  .duvida[open] .duvida-corpo{animation:abrir 300ms var(--curva) both}
+  @keyframes abrir{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+  .troca-tela{animation:trocaTela 320ms var(--curva) both}
+  @keyframes trocaTela{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .revela{opacity:1;transform:none}
+  .zap{opacity:1;transform:none}
+}
+
+/* ============================================================
+   15. RESPONSIVO
+   ============================================================ */
+@media (max-width:1080px){
+  .grade,.recursos,.passos{grid-template-columns:repeat(2,1fr)}
+  .hero-grade{grid-template-columns:1fr;gap:var(--e7);padding-block:calc(var(--e9) + var(--alt-cab)) var(--e9)}
+  .destaque{max-width:440px}
+  .ficha-topo{grid-template-columns:1fr;gap:var(--e7)}
+  .contato-carta{grid-template-columns:1fr;gap:var(--e6);padding:var(--e6)}
+  .duvidas-grade{grid-template-columns:1fr;gap:var(--e6)}
+  .duvidas-intro{position:static}
+  .rodape-grade{grid-template-columns:1fr 1fr;gap:var(--e6)}
+  .rodape-marca{grid-column:1 / -1}
+}
+
+@media (max-width:860px){
+  :root{--gutter:var(--e4);--e10:var(--e9)}
+  .nav-desk,.cta-cab{display:none}
+  .bt-menu{display:inline-flex}
+  .hero-grade{padding-block:calc(var(--e7) + var(--alt-cab)) var(--e8)}
+  .faixa-cta{padding:var(--e6)}
+  .zap{right:var(--e4);bottom:var(--e4)}
+  .contato-carta{padding:var(--e5)}
+}
+
+@media (max-width:640px){
+  .grade,.recursos,.passos{grid-template-columns:1fr}
+  .destaque{max-width:none}
+  .acoes .botao{width:100%}
+  .specs{grid-template-columns:1fr 1fr;gap:var(--e4)}
+  .rodape-grade{grid-template-columns:1fr;gap:var(--e6)}
+  .duvida summary{padding:var(--e4);font-size:var(--t16)}
+  .duvida-corpo{padding:0 var(--e4) var(--e4)}
+  .cartao-rodape{flex-direction:column;align-items:stretch;gap:var(--e4)}
+  .cartao-rodape .botao{width:100%}
+  .barra-catalogo{align-items:start;flex-direction:column;gap:var(--e4)}
+  .oferta{padding:var(--e5)}
+}
+</style>
+
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<div id="app"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var IMG = {
+    'hero': '__IMG:hero__',
+    'cg-160': '__IMG:cg-160__',
+    'cg-160-front': '__IMG:cg-160-front__',
+    'bros-160': '__IMG:bros-160__',
+    'bros-160-front': '__IMG:bros-160-front__',
+    'fazer-250': '__IMG:fazer-250__',
+    'fazer-250-front': '__IMG:fazer-250-front__',
+    'factor-150': '__IMG:factor-150__',
+    'factor-150-front': '__IMG:factor-150-front__',
+    'xre-300': '__IMG:xre-300__',
+    'xre-300-front': '__IMG:xre-300-front__',
+    'pcx': '__IMG:pcx__',
+    'pcx-front': '__IMG:pcx-front__'
+  };
+
+  /* ==========================================================
+     CONTEÚDO
+     Mesma forma do lib/content.ts: nenhum texto de marketing
+     escrito dentro de um componente.
+     ========================================================== */
+  var SITE = {
+    nome: 'Vértice', descritor: 'Aluguel de motos',
+    telefone: '(00) 00000-0000',
+    cidade: 'Cidade Exemplo',
+    endereco: ['Av. Horizonte, 240, Centro', 'Cidade Exemplo, BR'],
+    horario: ['Segunda a sexta, 8h às 18h', 'Sábado, 8h às 12h']
+  };
+
+  /* Valores ilustrativos. O site real trabalha com "sob consulta";
+     mostrar preço é mudança de postura comercial, não de layout. */
+  var MOTOS = [
+    { slug:'honda-cg-160', nome:'Honda CG 160', modelo:'CG 160', categoria:'Urbana',
+      cc:160, cambio:'Manual', preco:690, estoque:'ok', selo:'Disponível hoje',
+      foto:'cg-160', frente:'cg-160-front', cor:'vermelha',
+      resumo:'A mais pedida para o trajeto de todo dia.',
+      descricao:'Compacta, leve e fácil de manobrar no trânsito parado. É a escolha mais comum de quem aluga para ir e voltar do trabalho e quer gastar pouco com combustível.',
+      recursos:[
+        {t:'Leve no trânsito', d:'Peso baixo e raio de giro curto para andar entre carros parados e estacionar em espaço apertado.'},
+        {t:'Econômica', d:'A menor média de consumo do catálogo, o que pesa quando se roda todo dia.'},
+        {t:'Peça fácil', d:'Modelo mais comum do país: manutenção rápida e sem espera por peça.'}
+      ] },
+    { slug:'yamaha-factor-150', nome:'Yamaha Factor 150', modelo:'Factor 150', categoria:'Urbana',
+      cc:150, cambio:'Manual', preco:650, estoque:'ok', selo:'Disponível hoje',
+      foto:'factor-150', frente:'factor-150-front', cor:'prata',
+      resumo:'A opção mais barata para começar.',
+      descricao:'Perfil urbano, porte leve e comportamento previsível. É a moto de menor valor mensal do catálogo, boa para quem está alugando pela primeira vez.',
+      recursos:[
+        {t:'Menor mensalidade', d:'O valor mais baixo do catálogo, com as mesmas condições de seguro e manutenção.'},
+        {t:'Fácil de pilotar', d:'Resposta suave, boa para quem tirou a habilitação há pouco tempo.'},
+        {t:'Porte leve', d:'Cabe em vaga apertada e é simples de tirar do cavalete.'}
+      ] },
+    { slug:'honda-bros-160', nome:'Honda Bros 160', modelo:'Bros 160', categoria:'Trail',
+      cc:160, cambio:'Manual', preco:790, estoque:'atencao', selo:'Última unidade',
+      foto:'bros-160', frente:'bros-160-front', cor:'grafite',
+      resumo:'Aguenta rua ruim sem reclamar.',
+      descricao:'Suspensão mais alta e rodas raiadas dão folga para lombada, buraco e rua sem asfalto. Continua sendo moto de cidade, só que sem sofrer no caminho.',
+      recursos:[
+        {t:'Suspensão alta', d:'Absorve buraco e lombada sem transmitir tudo para o piloto.'},
+        {t:'Posição elevada', d:'Enxerga o trânsito por cima dos carros, o que ajuda na cidade.'},
+        {t:'Rodas raiadas', d:'Mais resistentes a impacto que rodas de liga, em piso ruim.'}
+      ] },
+    { slug:'honda-pcx', nome:'Honda PCX', modelo:'PCX', categoria:'Scooter',
+      cc:160, cambio:'Automática', preco:850, estoque:'ok', selo:'Disponível hoje',
+      foto:'pcx', frente:'pcx-front', cor:'branca',
+      resumo:'Sem embreagem, sem marcha, com espaço para o capacete.',
+      descricao:'Câmbio automático, plataforma para os pés e porta-objetos sob o banco. É a mais confortável do catálogo e a mais simples de pilotar em trânsito de para-e-anda.',
+      recursos:[
+        {t:'Automática', d:'Só acelerar e frear. Nada de embreagem em subida com trânsito.'},
+        {t:'Porta-objetos', d:'Espaço sob o banco para capacete ou uma mochila pequena.'},
+        {t:'Pernas à frente', d:'Postura relaxada, sem apertar o joelho em trajeto longo.'}
+      ] },
+    { slug:'yamaha-fazer-250', nome:'Yamaha Fazer 250', modelo:'Fazer 250', categoria:'Street',
+      cc:250, cambio:'Manual', preco:920, estoque:'ok', selo:'Disponível hoje',
+      foto:'fazer-250', frente:'fazer-250-front', cor:'azul-escura',
+      resumo:'Para quem roda muito quilômetro por dia.',
+      descricao:'Porte maior, motor com mais fôlego e postura confortável. Faz diferença para quem passa horas em cima da moto ou pega trecho de rodovia dentro do combinado.',
+      recursos:[
+        {t:'Fôlego de 250 cc', d:'Ultrapassa e mantém velocidade de rodovia com folga.'},
+        {t:'Menos vibração', d:'Motor maior trabalha mais relaxado, o que cansa menos em trajeto longo.'},
+        {t:'Postura confortável', d:'Guidão e banco pensados para tempo maior de pilotagem.'}
+      ] },
+    { slug:'honda-xre-300', nome:'Honda XRE 300', modelo:'XRE 300', categoria:'Trail',
+      cc:300, cambio:'Manual', preco:990, estoque:'consulta', selo:'Sob encomenda',
+      foto:'xre-300', frente:'xre-300-front', cor:'verde-oliva',
+      resumo:'A maior do catálogo, para sair do asfalto.',
+      descricao:'Trail de porte grande, suspensão de curso longo e posição de pilotagem alta. Pede confirmação de trajeto com a locadora antes de sair da cidade.',
+      recursos:[
+        {t:'Curso longo', d:'A suspensão com maior curso do catálogo, para piso irregular de verdade.'},
+        {t:'Motor de 300 cc', d:'Torque para subida com carga e trecho de estrada.'},
+        {t:'Trajeto combinado', d:'Uso fora do asfalto precisa ser acertado antes com a locadora.'}
+      ] }
+  ];
+
+  var CATEGORIAS = ['Urbana', 'Trail', 'Street', 'Scooter'];
+
+  var INCLUI = [
+    'Seguro contra roubo e colisão',
+    'Manutenção preventiva e revisões',
+    'Documento e licenciamento em dia',
+    'Capacete e baú, se precisar'
+  ];
+
+  var PASSOS = [
+    { icone:'moto', t:'Escolha o modelo', d:'Compare cilindrada, câmbio e valor mensal. Cada ficha diz para que tipo de trajeto a moto serve.' },
+    { icone:'conversa', t:'Chame no WhatsApp', d:'A mensagem já vai com a moto escolhida escrita. Você não precisa explicar de novo qual era.' },
+    { icone:'chave', t:'Retire e ande', d:'Levando CNH, comprovante de residência e a caução combinada, a retirada sai no mesmo dia.' }
+  ];
+
+  var DUVIDAS = [
+    { p:'Preciso de CNH definitiva?',
+      r:'Sim, categoria A definitiva e sem suspensão. Permissão provisória não é aceita pelo seguro, e é o seguro que define essa regra, não a locadora.' },
+    { p:'O que está incluso na mensalidade?',
+      r:'Seguro contra roubo e colisão, manutenção preventiva, revisões e documentação em dia. Combustível, multas e avaria por mau uso ficam por sua conta.' },
+    { p:'Qual o prazo mínimo?',
+      r:'Um mês. Períodos menores existem, mas o valor por dia sai bem mais caro — vale conversar antes de fechar.' },
+    { p:'Precisa de caução?',
+      r:'Sim, e o valor muda por modelo. Ela é devolvida na entrega da moto, descontado o que houver de avaria ou multa.' },
+    { p:'Posso usar para trabalhar com entrega?',
+      r:'Pode, e é preciso avisar antes: uso profissional muda o plano de manutenção e a cobertura do seguro. Não avisar é o que costuma dar problema depois.' },
+    { p:'E se a moto quebrar?',
+      r:'Manutenção preventiva e defeito mecânico estão cobertos. Você avisa pelo WhatsApp e a locadora combina o reparo ou a troca do veículo.' }
+  ];
+
+  /* ==========================================================
+     UTILITÁRIOS
+     ========================================================== */
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  function esc(t) {
+    return String(t).replace(/[&<>"]/g, function (c) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c];
+    });
+  }
+  var semMovimento = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+  function reais(v) { return 'R$&nbsp;' + v.toLocaleString('pt-BR'); }
+
+  var ICONES = {
+    check: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>',
+    zap: '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-9.91 9.9c0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.39a9.86 9.86 0 0 0 4.74 1.21h.01a9.9 9.9 0 0 0 9.9-9.9A9.9 9.9 0 0 0 12.04 2Zm5.8 14.06c-.25.69-1.44 1.32-1.99 1.4-.53.08-1.2.11-1.94-.12a17.6 17.6 0 0 1-1.76-.65c-3.1-1.34-5.12-4.46-5.28-4.67-.15-.21-1.26-1.67-1.26-3.19s.8-2.26 1.08-2.57c.28-.31.61-.39.82-.39h.59c.19 0 .44-.7.69.53l.94 2.29c.8.19.13.42.02.68-.12.25-.18.41-.35.63-.17.22-.36.49-.52.66-.17.17-.35.36-.15.7.2.35.89 1.47 1.91 2.38 1.31 1.17 2.42 1.53 2.76 1.7.35.18.55.15.75-.09.2-.24.87-1.01 1.1-1.36.23-.35.46-.29.78-.17.31.12 1.99.94 2.33 1.11.34.17.57.26.65.4.08.15.08.83-.17 1.52Z"/></svg>',
+    zapPequeno: '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-9.91 9.9c0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.39a9.86 9.86 0 0 0 4.74 1.21h.01a9.9 9.9 0 0 0 9.9-9.9A9.9 9.9 0 0 0 12.04 2Zm5.8 14.06c-.25.69-1.44 1.32-1.99 1.4-.53.08-1.2.11-1.94-.12a17.6 17.6 0 0 1-1.76-.65c-3.1-1.34-5.12-4.46-5.28-4.67-.15-.21-1.26-1.67-1.26-3.19s.8-2.26 1.08-2.57c.28-.31.61-.39.82-.39h.59c.19 0 .44-.7.69.53l.94 2.29c.8.19.13.42.02.68-.12.25-.18.41-.35.63-.17.22-.36.49-.52.66-.17.17-.35.36-.15.7.2.35.89 1.47 1.91 2.38 1.31 1.17 2.42 1.53 2.76 1.7.35.18.55.15.75-.09.2-.24.87-1.01 1.1-1.36.23-.35.46-.29.78-.17.31.12 1.99.94 2.33 1.11.34.17.57.26.65.4.08.15.08.83-.17 1.52Z"/></svg>',
+    baixo: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
+    direita: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13m-5-6 6 6-6 6"/></svg>',
+    escudo: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>',
+    relogio: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
+    moto: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M8 17h8m-3.5-8H16l3 5M7 9h4l2.5 8M11 9 9.5 6H7"/></svg>',
+    conversa: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-4-1L3 20l1.1-4.4A8.9 8.9 0 0 1 3 11.5 8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5Z"/></svg>',
+    chave: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 8.3-8.3 2 2-2 2 2 2-3 3-2-2-1.5 1.5"/></svg>'
+  };
+
+  /* ==========================================================
+     PEDAÇOS
+     ========================================================== */
+  function marca() {
+    return '<a class="marca" data-ir="/" role="link" tabindex="0">' +
+      '<span class="marca-selo" aria-hidden="true">V</span>' +
+      '<span class="marca-nome">' + SITE.nome + '<i>' + SITE.descritor + '</i></span></a>';
+  }
+
+  function pillEstoque(m) {
+    var classe = m.estoque === 'ok' ? 'pill-ok' : m.estoque === 'atencao' ? 'pill-atencao' : 'pill-neutro';
+    return '<span class="pill ' + classe + '">' + esc(m.selo) + '</span>';
+  }
+
+  /* Todo botão que leva ao WhatsApp é verde e carrega o ícone: cor e
+     símbolo dizem o mesmo, então quem não distingue a cor ainda
+     reconhece o destino. */
+  function botaoZap(texto, destino, classe) {
+    return '<a class="botao ' + (classe || 'botao-1') + '" data-ir="' + destino + '">' +
+      ICONES.zapPequeno + esc(texto) + '</a>';
+  }
+
+  function cabecalho(naFicha) {
+    var base = naFicha ? '/' : '';
+    return '<header class="cabecalho" id="cabecalho"><div class="container cab-int">' + marca() +
+      '<nav class="nav-desk" aria-label="Menu principal">' +
+        '<a data-ir="' + base + '#motos">Motos</a>' +
+        '<a data-ir="' + base + '#como-funciona">Como funciona</a>' +
+        '<a data-ir="' + base + '#duvidas">Dúvidas</a>' +
+        '<a data-ir="' + base + '#contato">Contato</a>' +
+      '</nav>' +
+      '<span class="cta-cab">' + botaoZap('Falar no WhatsApp', '#contato') + '</span>' +
+      '<button class="bt-menu" type="button" aria-expanded="false" aria-controls="gaveta">' +
+        '<span class="sr">Abrir menu</span>' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>' +
+      '</button>' +
+      '</div></header>' +
+      '<div class="gaveta" id="gaveta" data-aberta="false">' +
+        '<button class="gaveta-fundo" type="button" tabindex="-1" aria-hidden="true"></button>' +
+        '<div class="gaveta-painel" role="dialog" aria-label="Menu">' +
+          '<div class="gaveta-topo">' + marca() +
+            '<button class="bt-menu" type="button" data-fechar style="display:inline-flex"><span class="sr">Fechar menu</span>' +
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
+          '</div>' +
+          '<nav aria-label="Menu do celular">' +
+            '<a data-ir="' + base + '#motos">Motos</a>' +
+            '<a data-ir="' + base + '#como-funciona">Como funciona</a>' +
+            '<a data-ir="' + base + '#duvidas">Dúvidas</a>' +
+            '<a data-ir="' + base + '#contato">Contato</a>' +
+          '</nav>' + botaoZap('Falar no WhatsApp', '#contato') +
+        '</div></div>';
+  }
+
+  function rodape() {
+    return '<footer class="rodape"><div class="container">' +
+      '<div class="rodape-grade">' +
+        '<div class="rodape-col rodape-marca">' + marca() +
+          '<p>Aluguel mensal de motos em ' + SITE.cidade + ', com seguro, manutenção e documentação inclusos.</p></div>' +
+        '<div class="rodape-col"><h3>Navegação</h3>' +
+          '<nav aria-label="Navegação do rodapé">' +
+            '<a data-ir="/#motos">Motos</a>' +
+            '<a data-ir="/#como-funciona">Como funciona</a>' +
+            '<a data-ir="/#duvidas">Dúvidas</a>' +
+            '<a data-ir="/#contato">Contato</a>' +
+          '</nav></div>' +
+        '<div class="rodape-col"><h3>Atendimento</h3>' +
+          '<p>' + SITE.telefone + '</p>' +
+          '<address>' + SITE.endereco.join('<br>') + '</address>' +
+          '<p style="margin-top:var(--e3)">' + SITE.horario.join('<br>') + '</p></div>' +
+      '</div>' +
+      '<p class="aviso">Protótipo de design. Empresa, contatos, valores e imagens são ilustrativos; nenhum botão envia mensagem de verdade.</p>' +
+      '</div></footer>';
+  }
+
+  function zapFlutuante() {
+    return '<button class="zap" type="button" data-ir="#contato">' +
+      '<span class="sr">Falar no WhatsApp</span>' + ICONES.zap + '</button>';
+  }
+
+  function cartao(m, indice) {
+    return '<article class="cartao revela" data-categoria="' + m.categoria + '" data-slug="' + m.slug +
+        '" style="transition-delay:' + (indice % 3) * 90 + 'ms">' +
+      '<div class="cartao-topo">' +
+        '<img src="' + IMG[m.foto] + '" alt="Moto ' + esc(m.categoria.toLowerCase()) + ' ' + esc(m.cor) +
+          ' inspirada na ' + esc(m.nome) + '." width="1024" height="683" loading="lazy">' +
+        '<div class="cartao-pills">' + pillEstoque(m) + '</div>' +
+      '</div>' +
+      '<div class="cartao-corpo">' +
+        '<p class="cartao-local">' + m.categoria + ' · ' + SITE.cidade + '</p>' +
+        '<h3><a data-ir="/moto/' + m.slug + '">' + esc(m.nome) + '</a></h3>' +
+        '<p class="cartao-specs">' + m.cc + ' cc · Câmbio ' + m.cambio.toLowerCase() + '</p>' +
+        '<div class="cartao-rodape">' +
+          '<div><div class="preco"><span class="preco-valor">' + reais(m.preco) + '</span></div>' +
+          '<span class="preco-nota">por mês, valor ilustrativo</span></div>' +
+          '<span class="botao botao-ficha" role="link" tabindex="0" data-ir="/moto/' + m.slug + '">' +
+            'Ver ficha' + ICONES.direita + '</span>' +
+        '</div>' +
+      '</div></article>';
+  }
+
+  /* ==========================================================
+     TELA: HOME
+     ========================================================== */
+  function telaHome() {
+    var destaque = MOTOS[0];
+
+    return cabecalho(false) + '<main id="conteudo">' +
+
+      '<section class="hero">' +
+        '<div class="hero-foto" id="hero-foto"><img src="' + IMG.hero + '" alt="" width="1672" height="941"></div>' +
+        '<div class="hero-veu"></div>' +
+        '<div class="container hero-grade">' +
+          '<div>' +
+            '<h1>Alugue sua moto por mês, sem financiamento.</h1>' +
+            '<p class="chamada">Motos de 150 a 300 cc em ' + SITE.cidade + ', com seguro, manutenção e documento em dia. Você escolhe o modelo e combina o resto pelo WhatsApp.</p>' +
+            '<div class="acoes">' + botaoZap('Falar no WhatsApp', '#contato') +
+              '<a class="botao botao-3" data-ir="#motos">Ver as motos</a>' +
+            '</div>' +
+            '<p class="confianca">' +
+              '<span>' + ICONES.escudo + '<strong>Seguro e manutenção</strong> inclusos</span>' +
+              '<span>' + ICONES.relogio + '<strong>Retirada no mesmo dia</strong> com CNH categoria A</span>' +
+            '</p>' +
+          '</div>' +
+
+          '<article class="destaque" role="link" tabindex="0" data-ir="/moto/' + destaque.slug + '">' +
+            '<div class="destaque-foto">' +
+              '<img src="' + IMG[destaque.foto] + '" alt="Moto urbana vermelha inspirada na Honda CG 160." width="1024" height="683">' +
+            '</div>' +
+            '<div class="destaque-corpo">' +
+              '<div class="destaque-pills">' + pillEstoque(destaque) +
+                '<span class="pill pill-neutro">' + ICONES.check + ' Capacete incluso</span></div>' +
+              '<p class="destaque-local">' + destaque.categoria + ' · ' + SITE.cidade + '</p>' +
+              '<h3>' + esc(destaque.nome) + '</h3>' +
+              '<p class="destaque-specs">' + destaque.cc + ' cc · Câmbio ' + destaque.cambio.toLowerCase() + '</p>' +
+              '<div class="preco"><span class="preco-valor">' + reais(destaque.preco) + '</span>' +
+                '<span class="preco-nota">por mês, valor ilustrativo</span></div>' +
+            '</div>' +
+          '</article>' +
+        '</div>' +
+      '</section>' +
+
+      '<section class="secao" id="motos"><div class="container">' +
+        '<div class="secao-topo revela"><div><h2>Motos disponíveis</h2>' +
+        '<p class="chamada">Seis modelos, do mais econômico ao mais parrudo. Filtre pelo tipo de trajeto que você faz.</p></div></div>' +
+        '<div class="barra-catalogo revela">' +
+          '<div class="filtro" role="group" aria-label="Filtrar motos por categoria">' +
+            '<button type="button" data-cat="todas" aria-pressed="true">Todas</button>' +
+            CATEGORIAS.map(function (c) {
+              return '<button type="button" data-cat="' + c + '" aria-pressed="false">' + c + '</button>';
+            }).join('') +
+          '</div>' +
+          '<p class="contagem" role="status">' + MOTOS.length + ' motos disponíveis</p>' +
+        '</div>' +
+        '<div class="grade" id="grade">' + MOTOS.map(cartao).join('') + '</div>' +
+      '</div></section>' +
+
+      '<section class="secao faixa-escura" id="como-funciona"><div class="container">' +
+        '<div class="secao-topo revela"><div><h2>Como funciona</h2>' +
+        '<p class="chamada">Três passos, e o terceiro acontece na loja.</p></div></div>' +
+        '<div class="passos">' + PASSOS.map(function (p, i) {
+          return '<div class="passo revela" style="transition-delay:' + i * 110 + 'ms">' +
+            '<span class="passo-n" aria-hidden="true">' + (i + 1) + '</span>' +
+            '<div class="passo-icone">' + ICONES[p.icone] + '</div>' +
+            '<h3>' + esc(p.t) + '</h3><p>' + esc(p.d) + '</p></div>';
+        }).join('') + '</div>' +
+      '</div></section>' +
+
+      '<section class="secao faixa-branca" id="duvidas"><div class="container duvidas-grade">' +
+        '<div class="duvidas-intro revela">' +
+          '<h2>Dúvidas</h2>' +
+          '<p class="chamada">O que mais perguntam antes de fechar. Se a sua não estiver aqui, é só chamar.</p>' +
+          '<div class="acoes">' + botaoZap('Tirar uma dúvida', '#contato') + '</div>' +
+        '</div>' +
+        '<div class="duvidas">' + DUVIDAS.map(function (d, i) {
+          return '<details class="duvida revela" style="transition-delay:' + Math.min(i, 4) * 70 + 'ms">' +
+            '<summary>' + esc(d.p) + ICONES.baixo + '</summary>' +
+            '<div class="duvida-corpo">' + esc(d.r) + '</div></details>';
+        }).join('') + '</div>' +
+      '</div></section>' +
+
+      '<section class="secao" id="contato"><div class="container">' +
+        '<div class="contato-carta revela">' +
+          '<div><h2>Fale com a gente</h2>' +
+          '<p class="chamada">Diga qual moto te interessou e a gente responde com valor, disponibilidade e o que precisa levar na retirada.</p>' +
+          '<div class="acoes">' + botaoZap('Falar no WhatsApp', '#contato') + '</div></div>' +
+          '<dl class="dados">' +
+            '<div><dt>WhatsApp e telefone</dt><dd>' + SITE.telefone + '</dd></div>' +
+            '<div><dt>Onde estamos</dt><dd><address>' + SITE.endereco.join('<br>') + '</address></dd></div>' +
+            '<div><dt>Horário de atendimento</dt><dd>' + SITE.horario.join('<br>') + '</dd></div>' +
+          '</dl>' +
+        '</div>' +
+      '</div></section>' +
+
+      '</main>' + rodape() + zapFlutuante();
+  }
+
+  /* ==========================================================
+     TELA: FICHA DA MOTO
+     ========================================================== */
+  function telaMoto(slug) {
+    var m = MOTOS.filter(function (x) { return x.slug === slug; })[0] || MOTOS[0];
+    var outras = MOTOS.filter(function (x) { return x.slug !== m.slug; }).slice(0, 3);
+
+    var fotos = [
+      { chave:m.foto, alt:'Vista lateral de uma moto ' + m.categoria.toLowerCase() + ' ' + m.cor + ' inspirada na ' + m.nome + '.', legenda:'Vista lateral. Imagem ilustrativa; o modelo real pode apresentar diferenças.' },
+      { chave:m.frente, alt:'Vista frontal de uma moto ' + m.categoria.toLowerCase() + ' ' + m.cor + ' inspirada na ' + m.nome + '.', legenda:'Vista frontal. Imagem ilustrativa; o modelo real pode apresentar diferenças.' }
+    ];
+
+    return cabecalho(true) + '<main id="conteudo"><div class="container">' +
+      '<nav class="trilha" aria-label="Localização"><a data-ir="/#motos">Motos</a>' +
+      '<span aria-hidden="true"> / </span><span aria-current="page">' + esc(m.nome) + '</span></nav>' +
+
+      '<section class="ficha-topo">' +
+        '<div>' +
+          '<div class="galeria">' + fotos.map(function (f, i) {
+            return '<img src="' + IMG[f.chave] + '" alt="' + esc(f.alt) + '" data-ativa="' + (i === 0) + '" width="1024" height="683">';
+          }).join('') + '</div>' +
+          '<div class="minis" role="group" aria-label="Fotos da ' + esc(m.nome) + '">' +
+            fotos.map(function (f, i) {
+              return '<button type="button" aria-pressed="' + (i === 0) + '" data-legenda="' + esc(f.legenda) + '">' +
+                '<span class="sr">' + (i === 0 ? 'Ver a vista lateral' : 'Ver a vista frontal') + '</span>' +
+                '<img src="' + IMG[f.chave] + '" alt="" width="150" height="100"></button>';
+            }).join('') + '</div>' +
+          '<p class="legenda" id="legenda">' + esc(fotos[0].legenda) + '</p>' +
+        '</div>' +
+
+        '<div>' +
+          '<p class="cartao-local">' + m.categoria + ' · ' + SITE.cidade + '</p>' +
+          '<h1>' + esc(m.nome) + '</h1>' +
+          '<p class="chamada">' + esc(m.resumo) + '</p>' +
+
+          '<div class="oferta" style="margin-top:var(--e6)">' +
+            '<div class="oferta-pills">' + pillEstoque(m) +
+              '<span class="pill pill-neutro">' + ICONES.check + ' Capacete incluso</span></div>' +
+            '<div class="preco"><span class="preco-valor">' + reais(m.preco) + '</span>' +
+              '<span class="preco-nota">por mês, valor ilustrativo</span></div>' +
+            '<dl class="specs">' +
+              '<div><dt>Cilindrada</dt><dd>' + m.cc + ' cc</dd></div>' +
+              '<div><dt>Câmbio</dt><dd>' + m.cambio + '</dd></div>' +
+              '<div><dt>Categoria</dt><dd>' + m.categoria + '</dd></div>' +
+              '<div><dt>Prazo mínimo</dt><dd>1 mês</dd></div>' +
+            '</dl>' +
+            botaoZap('Consultar esta moto', '#consulta') +
+            '<p class="inclui-titulo">Está incluso na mensalidade</p>' +
+            '<ul class="inclui">' + INCLUI.map(function (i) {
+              return '<li>' + ICONES.check + '<span>' + esc(i) + '</span></li>';
+            }).join('') + '</ul>' +
+          '</div>' +
+
+          '<p class="legenda">Ficha ilustrativa. Ano, versão, equipamentos, caução e condições são confirmados com a locadora.</p>' +
+        '</div>' +
+      '</section>' +
+
+      '<section style="padding-bottom:var(--e9)">' +
+        '<div class="revela"><h2>Para que ela serve</h2>' +
+        '<p class="chamada">' + esc(m.descricao) + '</p></div>' +
+        '<ul class="recursos">' + m.recursos.map(function (r, i) {
+          return '<li class="revela" style="transition-delay:' + i * 90 + 'ms">' +
+            '<h3>' + esc(r.t) + '</h3><p>' + esc(r.d) + '</p></li>';
+        }).join('') + '</ul>' +
+      '</section>' +
+
+      '<section class="faixa-cta revela" id="consulta">' +
+        '<div><h2>Gostou da ' + esc(m.modelo) + '?</h2>' +
+        '<p>A mensagem já vai com o modelo escrito. Valor, disponibilidade, caução e documentação são combinados na conversa.</p></div>' +
+        botaoZap('Falar no WhatsApp', '#consulta') +
+      '</section>' +
+
+      '<section style="padding-bottom:var(--e9)">' +
+        '<div class="secao-topo revela"><div><h2>Outras motos</h2>' +
+        '<p class="chamada">Se essa não for a sua, talvez uma dessas seja.</p></div></div>' +
+        '<div class="grade">' + outras.map(cartao).join('') + '</div>' +
+      '</section>' +
+
+      '</div></main>' + rodape() + zapFlutuante();
+  }
+
+  /* ==========================================================
+     ROTEADOR
+     Sem hash e sem history: o arquivo abre por file:// e a
+     navegação é estado em memória.
+     ========================================================== */
+  var app = $('#app');
+  var rotaAtual = '/';
+
+  function render(rota, ancora) {
+    rotaAtual = rota;
+    var temHero = rota.indexOf('/moto/') !== 0;
+    document.body.dataset.hero = String(temHero);
+
+    app.innerHTML = temHero ? telaHome() : telaMoto(rota.slice(6));
+    app.classList.remove('troca-tela');
+    void app.offsetWidth;
+    if (!semMovimento()) app.classList.add('troca-tela');
+
+    ligarTela();
+
+    if (ancora) irParaAncora(ancora, true);
+    else window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function irParaAncora(id, imediato) {
+    var alvo = document.getElementById(id);
+    if (!alvo) return;
+    var topo = alvo.getBoundingClientRect().top + window.scrollY - 92;
+    window.scrollTo({ top: topo, behavior: (imediato || semMovimento()) ? 'auto' : 'smooth' });
+  }
+
+  function navegar(destino) {
+    if (destino.charAt(0) === '#') { irParaAncora(destino.slice(1)); return; }
+    var partes = destino.split('#');
+    var rota = partes[0] || '/';
+    if (rota === rotaAtual && partes[1]) { irParaAncora(partes[1]); return; }
+    render(rota, partes[1]);
+  }
+
+  /* ==========================================================
+     LIGAÇÕES
+     ========================================================== */
+  function ligarTela() {
+    ligarGaveta();
+    ligarFiltro();
+    ligarGaleria();
+    ligarRevelacao();
+    ligarZap();
+    atualizarCabecalho();
+  }
+
+  /* Delegação no documento: sobrevive a cada troca de tela. */
+  document.addEventListener('click', function (ev) {
+    var alvo = ev.target.closest('[data-ir]');
+    if (!alvo) return;
+    ev.preventDefault();
+    fecharGaveta();
+    navegar(alvo.getAttribute('data-ir'));
+  });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape') { fecharGaveta(); return; }
+    if (ev.key !== 'Enter' && ev.key !== ' ') return;
+    var alvo = ev.target.closest('[data-ir][role="link"]');
+    if (!alvo) return;
+    ev.preventDefault();
+    navegar(alvo.getAttribute('data-ir'));
+  });
+
+  var gavetaEl, btMenu;
+  function fecharGaveta() { if (gavetaEl) definirGaveta(false); }
+  function definirGaveta(aberta) {
+    if (!gavetaEl || !btMenu) return;
+    gavetaEl.dataset.aberta = String(aberta);
+    btMenu.setAttribute('aria-expanded', String(aberta));
+    document.body.style.overflow = aberta ? 'hidden' : '';
+    if (aberta) { var p = gavetaEl.querySelector('a,button:not([tabindex="-1"])'); if (p) p.focus(); }
+  }
+  function ligarGaveta() {
+    gavetaEl = $('#gaveta');
+    btMenu = document.querySelector('.cab-int .bt-menu');
+    if (!gavetaEl || !btMenu) return;
+    btMenu.addEventListener('click', function () { definirGaveta(gavetaEl.dataset.aberta !== 'true'); });
+    gavetaEl.addEventListener('click', function (ev) {
+      if (ev.target.closest('.gaveta-fundo,[data-fechar],a')) definirGaveta(false);
+    });
+  }
+
+  /* Filtro com FLIP: mede onde cada cartão está, muda o DOM, mede de
+     novo e anima a diferença. É o que faz os cartões que ficam
+     DESLIZAREM para a posição nova em vez de saltarem. */
+  function ligarFiltro() {
+    var filtro = document.querySelector('#motos .filtro'), grade = $('#grade');
+    if (!filtro || !grade) return;
+
+    var cartoes = $$('.cartao', grade), contagem = document.querySelector('#motos .contagem');
+
+    filtro.addEventListener('click', function (ev) {
+      var bt = ev.target.closest('button');
+      if (!bt) return;
+      var cat = bt.getAttribute('data-cat');
+
+      $$('button', filtro).forEach(function (b) { b.setAttribute('aria-pressed', String(b === bt)); });
+
+      var antes = cartoes.map(function (c) { return c.getBoundingClientRect(); });
+
+      var visiveis = 0;
+      cartoes.forEach(function (c) {
+        var mostra = cat === 'todas' || c.dataset.categoria === cat;
+        c.hidden = !mostra;
+        c.classList.toggle('saindo', !mostra);
+        if (mostra) visiveis++;
+      });
+
+      if (contagem) {
+        contagem.textContent = visiveis === 1 ? '1 moto disponível' : visiveis + ' motos disponíveis';
+      }
+
+      if (semMovimento()) return;
+
+      cartoes.forEach(function (c, i) {
+        if (c.hidden) return;
+        var depois = c.getBoundingClientRect();
+        var dx = antes[i].left - depois.left, dy = antes[i].top - depois.top;
+        if (!dx && !dy) return;
+        c.style.transition = 'none';
+        c.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+        requestAnimationFrame(function () { c.style.transition = ''; c.style.transform = ''; });
+      });
+    });
+  }
+
+  function ligarGaleria() {
+    var minis = $('.minis'), galeria = $('.galeria');
+    if (!minis || !galeria) return;
+
+    var fotos = $$('img', galeria), botoes = $$('button', minis), legenda = $('#legenda');
+
+    function selecionar(i) {
+      if (!botoes[i]) return;
+      fotos.forEach(function (f, j) { f.dataset.ativa = String(j === i); });
+      botoes.forEach(function (b, j) { b.setAttribute('aria-pressed', String(j === i)); });
+      if (legenda) legenda.textContent = botoes[i].getAttribute('data-legenda');
+      botoes[i].focus();
+    }
+
+    minis.addEventListener('click', function (ev) {
+      var b = ev.target.closest('button');
+      if (b) selecionar(botoes.indexOf(b));
+    });
+    minis.addEventListener('keydown', function (ev) {
+      var passo = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0;
+      if (!passo) return;
+      ev.preventDefault();
+      selecionar((botoes.indexOf(ev.target.closest('button')) + passo + botoes.length) % botoes.length);
+    });
+  }
+
+  /* Revelação ao rolar. Uma vez por elemento, e só nos blocos que o
+     olho procura.
+
+     Feita no mesmo handler de scroll que já existe, e não com
+     IntersectionObserver. O motivo é robustez: com o observer, um
+     callback que não dispara deixa o conteúdo invisível PARA SEMPRE.
+     Uma checagem de posição no scroll não tem esse modo de falha — e
+     o custo é uma comparação por elemento, uma vez só. */
+  var porRevelar = [];
+
+  function ligarRevelacao() {
+    porRevelar = $$('.revela');
+    if (semMovimento()) {
+      porRevelar.forEach(function (el) { el.dataset.visivel = 'true'; });
+      porRevelar = [];
+      return;
+    }
+    document.documentElement.dataset.anima = 'sim';
+    /* No quadro seguinte, para a transição ter de onde partir. */
+    requestAnimationFrame(revelarVisiveis);
+  }
+
+  function revelarVisiveis() {
+    if (!porRevelar.length) return;
+    var limite = window.innerHeight * 0.92;
+    porRevelar = porRevelar.filter(function (el) {
+      if (el.getBoundingClientRect().top > limite) return true;
+      el.dataset.visivel = 'true';
+      return false;
+    });
+  }
+
+  function ligarZap() {
+    var zap = $('.zap');
+    if (!zap) return;
+    setTimeout(function () { zap.dataset.pronto = 'true'; }, 700);
+  }
+
+  /* Cabeçalho ganha fundo e borda ao rolar; a foto do hero anda mais
+     devagar que a página. */
+  var tickando = false;
+  function atualizarCabecalho() {
+    var cab = $('#cabecalho');
+    if (cab) cab.dataset.rolou = String(window.scrollY > 8);
+    var foto = $('#hero-foto');
+    if (foto && !semMovimento() && window.scrollY < window.innerHeight * 1.2) {
+      foto.style.transform = 'translate3d(0,' + (window.scrollY * 0.22) + 'px,0)';
+    }
+  }
+  window.addEventListener('scroll', function () {
+    if (tickando) return;
+    tickando = true;
+    requestAnimationFrame(function () { atualizarCabecalho(); revelarVisiveis(); tickando = false; });
+  }, { passive: true });
+
+  render('/');
+})();
+</script>
+  </body>
+</html>

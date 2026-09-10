@@ -1,0 +1,18 @@
+# Um só formato de arquivo entre editores. Complementa o oxfmt:
+# o oxfmt formata TS/TSX, isto cobre o resto (json, css, md, mjs).
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.md]
+# Markdown usa dois espaços no fim da linha para quebra forçada.
+trim_trailing_whitespace = false
+
+[*.{png,jpg,jpeg,webp,woff2,svg}]
+insert_final_newline = false

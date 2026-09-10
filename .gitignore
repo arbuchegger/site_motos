@@ -1,0 +1,87 @@
+# ─────────────────────────────────────────────────────────────
+# .gitignore da raiz — o repositório não tinha nenhum.
+#
+# CICATRIZ: sem este arquivo, o cache do npm (`work/npm-cache/`,
+# 619 MB e 2.743 arquivos) entrou no commit inicial deste repo.
+# O site em si tem 2,2 MB. 99,7% do que se clonava aqui era lixo
+# reconstruível. A pasta `work/` foi removida na Fase 0; as regras
+# abaixo existem para que ela nunca volte, com qualquer nome.
+#
+# A regra: nada que uma ferramenta consiga gerar de novo entra no
+# git. Lockfile é exceção — ele é a fonte da verdade das versões.
+# ─────────────────────────────────────────────────────────────
+
+# Dependências e caches de gerenciador de pacotes
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+.npm/
+.pnpm-store/
+work/
+outputs/
+
+# Saída de build — sempre reconstruível a partir do fonte
+dist/
+build/
+out/
+.next/
+.vinext/
+.vercel/
+.wrangler/
+.turbo/
+.cache/
+
+# Artefatos incrementais de compilador
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+.eslintcache
+
+# Declaracoes de tipo geradas pelo `vinext build`
+next-env.d.ts
+
+# Segredos. NUNCA versione. Só o exemplo, sem valores dentro.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Testes e cobertura
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores (mantém as configs compartilhadas do time)
+.idea/
+*.swp
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Protótipo hi-fi montado. 1,5 MB gerados por
+# `node prototipos/gerar-standalone.mjs` a partir de prototipos/src/.
+# O motivo de ele não entrar está em prototipos/README.md.
+prototipos/*-standalone.html
+
+# Rascunho local — use para qualquer coisa que não deve ser versionada
+/tmp/
+/scratch/
