@@ -10,7 +10,9 @@ fonte e as treze imagens vêm embutidas em base64 dentro do próprio HTML. Dá p
 mandar por e-mail ou WhatsApp para quem vai avaliar o design, e funciona no
 computador da pessoa sem que ela instale nada.
 
-Duas telas: **home** e **ficha da moto** (as seis motos funcionam).
+É o site, e só o site — sem moldura de ferramenta, sem seletor de tela ou de
+tema. Duas páginas navegáveis: **home** e **ficha da moto** (as seis motos
+funcionam). O tema segue o sistema de quem abre, como o site real.
 
 ## Por que o arquivo gerado não está versionado
 
@@ -43,26 +45,12 @@ base64 no meio do código tornam o fonte ilegível e o diff impossível de revis
 
 ## O que dá para fazer
 
-A barra escura do topo é a ferramenta, não o produto: troca de tela, de largura
-(celular 390, tablet 834, desktop) e de tema (sistema, claro, escuro).
+Filtrar o catálogo por categoria, abrir a gaveta do menu, navegar para a ficha de
+qualquer moto pelo cartão ou pela carta de oferta do hero, trocar a foto na ficha
+com o mouse ou com as setas ← →, e abrir as perguntas da seção Dúvidas.
 
-Dentro do protótipo: filtrar o catálogo por categoria, abrir a gaveta do menu,
-navegar para a ficha de qualquer moto pelo cartão, trocar a foto na ficha com o
-mouse ou com as setas ← →, e abrir as perguntas da seção Dúvidas.
-
-### O seletor de largura funciona por `@container`, não por `@media`
-
-O jeito comum de mostrar um layout responsivo é pôr a página num `<iframe>` da
-largura desejada. Funciona, mas obriga o protótipo a ser um arquivo separado — e
-o pedido era um arquivo só.
-
-A saída é `container-type: inline-size` no palco. Todas as regras responsivas são
-`@container tela (max-width: …)`. Elas passam a responder à largura **daquele
-elemento**, não da janela. Trocar para "Celular" reflui o layout exatamente como
-o aparelho reflui.
-
-Verificado com o palco em 372 px: `.nav-desk` em `none`, `.bt-menu` em `flex`,
-grade em 1 coluna, e `scrollWidth == clientWidth` — sem estouro horizontal.
+Para ver o celular, estreite a janela do navegador: o responsivo é `@media`
+comum, como no site de verdade.
 
 ---
 
@@ -83,7 +71,7 @@ negócio local, catálogo pequeno, conversão única no WhatsApp.
 | **Badges de status no cartão** — Disponível hoje, Última unidade | Escassez honesta e informação útil no mesmo elemento. |
 | **WhatsApp flutuante** | Fica à mão em qualquer ponto da página, em qualquer largura. |
 | **Seção de Dúvidas** | CNH, caução, prazo, uso para entrega. São as perguntas que travam o fechamento. |
-| **Cantos de 14 px, sombra macia, cartas brancas sobre fundo quente** | Vocabulário de negócio de bairro, não de portfólio de estúdio. |
+| **Cantos de 16 px, sombra macia, cartas brancas sobre fundo quente** | Vocabulário de negócio de bairro, não de portfólio de estúdio. |
 
 ### Cor: uma marca só, e ela é verde por um motivo funcional
 
@@ -103,7 +91,7 @@ Um token para escrever e preencher, sem a ginástica de manter dois. Os dois
 últimos números foram medidos **na página viva**, lendo o `getComputedStyle` dos
 botões de verdade — não numa planilha à parte que envelhece sozinha.
 
-O resto é neutro quente: fundo `#F7F6F3`, cartas brancas, texto `#1A1D21`,
+O resto é neutro quente: fundo `#F5F3EF`, cartas brancas, texto `#1A1D21`,
 secundário `#5C6470`. Âmbar `#8A5300` só no selo "Última unidade".
 
 ### Tipografia
@@ -112,29 +100,44 @@ secundário `#5C6470`. Âmbar `#8A5300` só no selo "Última unidade".
 formas arredondadas: fala como um negócio de bairro. Títulos em 800 com
 entreletra negativa; texto em 400.
 
-### Movimento
+### Ritmo de fundo
 
-Só a entrada do hero é iniciada pela página: os dois blocos sobem 18 px em
-640 ms, escalonados em 120 ms. O resto responde a uma ação e mostra o que mudou:
+A página alterna faixa para o olho encontrar onde uma seção termina:
+
+```
+hero (foto escura) → catálogo (fundo quente) → como funciona (faixa escura)
+   → dúvidas (branco) → contato (fundo quente) → rodapé
+```
+
+Sem isso tudo vira um bloco só de `#f5f3ef` e o conteúdo parece flutuar. Os
+cartões também ganharam sombra **em repouso**, não só no hover — sem ela a grade
+lê como tabela.
+
+### Movimento
 
 | Interação | Tratamento |
 |---|---|
-| **Filtro do catálogo** | FLIP: os cartões que ficam **deslizam** para a posição nova em 260 ms; os que saem encolhem e somem |
-| Troca de tela | 260 ms, sobe 10 px |
-| Cartão sob o mouse | Sobe 3 px, a foto cresce 4%, a sombra abre |
-| Troca de foto na ficha | As duas imagens empilhadas trocam por opacidade, sem pulo de layout |
-| Cabeçalho ao rolar | Ganha fundo e borda — mostra que virou barra fixa |
-| Dúvida abrindo | 240 ms, e o chevron gira |
-| Gaveta | 280 ms |
+| Entrada do hero | Os dois blocos sobem 22 px em 720 ms, escalonados em 140 ms |
+| Foto do hero ao rolar | Anda a 22% da velocidade da página — paralaxe curta |
+| Revelação ao rolar | Cada cartão, passo e pergunta sobe 20 px em 700 ms, uma vez, escalonado dentro da linha |
+| **Filtro do catálogo** | FLIP: os cartões que ficam **deslizam** para a posição nova; os que saem encolhem e somem |
+| Cartão sob o mouse | Sobe 5 px, a foto cresce 5%, a sombra abre |
+| Carta de oferta do hero | Sobe 5 px e a foto cresce — ela é clicável inteira |
+| Troca de foto na ficha | Crossfade com um leve zoom, sem pulo de layout |
+| Cabeçalho ao rolar | Ganha fundo e borda |
+| Selo da marca no hover | Gira 8° com curva de mola |
+| Ícone do passo no hover | Cresce 8% e gira |
+| Gaveta abrindo | Painel em 320 ms, itens em cascata de 50 ms |
+| Dúvida abrindo | 300 ms e o chevron gira 180° |
+| WhatsApp flutuante | Entra com mola após 700 ms e pulsa um anel duas vezes |
+| Botões | Sobem 1 px no hover, encolhem 2,5% ao pressionar |
 
 O FLIP do filtro merece nota: mede-se onde cada cartão está, muda-se o DOM, mede
 de novo, e anima-se a diferença. Sem ele, filtrar é um piscar e ninguém entende o
 que aconteceu com os cartões.
 
-Não há fade-and-slide-up em cada seção — esse é o padrão genérico e dilui
-justamente o momento que deveria chamar atenção. Tudo dentro de
-`prefers-reduced-motion: no-preference`, com um bloco `reduce` que zera animação
-e transição.
+Tudo dentro de `prefers-reduced-motion: no-preference`, com um bloco `reduce` que
+zera animação e transição.
 
 ---
 
@@ -153,7 +156,7 @@ e transição.
 
 ---
 
-## Três bugs que valem registrar
+## Quatro bugs que valem registrar
 
 ### 1. O cabeçalho que estourava no celular
 
@@ -177,7 +180,26 @@ A resposta veio de medir: uma sonda que compara
 **Lição:** captura de tela não é medição. Quando o sintoma e o artefato da
 ferramenta se parecem, meça.
 
-### 3. O botão verde com texto claro no tema escuro
+### 3. A revelação que podia sumir com a página
+
+A primeira versão da revelação ao rolar usava `IntersectionObserver`, com os
+elementos nascendo em `opacity: 0` pelo CSS. Funciona — até o observer não
+disparar. Aí o conteúdo fica **invisível para sempre**, e o modo de falha é
+silencioso: nenhum erro, nenhuma pista, só uma página em branco.
+
+Descobri no Chrome headless, onde o observer de fato não roda. Duas mudanças:
+
+1. A checagem passou para o handler de scroll que já existia — uma comparação de
+   posição por elemento, sem callback que possa não vir.
+2. O estado escondido só existe sob `html[data-anima]`, marcado pelo próprio
+   JavaScript. Sem script, ou se algo falhar antes disso, tudo aparece
+   normalmente.
+
+**Lição:** nenhum conteúdo pode depender de uma animação para ser lido. Se a
+regra que esconde vem do CSS estático, ela precisa de um interruptor que só o JS
+liga.
+
+### 4. O botão verde com texto claro no tema escuro
 
 `.tela a { color: inherit }` tem especificidade `(0,1,1)`. `.botao-1 { color:
 var(--marca-texto) }` tem `(0,1,0)`. O `a` ganhava, e o botão **herdava** a cor
@@ -204,6 +226,8 @@ Não é o site. É uma proposta visual para a Fase 3.
 - **É protótipo, não código de produção.** As telas são geradas por concatenação
   de string em JavaScript: ótimo para iterar, péssimo para manter. O site
   continua sendo React.
+- **Não há alternador de tema.** O protótipo segue o sistema operacional, igual
+  ao site real. Para ver o outro tema, troque o tema do sistema.
 - **Nenhum botão envia mensagem.** Os destinos são âncoras da própria página.
 - **Os preços são ilustrativos** — e mostrá-los é decisão de negócio, não de
   layout. Ver a pendência P6 em [`../docs/07-decisoes.md`](../docs/07-decisoes.md).

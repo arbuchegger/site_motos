@@ -168,8 +168,8 @@ Herdado do gerador e verificado. Não desfaça:
 
 Uma direção visual foi prototipada em HTML puro, em `prototipos/`. Rode
 `node prototipos/gerar-standalone.mjs` e abra o arquivo que ele produz: **um
-arquivo só**, com fonte e imagens embutidas, que troca entre celular, tablet e
-desktop, entre claro e escuro, e onde as interações funcionam de verdade.
+arquivo só**, com fonte e imagens embutidas, onde as interações funcionam de
+verdade. É o site e só o site — sem moldura de ferramenta.
 
 A proposta em uma linha: **site de negócio local, não de estúdio de design.**
 Foto sangrando com o cabeçalho flutuando por cima, carta de oferta com preço

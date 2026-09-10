@@ -250,8 +250,9 @@ protótipo de duas telas.
 
 **Decidido e medido:** uma cor de marca só (`#0E7A3C`), verde porque a única
 conversão é WhatsApp; 5,43:1 com branco por cima e 5,02:1 como texto, os dois
-papéis num token. Responsivo por `@container` em vez de `@media`, que é o que
-permite o seletor de largura funcionar dentro de um arquivo só, sem `iframe`.
+papéis num token. Ritmo de fundo alternando faixa clara, quente e escura, para a
+página não virar um bloco monocromático. E nenhuma moldura de ferramenta: o
+arquivo é o site, e o responsivo é `@media` comum.
 
 **Consequência.** Existe um segundo CSS no repositório, e ele **vai** divergir do
 site. É dívida aceita e datada: aprovada, os tokens migram para
