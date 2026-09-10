@@ -41,6 +41,9 @@ out/
 tsconfig.tsbuildinfo
 .eslintcache
 
+# Declaracoes de tipo geradas pelo `vinext build`
+next-env.d.ts
+
 # Segredos. NUNCA versione. Só o exemplo, sem valores dentro.
 .env
 .env.*
