@@ -1,11 +1,17 @@
-# Vértice Motos
+# Leandro MotorFast
 
-Vitrine estática de aluguel de motos, em português do Brasil. Seis modelos, uma
+Vitrine estática de aluguel da BMW R 1300 GS, em português do Brasil. Seis versões, uma
 página de detalhe para cada, e um único caminho de conversão: WhatsApp. Não há
 carrinho, cadastro, login ou pagamento — a negociação acontece na conversa.
 
-O site é **demonstrativo**: empresa, telefone, endereço e imagens são fictícios,
-e o `layout.tsx` publica `robots: { index: false }` justamente por isso.
+Esta é a versão Leandro MotorFast, com identidade, contato, catálogo e condições
+de locação definidos durante a revisão do site. As imagens são ilustrativas.
+A indexação continua desativada em `app/layout.tsx`; ativá-la e configurar o
+domínio fazem parte da publicação, que não acontece ao enviar commits.
+
+O histórico começou como uma vitrine demonstrativa chamada Vértice Motos. Os
+documentos antigos em `docs/` preservam o contexto dessas decisões. Para a versão
+atual, consulte [`docs/leandro-motorfest.md`](docs/leandro-motorfest.md).
 
 Este repositório também é um **projeto-exemplo de mentoria**. Cada decisão
 estrutural está documentada com o motivo que a gerou. Se você é uma IA lendo
@@ -79,14 +85,14 @@ sobra de Next. O `vinext build` terminou com "Build complete" e código de saíd
 zero, sem escrever um único `.html`. A falha só apareceu no passo seguinte, num
 `ENOENT` do `prepare-static.mjs`._
 
-**3. Todo conteúdo vive em `lib/content.ts`.** Nome, telefone, endereço, títulos,
-descrições, catálogo — tudo. Nenhum texto de marketing escrito dentro de um
-componente. Quem for editar o site não deve precisar abrir um `.tsx`.
+**3. Identidade, contato, preços e catálogo vivem em `lib/content.ts`.** As
+perguntas frequentes e os textos curtos do celular estão em
+`components/home-sections.tsx`; a localização, em `components/service-area.tsx`.
+Consulte o guia da versão atual antes de editar textos.
 
-**4. Nenhum dado real de empresa enquanto o site for demonstrativo.** Telefone
-fictício, `robots: index:false`, e o rodapé dizendo que é demonstração. Publicar
-com dados reais é um checklist, não um commit — está em
-[`docs/07-decisoes.md`](docs/07-decisoes.md).
+**4. Publicação é uma etapa separada do versionamento.** Os dados comerciais
+atuais foram informados pelo responsável pelo site. A revisão de domínio,
+indexação, disponibilidade e condições deve ocorrer antes da publicação.
 
 **5. Uma `<h1>` por página.** O `verify.mjs` reprova o build se houver zero ou
 duas. Hierarquia de heading é navegação para leitor de tela, não estilo.
@@ -138,8 +144,8 @@ e **o que se commita** (item 2).
   mas o layout mora no `globals.css`.
 - **`@/` resolve para a raiz** (`tsconfig.json:paths`). Importe `@/lib/content`,
   nunca `../../lib/content`.
-- **`'use client'` só onde há estado.** Hoje: `components/header.tsx` (menu) e
-  `components/gallery.tsx` (foto ativa). Todo o resto é Server Component.
+- **`'use client'` nas interações.** Menu, galeria, carrossel, animações de entrada
+  e seção de localização usam componentes de cliente; a exportação segue estática.
 - **`components/ui/` é território do shadcn.** Não edite à mão. O que for do
   projeto vai em `components/`.
 - **Formate com `npm run format`.** Não discuta estilo em revisão.
