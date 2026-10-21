@@ -85,3 +85,10 @@ prototipos/*-standalone.html
 # Rascunho local — use para qualquer coisa que não deve ser versionada
 /tmp/
 /scratch/
+
+# Comparações, capturas e resultados intermediários de imagem ficam locais.
+/output/
+/public/images/bmw-r1300gs/*.png
+# Experimentos antigos de banner; versionar as variantes responsivas finais.
+/public/images/bmw-r1300gs/banner-*.webp
+!/public/images/bmw-r1300gs/banner-*-sr-*.webp
