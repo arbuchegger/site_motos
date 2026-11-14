@@ -1,0 +1,6 @@
+[build]
+  command = "npm run build && npm run verify"
+  publish = "dist/client"
+
+[build.environment]
+  NODE_VERSION = "22"

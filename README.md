@@ -1,10 +1,10 @@
-# Leandro MotorFast
+# Paraíba MotorFast
 
 Vitrine estática de aluguel da BMW R 1300 GS, em português do Brasil. Seis versões, uma
 página de detalhe para cada, e um único caminho de conversão: WhatsApp. Não há
 carrinho, cadastro, login ou pagamento — a negociação acontece na conversa.
 
-Esta é a versão Leandro MotorFast, com identidade, contato, catálogo e condições
+Esta é a versão Paraíba MotorFast, com identidade, contato, catálogo e condições
 de locação definidos durante a revisão do site. As imagens são ilustrativas.
 A indexação continua desativada em `app/layout.tsx`; ativá-la e configurar o
 domínio fazem parte da publicação, que não acontece ao enviar commits.

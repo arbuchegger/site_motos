@@ -22,7 +22,7 @@
 .duvidas{display:grid;gap:12px;min-width:0}
 .duvida{background:var(--background);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color 200ms,box-shadow 260ms,background-color 200ms}
 .duvida:hover{border-color:var(--accent-ink)}
-.duvida[open]{background:var(--surface);border-color:transparent;box-shadow:0 8px 20px -10px #3c251c45}
+.duvida[open]{background:var(--background);border-color:var(--border)}
 .duvida summary{display:flex;align-items:center;gap:16px;list-style:none;cursor:pointer;padding:24px;font-size:18px;font-weight:750;line-height:1.35}
 .duvida summary::-webkit-details-marker{display:none}
 .duvida summary:focus-visible{outline:3px solid var(--accent-ink);outline-offset:-5px;border-radius:15px}
@@ -90,6 +90,16 @@
 @media(hover:hover){.service-marker:hover .city-tooltip{opacity:1;visibility:visible;transform:none}}
 .service-map-caption{display:flex;align-items:center;justify-content:center;gap:9px;font-size:14px;color:var(--muted-foreground);padding:8px 0}
 .service-map-caption>span{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+/* Wide screens: give the map the full section width and contact below it. */
+@media(min-width:1100px){
+  .service-layout{grid-template-columns:minmax(0,1fr);gap:28px}
+  .service-info{display:contents}
+  .service-city{display:none}
+  .service-map{grid-column:1;grid-row:1;max-width:none;padding:28px 40px 20px}
+  .service-map-canvas{max-width:540px;margin-inline:auto}
+  .service-followup{grid-column:1;grid-row:2;text-align:center}
+  .service-followup .service-description{max-width:60ch;margin:0 auto 24px}
+}
 @media(max-width:767px){.service-layout{grid-template-columns:minmax(0,1fr);gap:32px}.service-info{max-width:none}.service-city{padding:24px}.service-city h3{font-size:25px}.service-description{font-size:16px;margin:20px 0 24px}.service-info>.button{width:100%}.service-map{max-width:380px;padding:14px;border-radius:18px}.service-area .section-heading p{max-width:none}}
 @media(prefers-reduced-motion:reduce){.radar-ring{animation:none;opacity:.35}.radar-ring-delayed{display:none}}
 
@@ -124,4 +134,73 @@
   .service-followup{grid-column:1/-1;grid-row:2;text-align:center}
   .service-followup .service-description{margin:0 auto 20px;max-width:38ch;font-size:15px}
   .service-followup>.button{width:100%}
+}
+
+/* Portrait tablets: two steps above, the last step centered underneath. */
+@media(min-width:768px) and (max-width:1399px) and (orientation:portrait){
+ .motorfast-how .passos{grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+ .motorfast-how .passos>li{grid-column:span 2}
+ .motorfast-how .passos>li:last-child{grid-column:2 / span 2}
+}
+
+.motorfast-how .passo h3{font-family:'MotorFast Display',Outfit,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:-.025em;font-size:26px}
+.site-header.header-over-hero[data-light-surface]:not(.is-transparent){background:#383027}
+@media(min-width:1100px){
+ .restored-sections .section.service-area{display:flex;align-items:center;min-height:calc(100svh - 85px);padding-block:20px;scroll-margin-top:-15px}
+ .service-area .section-heading .service-eyebrow{display:none}
+ .service-area .section-heading{margin-bottom:20px}
+ .restored-sections :is(.service-area,.motorfast-how) .section-heading h2{font-size:clamp(84px,8.3vw,126px)}
+ .service-area .section-heading p{margin-top:12px;font-size:19px}
+ .service-area .service-layout{width:min(100%,700px);margin-inline:auto;gap:16px}
+ .service-area .service-map{padding:12px 24px 8px;border-radius:20px}
+ .service-area .service-map-canvas{max-width:clamp(180px,calc((100svh - 480px)*.913),350px)}
+ .service-area .service-followup .service-description{font-size:18px;line-height:1.5;max-width:60ch;margin:0 auto 14px}
+ .service-area .service-map-caption{font-size:16px}
+ .service-area .service-followup .button{font-size:21px}
+}
+@media(max-width:767px){.motorfast-how .passo h3{font-size:20px}}
+
+.restored-sections .section.motorfast-faq {
+  background: var(--surface);
+  border-top: 0;
+}
+
+.motorfast-faq .duvidas-grade {
+  background: var(--background);
+  border: 1px solid var(--border);
+  padding: clamp(20px, 4vw, 56px);
+  border-radius: 12px;
+}
+
+.motorfast-faq .duvida,
+.motorfast-faq .duvida[open] {
+  background: var(--surface);
+}
+
+.restored-sections .section.motorfast-faq,
+.restored-sections .section.service-area {
+  padding-top: clamp(72px, 7vw, 112px);
+}
+
+.restored-sections .section.service-area {
+  align-items: flex-start;
+}
+.rental-guide-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: clamp(24px, 5vw, 64px);
+}
+.rental-guide-content h2 {
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  line-height: 1.08;
+  text-wrap: balance;
+}
+.rental-guide-content p {
+  margin-top: 1rem;
+  color: var(--muted-foreground);
+  line-height: 1.65;
+}
+.rental-guide-content .button {
+  margin-top: 24px;
 }

@@ -1,0 +1,123 @@
+/* Uma janela por slide, com áreas de texto próprias para cada proporção. */
+.hero.hero-slideshow {
+  --hero-gutter: max(48px, calc((100vw - 1240px) / 2));
+  --hero-copy-safe: calc(100vw - 90dvh - var(--hero-gutter) - 24px);
+  display: flex; align-items: center;
+  height: 100vh; height: 100dvh; min-height: 0;
+}
+.hero-slideshow .hero-slides { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; z-index: -2; }
+.hero-slideshow .hero-slide { object-fit: cover; object-position: right bottom; }
+.hero-slideshow .hero-slide[data-model="racing-red"] { object-position: right center; }
+.hero-slideshow .hero-shade {
+  position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1;
+  background: linear-gradient(90deg, #0007, #0003 42%, transparent 72%);
+}
+.hero-slideshow .hero-content {
+  display: flex; align-items: center; height: 100%;
+  width: min(1240px, calc(100% - 96px));
+  padding-block: clamp(96px, 12dvh, 144px) 80px;
+}
+.hero-slideshow .hero-copy {
+  position: relative; height: auto; padding: 0;
+  width: max(180px, min(48%, 600px, var(--hero-copy-safe)));
+}
+.hero-slideshow .hero-copy .hero-title-reveal h1 {
+  font-size: clamp(32px, min(6.3vw, 14dvh, calc(var(--hero-copy-safe) / 5.1)), 112px);
+  line-height: 1.02;
+}
+.hero-slideshow .hero-copy .eyebrow {
+  max-width: none; margin: 0 0 24px; font-size: clamp(9px, .65vw, 12px);
+  line-height: 1.5; letter-spacing: 1.6px;
+}
+.hero-slideshow .hero-copy .hero-description {
+  display: block; margin-top: 28px; max-width: 100%; font-size: clamp(18px, 1.1vw, 20px); line-height: 1.65;
+}
+.hero-slideshow .hero-copy > .hero-copy-secondary:last-child { position: static; }
+.hero-slideshow .hero-copy .actions { display: flex; justify-content: center; margin-top: 32px; }
+.hero-slideshow .hero-copy .actions .button { width: auto; min-width: 0; flex: 0 0 auto; padding: 16px 24px; font-size: 18px; }
+.hero-slideshow .hero-copy .actions .button {
+  text-shadow: none;
+}
+.hero-slideshow .hero-slide-controls { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); margin: 0; }
+
+@media (max-width: 1023px) {
+  .hero.hero-slideshow { --hero-gutter: 24px; }
+  .hero-slideshow .hero-content { width: calc(100% - 48px); }
+}
+
+/* Fill the viewport at intermediate aspect ratios, including landscape tablets. */
+@media (min-aspect-ratio: 4/5) and (max-aspect-ratio: 3/2) {
+  .hero-slideshow .hero-slide { object-position: right center; }
+  .hero-slideshow .hero-slide[data-model="racing-red"] { object-position: center; }
+  .hero-slideshow .hero-copy { width: 42%; }
+  .hero-slideshow .hero-copy .hero-title-reveal h1 { font-size: clamp(32px, 5.4vw, 76px); }
+}
+/* Fill only the intermediate landscape range that previously showed empty bands. */
+@media(min-width:960px) and (max-width:1099px) and (orientation:landscape) and (max-aspect-ratio:3/2){
+ .hero-slideshow .hero-slide,.hero-slideshow .hero-slide[data-model="racing-red"]{object-fit:cover;object-position:center}
+ .hero-slideshow .hero-slide[data-model="light-white"]{object-position:95% center}
+ .hero-slideshow .hero-slide[data-model="triple-black"]{object-position:75% center}
+ .hero-slideshow .hero-copy{width:30%}
+ .hero-slideshow .hero-copy .hero-title-reveal h1{font-size:clamp(32px,4.8vw,70px)}
+}
+
+@media (min-aspect-ratio: 4/5) and (max-height: 600px) {
+  .hero-slideshow .hero-content { padding-block: 82px 48px; }
+  .hero-slideshow .hero-copy .hero-title-reveal h1 { font-size: clamp(28px, 9dvh, 52px); }
+  .hero-slideshow .hero-copy .eyebrow { margin-bottom: 12px; font-size: 9px; letter-spacing: 1px; }
+  .hero-slideshow .hero-copy .hero-description { margin-top: 14px; font-size: 14px; line-height: 1.4; }
+  .hero-slideshow .hero-copy .actions { margin-top: 18px; }
+  .hero-slideshow .hero-copy .actions .button { padding: 11px 18px; min-height: 44px; font-size: 16px; }
+  .hero-slideshow .hero-slide-controls { bottom: 4px; }
+}
+
+/* Retrato: céu para o título, moto no meio e chão para o botão. */
+@media (max-aspect-ratio: 4/5), (min-width:600px) and (max-width:767px) and (orientation:portrait) {
+  .hero-slideshow .hero-slide { object-fit: cover; object-position: 50% center; }
+  .hero-slideshow .hero-slide[data-model="racing-red"] { object-fit: cover; object-position: 75% center; }
+  .hero-slideshow .hero-slide[data-model="light-white"] { object-position: 65% center; }
+  .hero-slideshow .hero-shade { background: linear-gradient(180deg, #0004, transparent 40%, transparent 72%, #0005); }
+  .hero-slideshow .hero-content { width: 100%; height: 100%; padding: 0 24px; }
+  .hero-slideshow .hero-copy { width: 100%; height: 100%; padding-top: max(90px, 11svh); }
+  .hero-slideshow .hero-copy .eyebrow {
+    max-width: 290px; margin: 0 auto 14px; font-size: 9px; line-height: 1.5; letter-spacing: 1.25px;
+  }
+  .hero-slideshow .hero-copy .hero-title-reveal h1 { font-size: clamp(38px, min(11vw, 6.5svh), 62px); line-height: 1; }
+  .hero-slideshow .hero-copy .hero-description { display: none; }
+  .hero-slideshow .hero-copy > .hero-copy-secondary:last-child {
+    position: absolute; bottom: max(86px, calc(env(safe-area-inset-bottom) + 76px)); left: 0; right: 0;
+  }
+  .hero-slideshow .hero-copy .actions { margin: 0; }
+  .hero-slideshow .hero-copy .actions .button { min-width: 198px; padding: 16px 24px; font-size: 18px; }
+  .hero-slideshow .hero-slide-controls { bottom: max(16px, calc(env(safe-area-inset-bottom) + 12px)); }
+}
+@media (max-aspect-ratio: 4/5) and (min-width:600px), (min-width:600px) and (max-width:767px) and (orientation:portrait) {
+  .hero-slideshow .hero-copy .hero-title-reveal h1 { font-size: clamp(44px, 5vw, 62px); }
+}
+@media (max-aspect-ratio: 4/5) and (max-height:650px), (min-width:600px) and (max-width:767px) and (orientation:portrait) and (max-height:650px) {
+  .hero-slideshow .hero-copy { padding-top: 84px; }
+  .hero-slideshow .hero-copy .eyebrow { font-size: 8px; letter-spacing: 1px; margin-bottom: 10px; }
+  .hero-slideshow .hero-copy .hero-title-reveal h1 { font-size: 34px; }
+  .hero-slideshow .hero-copy > .hero-copy-secondary:last-child { bottom: 76px; }
+  .hero-slideshow .hero-copy .actions .button { padding: 13px 20px; min-height: 48px; }
+}
+/* Gestures also start over the title and CTA, not only the background photo. */
+.hero-slideshow{touch-action:pan-y pinch-zoom}
+
+/* Portrait tablets: generous type in the sky and CTA on the ground. */
+@media(min-width:768px) and (max-width:1399px) and (orientation:portrait){
+ .hero-slideshow .hero-slide,.hero-slideshow .hero-slide[data-model="racing-red"]{object-fit:cover;object-position:50% center}
+ .hero-slideshow .hero-slide[data-model="racing-red"]{object-position:75% center}
+ .hero-slideshow .hero-slide[data-model="light-white"]{object-position:65% center}
+ .hero-slideshow .hero-shade{background:linear-gradient(180deg,#0004,transparent 40%,transparent 72%,#0008)}
+ .hero-slideshow .hero-content{width:100%;height:100%;padding:0 40px}
+ .hero-slideshow .hero-copy{width:100%;height:100%;padding-top:max(112px,10svh)}
+ .hero-slideshow .hero-copy .eyebrow{max-width:none;margin:0 auto 20px;font-size:clamp(18px,2.3vw,24px);line-height:1.5;letter-spacing:1.4px}
+ .hero-slideshow .hero-copy .hero-title-reveal h1{font-size:clamp(64px,8vw,96px);line-height:1.02;max-width:none}
+ .hero-slideshow .hero-copy>.hero-copy-secondary:last-child{position:absolute;left:0;right:0;bottom:max(86px,calc(env(safe-area-inset-bottom) + 76px))}
+ .hero-slideshow .hero-copy .hero-description{display:none}
+ .hero-slideshow .hero-copy .actions{margin:0}
+ .hero-slideshow .hero-copy .actions .button{min-width:280px;min-height:64px;padding:20px 32px;font-size:26px}
+ .hero-slideshow .hero-copy .actions .button svg{width:24px;height:24px}
+ .hero-slideshow .hero-slide-controls{bottom:max(16px,calc(env(safe-area-inset-bottom) + 12px))}
+}
