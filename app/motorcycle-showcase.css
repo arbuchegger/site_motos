@@ -1,0 +1,410 @@
+/* Vitrine de cores: seleção explícita, com prévia sutil no hover. */
+.catalog.catalog-showcase { width: min(1760px, calc(100% - 48px)); max-width: none; }
+.catalog-showcase .section-heading { margin-bottom: 56px; }
+.motorcycle-showcase {
+  --showcase-ease: cubic-bezier(.22,.75,.25,1);
+  --showcase-sand: var(--muted);
+  --showcase-rest: var(--muted);
+}
+.showcase-colors { display: none; }
+.showcase-mobile-title-break { display: none; }
+.showcase-panels { display: flex; gap: 6px; height: clamp(600px, 46vw, 760px); }
+.showcase-panel {
+  position: relative; flex: 1 1 0; min-width: 0; overflow: hidden;
+  background: var(--showcase-rest); color: var(--foreground); border-radius: 3px; isolation: isolate;
+  transition: flex-grow .65s var(--showcase-ease), background-color .45s var(--showcase-ease);
+}
+.showcase-panel.is-selected { flex-grow: 6; background: var(--showcase-sand); }
+.showcase-trigger {
+  position: absolute; inset: 0; z-index: 2; padding: 0; border: 0;
+  background: transparent; color: var(--foreground); cursor: pointer; text-align: left;
+}
+.showcase-trigger > span {
+  position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%) rotate(180deg);
+  writing-mode: vertical-rl; white-space: nowrap;
+  font-family: 'MotorFast Display', Outfit, sans-serif; font-weight: 700;
+  font-size: clamp(22px, 1.8vw, 32px); line-height: 1.12; letter-spacing: -.025em; text-transform: uppercase;
+  opacity: 1;
+}
+.is-selected .showcase-trigger { height: 104px; bottom: auto; }
+.is-selected .showcase-trigger > span {
+  writing-mode: horizontal-tb; transform: none; inset: 28px 32px auto;
+  white-space: normal; font-size: clamp(32px, 2.8vw, 48px);
+  opacity: 1;
+}
+.showcase-photo {
+  position: absolute; top: 16px; left: 0; width: 100%; height: 110px;
+  object-fit: contain; pointer-events: none; user-select: none; mix-blend-mode: normal; opacity: 1; filter: none;
+  transition: top .65s var(--showcase-ease), height .65s var(--showcase-ease), opacity .4s;
+}
+.is-selected .showcase-photo { top: 105px; height: calc(100% - 300px); opacity: 1; }
+.showcase-info {
+  position: absolute; bottom: 30px; left: 32px; right: 32px;
+  opacity: 0; visibility: hidden; transform: translateY(12px);
+  transition: opacity .15s, visibility .15s, transform .15s;
+}
+.is-selected .showcase-info {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity .35s .25s, visibility 0s .25s, transform .45s .2s var(--showcase-ease);
+}
+.showcase-description { max-width: 60ch; font-size: 16px; line-height: 1.55; text-wrap: pretty; color: var(--muted-foreground); }
+.showcase-purchase { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 24px; }
+.showcase-price { display: grid; gap: 3px; flex-shrink: 0; }
+.showcase-price > span { color: var(--muted-foreground); font-size: 12px; }
+.showcase-price strong { font-size: 28px; letter-spacing: -.04em; line-height: 1.2; font-weight: 600; font-variant-numeric: tabular-nums; }
+.showcase-price small { font-size: 14px; font-weight: 400; letter-spacing: 0; margin-left: 5px; }
+.showcase-link { min-width: 168px; border-radius: 3px; padding: 16px 24px; flex-shrink: 0; }
+.showcase-trigger:focus-visible { outline: 3px solid var(--accent); outline-offset: -5px; }
+.showcase-color:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.showcase-link:focus-visible { outline: 3px solid var(--foreground); outline-offset: 4px; }
+.catalog-showcase .catalog-note { margin-top: 26px; }
+@media (min-width: 1100px) and ((orientation: landscape) or (min-width: 1400px)) and (hover: hover) {
+  .showcase-panel:not(.is-selected):hover { flex-grow: 1.22; background: color-mix(in srgb, var(--muted) 90%, var(--foreground)); }
+  .showcase-panel:not(.is-selected):hover .showcase-photo,
+  .showcase-panel:not(.is-selected):hover .showcase-trigger > span { opacity: 1; }
+}
+@media (max-width: 1099px), (min-width: 768px) and (max-width: 1399px) and (orientation: portrait) {
+  .catalog.catalog-showcase { width: 100%; }
+  .catalog-showcase > .section-heading, .catalog-showcase > .catalog-note { margin-inline: 24px; }
+  .motorcycle-showcase { background: var(--showcase-sand); color: var(--foreground); padding-block: 24px 40px; }
+  .showcase-colors {
+    display: block; position: relative; overflow: clip; height: 82px;
+    touch-action: pan-y pinch-zoom; user-select: none;
+  }
+  .showcase-color {
+    position: absolute; top: 0; left: 50%; width: 70%; height: 76px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 6px 12px; border: 0; background: transparent; color: var(--foreground);
+    font-family: 'MotorFast Display', Outfit, sans-serif;
+    font-size: clamp(24px, 6.8vw, 40px); font-weight: 700; text-transform: uppercase;
+    letter-spacing: -.03em; line-height: 1.1; text-align: center; text-wrap: balance; cursor: pointer;
+    transform: translateX(calc(-50% + var(--color-offset) * 70%)) scale(.8);
+    opacity: 0; pointer-events: none; z-index: 0;
+    transition: transform .45s var(--showcase-ease), opacity .35s;
+  }
+  .showcase-color[data-position="-1"], .showcase-color[data-position="1"] { opacity: .32; pointer-events: auto; z-index: 1; }
+  .showcase-color[aria-pressed=true] { opacity: 1; pointer-events: auto; z-index: 2; transform: translateX(-50%) scale(1); }
+  .showcase-color small { display: block; margin-top: 5px; font-size: .55em; letter-spacing: .015em; }
+  .showcase-panels { display: block; height: auto; touch-action: pan-y pinch-zoom; }
+  .showcase-panel { display: none; border-radius: 0; }
+  .showcase-panel.is-selected { display: flex; flex-direction: column; align-items: center; }
+  .showcase-trigger { display: none; }
+  .is-selected .showcase-photo {
+    position: static; width: 100%; height: clamp(240px, 55vw, 390px); margin-block: 16px;
+    animation: showcase-photo-arrive .3s var(--showcase-ease) both;
+  }
+  .showcase-info, .is-selected .showcase-info {
+    position: static; width: min(100% - 48px, 600px); text-align: center;
+    transition: none; animation: showcase-arrive .45s .08s var(--showcase-ease) both;
+  }
+  .showcase-description { margin: 0 auto; font-size: 16px; line-height: 1.6; min-height: 5em; }
+  .showcase-purchase { flex-direction: column; gap: 22px; margin-top: 20px; }
+  .showcase-link { min-width: 182px; }
+  .showcase-price strong { font-size: 28px; }
+}
+@keyframes showcase-arrive { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+@keyframes showcase-photo-arrive { from { transform: translateX(12px); } to { transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .motorcycle-showcase *, .motorcycle-showcase *::before, .motorcycle-showcase *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+/* iPad may use the desktop layout while still receiving touch input. */
+.showcase-panels{touch-action:pan-y pinch-zoom}
+.motorcycle-showcase .showcase-colors,
+.motorcycle-showcase .is-selected .showcase-photo {
+  touch-action: pinch-zoom;
+  user-select: none;
+}
+.motorcycle-showcase .is-selected .showcase-photo { pointer-events: auto; }
+
+@media (min-width: 768px) and (orientation: landscape) {
+  .motorcycle-showcase .showcase-colors,
+  .motorcycle-showcase .is-selected .showcase-photo {
+    touch-action: pan-y pinch-zoom;
+  }
+}
+
+/* The image window and the information row share a boundary, even when text wraps. */
+.showcase-picture { display: contents; }
+.showcase-neighbor-photo { display: none; }
+@media (min-width: 1100px) and ((orientation: landscape) or (min-width: 1400px)) {
+  .catalog.catalog-showcase { width: 100%; padding: 8px; scroll-margin-top: -15px; }
+  .catalog-showcase > .section-heading, .catalog-showcase > .catalog-note { display: none; }
+  .catalog-showcase .showcase-panels { height: calc(100svh - 101px); min-height: 560px; }
+  .catalog-showcase .showcase-panel {
+    flex: 1 1 0%; border-radius: 10px;
+    transition: flex-basis .5s ease, flex-grow .5s ease, background-color .5s ease;
+  }
+  .catalog-showcase .showcase-panel.is-selected {
+    flex: 0 0 40%; max-width: 45%; display: grid;
+    grid-template-rows: minmax(74px,1fr) minmax(0,55%) auto;
+  }
+  .is-selected .showcase-trigger { position: relative; grid-row: 1; height: 74px; }
+  .is-selected .showcase-trigger > span { inset: 20px 22px auto; font-size: clamp(28px,2.4vw,42px); }
+  .showcase-panel:not(.is-selected) .showcase-trigger > span { left: 20px; bottom: 20px; transform: rotate(180deg); }
+  .showcase-picture { display: block; position: relative; height: 80px; overflow: hidden; }
+  .showcase-picture .showcase-photo {
+    position: absolute; left: 0; top: 0; height: 100%; width: auto; max-width: none;
+    object-fit: contain; transform: translateX(-27%);
+  }
+  .is-selected .showcase-picture { grid-row: 2; height: 100%; }
+  .is-selected .showcase-picture .showcase-photo {
+    position: absolute; left: -10%; bottom: 0; top: auto; height: 100%; width: 112%;
+    object-view-box: inset(6% 2% 5% 30%); object-fit: contain; object-position: left bottom; transform: none;
+  }
+  .is-selected .showcase-info {
+    position: static; grid-row: 3; padding: 8px 18px 16px;
+    display: grid; grid-template-columns: minmax(0,55fr) minmax(0,45fr); gap: 6px 12px;
+  }
+  .showcase-description { grid-column: 1; font-size: 14px; line-height: 1.35; }
+  .showcase-purchase { display: contents; }
+  .showcase-price { grid-column: 1; gap: 0; }
+  .showcase-price strong { font-size: 24px; }
+  .showcase-link { grid-column: 2; grid-row: 1 / 3; align-self: end; justify-self: end; min-width: 0; padding: 12px 18px; }
+}
+@media(min-width: 1100px) and ((orientation: landscape) or (min-width: 1400px)){
+ :root{--header-h:85px}
+ .catalog.catalog-showcase{height:682px;padding:10px;box-sizing:border-box;scroll-margin-top:-15px;margin-bottom:clamp(28px,4svh,44px)}
+ .catalog-showcase .showcase-panels{height:100%;min-height:0;gap:6px}
+ .catalog-showcase .motorcycle-showcase{height:100%}
+ .catalog-showcase .showcase-panel{flex:1 1 0%;height:100%;border-radius:9px;transition:flex-basis .5s ease,flex-grow .5s ease,transform .3s ease}
+ .catalog-showcase .showcase-panel.is-selected{flex:0 1 min(620px,47%);min-width:0;max-width:none;display:block}
+ .catalog-showcase .is-selected .showcase-trigger{position:absolute;inset:0 0 auto;height:80px}
+ .catalog-showcase .is-selected .showcase-picture{position:absolute;left:0;right:0;bottom:150px;height:72%;overflow:visible}
+ .catalog-showcase .is-selected .showcase-picture .showcase-photo{left:-10%;top:auto;bottom:0;width:110%;height:100%;object-view-box:none;object-fit:contain;object-position:left bottom;transform:none}
+ .catalog-showcase .is-selected .showcase-info{position:absolute;left:0;right:0;bottom:0;padding:10px 20px 16px}
+ .catalog-showcase .showcase-panel:not(.is-selected) .showcase-picture{height:100px;margin-top:15px}
+ .catalog-showcase .showcase-panel:not(.is-selected) .showcase-photo{width:115%;height:100%;object-fit:contain;object-position:left center;transform:translateX(-15%);transition:transform .3s ease}
+ .catalog-showcase .showcase-panel:not(.is-selected) .showcase-trigger{cursor:pointer}
+}
+@media(min-width: 1100px) and ((orientation: landscape) or (min-width: 1400px)) and (hover:hover){
+ .catalog-showcase .showcase-panel:not(.is-selected):hover{flex-grow:1;transform:scale(1.015);z-index:3}
+ .catalog-showcase .showcase-panel:not(.is-selected):hover .showcase-photo{transform:translateY(-3px) scale(1.04)}
+}
+
+
+
+
+@media(min-width:1600px){.catalog-showcase .is-selected .showcase-picture .showcase-photo{left:-17%;width:100%;height:auto}}
+
+/* Preview and expanded content remain mounted in independent layers. */
+.showcase-preview,.showcase-content-logo{display:none}
+.showcase-content,.showcase-content-wrapper{display:contents}
+@media(max-width:1099px), (min-width: 768px) and (max-width: 1399px) and (orientation: portrait) {
+ .showcase-bottom-text .showcase-price{margin-top:20px}
+ .showcase-bottom-btn-wrapper{display:flex;justify-content:center;margin-top:22px}
+}
+@media(min-width: 1100px) and ((orientation: landscape) or (min-width: 1400px)){
+ .catalog-showcase .showcase-preview,.catalog-showcase .showcase-content,.catalog-showcase .showcase-content-wrapper{display:block;position:absolute;inset:0}
+ .catalog-showcase .showcase-preview{opacity:1;pointer-events:none;transition:opacity .4s ease .12s}
+ .catalog-showcase .is-selected .showcase-preview{opacity:0;transition:opacity .2s ease}
+ .showcase-preview-picture{display:block;position:relative;height:100px;margin-top:15px;overflow:hidden}
+ .showcase-preview-photo{width:100%;max-width:none;height:100%;object-fit:contain;object-position:center;transition:transform .3s ease}
+ .showcase-preview-name{position:absolute;bottom:20px;left:20px;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;font-family:'MotorFast Display',Outfit,sans-serif;font-size:clamp(27px,2.3vw,44px);font-weight:700;line-height:1.12;letter-spacing:-.025em;text-transform:uppercase}
+ .catalog-showcase .showcase-content{opacity:0;pointer-events:none;transition:opacity .2s ease}
+ .catalog-showcase .is-selected .showcase-content{opacity:1;pointer-events:auto;transition:opacity .6s ease .17s}
+ .catalog-showcase .showcase-content-logo{display:block;position:absolute;inset:20px 22px auto;font-family:'MotorFast Display',Outfit,sans-serif;font-size:clamp(28px,2.4vw,42px);font-weight:700;line-height:1.12;letter-spacing:-.025em;text-transform:uppercase;opacity:0;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease}
+ .catalog-showcase .showcase-panel .showcase-content .showcase-picture{display:block;position:absolute;left:0;right:0;bottom:150px;top:auto;height:72%;margin:0;overflow:visible}
+ .catalog-showcase .showcase-panel .showcase-content .showcase-photo{position:absolute;left:0;top:auto;bottom:0;width:100%;height:100%;max-width:none;object-view-box:none;object-fit:contain;object-position:center bottom;opacity:0;filter:brightness(1.8);transform:scale(1.04);transform-origin:left bottom;transition:opacity .2s ease,filter .2s ease,transform .2s ease}
+ .catalog-showcase .showcase-panel.is-selected .showcase-content .showcase-photo{opacity:1;filter:brightness(1);transform:scale(1);transition:opacity .7s ease .15s,filter .7s ease .15s,transform .7s ease .15s}
+ .catalog-showcase .showcase-panel .showcase-content .showcase-info{position:absolute;left:0;right:0;bottom:0;padding:10px 20px 16px;display:grid;grid-template-columns:minmax(0,55fr) minmax(0,45fr);gap:12px;visibility:visible;opacity:0;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease}
+ .catalog-showcase .is-selected .showcase-content-logo,.catalog-showcase .showcase-panel.is-selected .showcase-content .showcase-info{opacity:1;transform:translateY(0);transition:opacity .45s ease .3s,transform .45s ease .3s}
+ .showcase-bottom-text{min-width:0}.showcase-bottom-text .showcase-price{margin-top:6px}
+ .showcase-bottom-btn-wrapper{display:flex;align-items:flex-end;justify-content:flex-end;min-width:0}
+ .showcase-bottom-btn-wrapper .showcase-link{transition:background-color .3s ease,transform .3s ease}
+}
+
+@media(min-width: 1100px) and ((orientation: landscape) or (min-width: 1400px)) and (hover:hover){.showcase-panel:not(.is-selected):hover .showcase-preview-photo{transform:translateY(-3px) scale(1.04)}}
+
+@media (max-width: 767px), (min-width: 768px) and (max-width: 1399px) and (orientation: portrait) {
+  .showcase-colors {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: 16px;
+    height: auto;
+    min-height: 44px;
+  }
+  .showcase-color {
+    width: max-content;
+    max-width: 48vw;
+    height: auto;
+    min-height: 44px;
+    padding: 0;
+    font-size: clamp(30px, 10.8vw, 44px);
+    line-height: 1;
+  }
+  .showcase-color[data-single-line] {
+    max-width: none;
+    white-space: nowrap;
+  }
+  .showcase-mobile-title-break { display: inline; }
+  .showcase-color[data-position="-1"],
+  .showcase-color[data-position="1"],
+  .showcase-color[aria-pressed=true] {
+    position: static;
+    grid-row: 1;
+    transform: none;
+  }
+  .showcase-color[data-position="-1"] { grid-column: 1; justify-self: end; }
+  .showcase-color[aria-pressed=true] { grid-column: 2; }
+  .showcase-color[data-position="1"] { grid-column: 3; justify-self: start; }
+  .catalog-showcase > .section-heading {
+    display: none;
+  }
+}
+
+
+
+@media (max-width: 767px), (min-width: 768px) and (max-width: 1399px) and (orientation: portrait) {
+  .showcase-bottom-text {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .showcase-bottom-text .showcase-price {
+    order: -1;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 767px), (min-width: 768px) and (max-width: 1399px) and (orientation: portrait) {
+  .catalog.catalog-showcase {
+    background: var(--muted);
+    display: grid;
+    align-content: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-block: clamp(24px, 4svh, 44px) clamp(48px, 7svh, 76px);
+  }
+  .catalog-showcase .motorcycle-showcase {
+    padding-block: 0;
+  }
+  .catalog-showcase + .restored-sections .service-area {
+    border-top: 0;
+    padding-bottom: 40px;
+  }
+}
+
+@media (max-width: 767px) {
+  .motorcycle-showcase .showcase-colors,
+  .motorcycle-showcase .is-selected .showcase-photo {
+    touch-action: pan-y pinch-zoom;
+  }
+
+  .catalog-showcase .is-selected .showcase-picture {
+    position: relative;
+    display: block;
+    width: 100%;
+    overflow: clip;
+    touch-action: pan-y pinch-zoom;
+  }
+
+  .catalog-showcase .showcase-neighbor-photo {
+    position: absolute;
+    display: block;
+    inset: 16px auto auto 0;
+    width: 100%;
+    height: clamp(240px, 55vw, 390px);
+    object-fit: contain;
+    pointer-events: none;
+  }
+
+  .catalog-showcase .showcase-neighbor-photo[data-direction="-1"] { translate: -84% 0; }
+  .catalog-showcase .showcase-neighbor-photo[data-direction="1"] { translate: 84% 0; }
+}
+
+@media (min-width: 768px) and (max-width: 1399px) and (orientation: portrait) {
+  .catalog.catalog-showcase {
+    /* Reference: a 1038px section at 960px wide. */
+    min-height: 108.125vw;
+    align-content: start;
+    margin-bottom: 0;
+    padding-block: 2vw 6vw;
+  }
+
+  .catalog-showcase .showcase-colors {
+    column-gap: clamp(14px, 2vw, 24px);
+    min-height: 10vw;
+  }
+
+  .catalog-showcase .showcase-color {
+    max-width: 76vw;
+    font-size: clamp(60px, 8vw, 96px);
+  }
+
+  .catalog-showcase .showcase-color[data-single-line] {
+    max-width: none;
+  }
+
+  .catalog-showcase .is-selected .showcase-picture {
+    position: relative;
+    display: block;
+    width: 100%;
+    overflow: clip;
+    touch-action: pinch-zoom;
+    margin-block: 9vw 6vw;
+  }
+
+  .catalog-showcase .is-selected .showcase-photo,
+  .catalog-showcase .showcase-neighbor-photo {
+    display: block;
+    width: 88%;
+    max-width: none;
+    height: auto;
+  }
+
+  .catalog-showcase .is-selected .showcase-photo {
+    margin: 0 auto;
+  }
+
+  .catalog-showcase .showcase-neighbor-photo {
+    position: absolute;
+    top: 0;
+    pointer-events: none;
+  }
+
+  /* The visible tires start and end at about 14% and 86% of each canvas. */
+  .catalog-showcase .showcase-neighbor-photo[data-direction="-1"] { left: -72.5%; }
+  .catalog-showcase .showcase-neighbor-photo[data-direction="1"] { left: 84.5%; }
+}
+
+@media (min-width: 1100px) and ((orientation: landscape) or (min-width: 1400px)) {
+  .catalog-showcase .showcase-panel .showcase-content .showcase-picture {
+    container-type: size;
+    top: 82px;
+    height: auto;
+  }
+
+  .catalog-showcase .showcase-panel .showcase-content .showcase-photo {
+    width: min(124%, 177.78cqh);
+    height: auto;
+    translate: -18% 0;
+  }
+
+  .catalog-showcase .showcase-preview-photo {
+    width: min(158%, 236px);
+    height: auto;
+    translate: -42% 0;
+    transform-origin: center bottom;
+  }
+
+  .catalog-showcase .showcase-preview-picture {
+    height: auto;
+    margin-top: 4px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .catalog-showcase .showcase-panel .showcase-content .showcase-photo {
+    width: min(137%, 177.78cqh);
+    translate: -25% 0;
+  }
+
+  .catalog-showcase .showcase-panel.is-selected {
+    flex-basis: min(51%, clamp(620px, calc(99.0625vw - 965px), 937px));
+  }
+
+  .catalog.catalog-showcase {
+    height: 940px;
+  }
+}

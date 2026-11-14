@@ -1,13 +1,13 @@
 // EDITE AQUI: identidade, contatos, textos e catálogo. Não é necessário painel.
 export const site = {
-  name: 'Leandro', descriptor: 'MotorFast', fullName: 'Leandro MotorFast',
-  logoImage: '', // Opcional: /images/sua-logo.svg. Vazio usa a marca tipográfica.
-  whatsapp: '555496411836', // País + DDD + número, conforme informado.
-  phone: '+555496411836', phoneDisplay: '+55 (54) 9641-1836',
+  name: 'Paraíba', descriptor: 'MotorFast', fullName: 'Paraíba MotorFast',
+  logoImage: '/images/paraiba-motorfast-logo.png',
+  whatsapp: '555499602140', // País + DDD + número, conforme informado.
+  phone: '+555499602140', phoneDisplay: '+55 (54) 9960-2140',
   address: { street: 'Local de retirada a combinar', city: 'Nordeste, Brasil' },
   hours: { weekdays: 'Segunda a sexta, 8h às 18h', saturday: 'Sábado, 8h às 12h' },
   heroImage: '/images/bmw-r1300gs/banner-light-white-sr-2752.webp',
-  generalMessage: 'Olá! Vi o site da Leandro MotorFast e gostaria de saber mais sobre o aluguel diário da BMW R 1300 GS.',
+  generalMessage: 'Olá! Vi o site da Paraíba MotorFast e gostaria de saber mais sobre o aluguel diário da BMW R 1300 GS.',
   motorcycleMessage: 'Olá! Tenho interesse no aluguel diário da {moto}. Gostaria de saber o valor e a disponibilidade.',
 };
 export const copy = {
@@ -18,22 +18,22 @@ export const copy = {
   contactTitle: 'Seu próximo destino começa numa conversa',
   contactDescription: 'Conte seus planos pelo Nordeste. Consulte a disponibilidade da sua GS e as condições do aluguel diário.',
   footerTagline: 'Entre o litoral e o sertão, vá de GS.',
-  heroDescription: 'Explore as praias do Nordeste e sinta a liberdade de viajar em uma BMW.',
-  catalogDescription: 'Seis opções da BMW R 1300 GS, uma vontade de pegar a estrada. Conheça cada versão e planeje sua próxima viagem.',
+  heroDescription: 'Explore as praias do Nordeste e sinta a liberdade\nde viajar em uma BMW.',
+  catalogDescription: 'Seis versões da BMW R 1300 GS. Escolha a sua próxima aventura.',
   consultationNote: 'Confirme valores, disponibilidade e condições da locação pelo WhatsApp.',
   detailConsultation: 'Vamos planejar seus dias de GS? Consulte a disponibilidade desta cor e as condições da locação.',
   demoContact: 'Confirme local de retirada e horários com a locadora.',
   demoNotice: 'Imagens ilustrativas. Consulte a disponibilidade de cada modelo.',
   specificationsNote: 'Cores e versões de anos diferentes. Imagens geradas por IA. Confirme ano, equipamentos e condições da unidade com a locadora.',
   steps: [
-    { title: 'Encontre sua GS.', description: 'Explore as seis opções e veja as fotos e a ficha da BMW R 1300 GS que combina com você.' },
-    { title: 'Planeje seus dias.', description: 'Confirme pelo WhatsApp a diária, as datas e a disponibilidade da cor escolhida.' },
-    { title: 'Combine a retirada.', description: 'Envie a documentação e combine o adiantamento da reserva, a quilometragem e o roteiro com a Leandro MotorFast.' },
+    { title: 'Encontre sua GS.', description: 'Conheça as seis versões da BMW R 1300 GS, confira as fotos e os detalhes de cada moto. Escolha a cor que combina com seu estilo e com a viagem que você quer fazer.' },
+    { title: 'Planeje seus dias.', description: 'Chame no WhatsApp e conte suas datas e seu roteiro. Confirme a disponibilidade da moto, o valor das diárias e as condições da locação antes de reservar.' },
+    { title: 'Combine a retirada.', description: 'Envie os documentos pelo WhatsApp e confirme o adiantamento de 50%, descontado do aluguel. Combine o local e o horário da retirada, a quilometragem e o roteiro com a Paraíba MotorFast.' },
   ],
 };
 export type Motorcycle = {
   slug: string; brand: string; model: string; name: string; category: string;
-  color: string; dailyPrice: number; fuelConsumption: string; displacement: string; transmission: string; image: string;
+  color: string; dailyPrice: number; weekendDailyPrice: number; fuelConsumption: string; displacement: string; transmission: string; image: string;
   images: { src: string; alt: string }[];
   summary: string; description: string; idealFor: string;
   features: { title: string; description: string }[];
@@ -45,7 +45,8 @@ export const motorcycles: Motorcycle[] = [
     "model": "R 1300 GS",
     "name": "BMW R 1300 GS — Light White",
     "color": "Light White",
-    "dailyPrice": 950,
+    "dailyPrice": 619,
+    "weekendDailyPrice": 719,
     "fuelConsumption": "≈ 20,8 km/l",
     "category": "Big trail",
     "displacement": "1.300 cc",
@@ -85,7 +86,8 @@ export const motorcycles: Motorcycle[] = [
     "model": "R 1300 GS",
     "name": "BMW R 1300 GS — Triple Black",
     "color": "Triple Black",
-    "dailyPrice": 1000,
+    "dailyPrice": 619,
+    "weekendDailyPrice": 719,
     "fuelConsumption": "≈ 20,8 km/l",
     "category": "Big trail",
     "displacement": "1.300 cc",
@@ -125,7 +127,8 @@ export const motorcycles: Motorcycle[] = [
     "model": "R 1300 GS",
     "name": "BMW R 1300 GS — Racing Blue Trophy",
     "color": "Racing Blue Trophy",
-    "dailyPrice": 1050,
+    "dailyPrice": 619,
+    "weekendDailyPrice": 719,
     "fuelConsumption": "≈ 20,8 km/l",
     "category": "Big trail",
     "displacement": "1.300 cc",
@@ -165,7 +168,8 @@ export const motorcycles: Motorcycle[] = [
     "model": "R 1300 GS",
     "name": "BMW R 1300 GS — Aurelius Green",
     "color": "Aurelius Green",
-    "dailyPrice": 1100,
+    "dailyPrice": 619,
+    "weekendDailyPrice": 719,
     "fuelConsumption": "≈ 20,8 km/l",
     "category": "Big trail",
     "displacement": "1.300 cc",
@@ -205,7 +209,8 @@ export const motorcycles: Motorcycle[] = [
     "model": "R 1300 GS",
     "name": "BMW R 1300 GS — Racing Red",
     "color": "Racing Red",
-    "dailyPrice": 980,
+    "dailyPrice": 619,
+    "weekendDailyPrice": 719,
     "fuelConsumption": "≈ 20,8 km/l",
     "category": "Big trail",
     "displacement": "1.300 cc",
@@ -245,7 +250,8 @@ export const motorcycles: Motorcycle[] = [
     "model": "R 1300 GS",
     "name": "BMW R 1300 GS — Light White · rodas pretas",
     "color": "Light White · rodas pretas",
-    "dailyPrice": 990,
+    "dailyPrice": 619,
+    "weekendDailyPrice": 719,
     "fuelConsumption": "≈ 20,8 km/l",
     "category": "Big trail",
     "displacement": "1.300 cc",
@@ -281,6 +287,14 @@ export const motorcycles: Motorcycle[] = [
   }
 ];
 export function formatDailyPrice(value: number) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(value); }
+export const motorcycleSpinCopy = {
+  previous: 'Girar para o ângulo anterior',
+  next: 'Girar para o próximo ângulo',
+  hint: 'Arraste para explorar',
+  unavailable: 'Giro indisponível no momento',
+  disclaimer: 'Imagens ilustrativas. O modelo real pode apresentar diferenças.',
+  keyboard: 'Use as setas esquerda e direita do teclado para girar a moto.',
+};
 export function whatsappUrl(motoName?: string) {
   const message = motoName ? site.motorcycleMessage.replace('{moto}', motoName) : site.generalMessage;
   return `https://wa.me/${site.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
