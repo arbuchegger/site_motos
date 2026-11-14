@@ -11,7 +11,7 @@ for (const name of await readdir(directory)) {
   const destination = path.join(directory, slug);
   await mkdir(destination, { recursive: true });
   await copyFile(path.join(directory, name), path.join(destination, 'index.html'));
-  sitemapPaths.push(`/motos/${encodeURIComponent(slug)}/`);
+  sitemapPaths.push(`/motos/${encodeURIComponent(slug)}`);
 }
 const reservation = path.resolve('dist/client/reserva');
 await mkdir(reservation, { recursive: true });

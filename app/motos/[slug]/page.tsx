@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (moto) return {
     title: { absolute: `${moto.name} | Aluguel em João Pessoa` },
     description: `${moto.summary} Confira as diárias da ${moto.name} em João Pessoa, PB, veja a moto em 360° e consulte disponibilidade pelo WhatsApp.`,
-    alternates: { canonical: `/motos/${moto.slug}/` },
+    alternates: { canonical: `/motos/${moto.slug}` },
   };
   return { title: 'Moto não encontrada', robots: { index: false } };
 }

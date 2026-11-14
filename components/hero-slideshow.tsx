@@ -87,7 +87,7 @@ export function HeroSlideshow() {
         srcSet={[960, 1600, slide.width].map(width => `${slide.asset === 'racing-red' ? `/images/experiments/racing-red-sunset-film-${width}.webp` : slide.asset === 'light-white' ? `/images/experiments/light-white-praia-final-${width}.webp` : `/images/experiments/triple-black-road-grain-${width}.webp`} ${width}w`).join(', ')}
         sizes="100vw"
         alt={`BMW R 1300 GS ${slide.label}. Imagem ilustrativa.`} width={slide.width} height={slide.height} fetchPriority={index === 0 ? 'high' : 'low'} decoding={index === 0 ? 'auto' : 'async'} /></picture>)}
-      <a className="hero-photo-link" href={`/motos/bmw-r1300gs-${slides[active].asset}/`} aria-label={`Ver detalhes da BMW R 1300 GS ${slides[active].label}`} draggable={false} onClick={event => {
+      <a className="hero-photo-link" href={`/motos/bmw-r1300gs-${slides[active].asset}`} aria-label={`Ver detalhes da BMW R 1300 GS ${slides[active].label}`} draggable={false} onClick={event => {
         if (suppressLink.current && event.detail !== 0) event.preventDefault();
       }} />
     </div>
@@ -106,7 +106,7 @@ export function HeroSlideshow() {
         </div>
         <div className="hero-copy-secondary">
           <p className="hero-description">{slides[active].description.split('\n').map((line, index) => <span className="hero-description-line" key={index}>{line}</span>)}</p>
-          <div className="actions"><a className="button button-primary" href={active === 0 ? '#motos' : `/motos/bmw-r1300gs-${slides[active].asset}/`}><ButtonLabel>{active === 0 ? 'Escolher minha GS' : 'Saiba mais'} <ArrowDown size={19} aria-hidden="true" /></ButtonLabel></a></div>
+          <div className="actions"><a className="button button-primary" href={active === 0 ? '#motos' : `/motos/bmw-r1300gs-${slides[active].asset}`}><ButtonLabel>{active === 0 ? 'Escolher minha GS' : 'Saiba mais'} <ArrowDown size={19} aria-hidden="true" /></ButtonLabel></a></div>
         </div>
       </div>
     </div>

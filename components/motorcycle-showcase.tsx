@@ -154,7 +154,7 @@ export function MotorcycleShowcase({ motorcycles }: { motorcycles: Motorcycle[] 
                   <p className="showcase-description">{moto.features[0].description}</p>
                   <p className="showcase-price"><span>Diária · dias de semana</span><strong>{formatDailyPrice(moto.dailyPrice)}<small>/dia</small></strong><span className="rental-weekend-price">Finais de semana e feriados: {formatDailyPrice(moto.weekendDailyPrice)}/dia</span></p>
                 </div>
-                <div className="showcase-bottom-btn-wrapper"><a className="button button-primary showcase-link" href={`/motos/${moto.slug}/`} tabIndex={active ? 0 : -1}>
+                <div className="showcase-bottom-btn-wrapper"><a className="button button-primary showcase-link" href={`/motos/${moto.slug}`} tabIndex={active ? 0 : -1}>
                   <ButtonLabel>Saiba mais <ArrowUpRight size={19} aria-hidden="true" /></ButtonLabel>
                   <span className="sr-only"> sobre a {moto.name}</span>
                 </a></div>

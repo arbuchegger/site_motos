@@ -53,9 +53,9 @@ export function RelatedMotorcycles({ motorcycles }: { motorcycles: Motorcycle[] 
         event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1);
       }}>
       {[...motorcycles, ...motorcycles, ...motorcycles].map((moto, index) => <article key={`${index}-${moto.slug}`} className="related-moto" aria-hidden={index < motorcycles.length || index >= motorcycles.length * 2 || undefined}>
-        <a href={`/motos/${moto.slug}/`} tabIndex={index < motorcycles.length || index >= motorcycles.length * 2 ? -1 : undefined} className="related-photo"><img src={`/images/bmw-r1300gs/cutouts/${moto.slug}.webp`} alt={moto.name} width={1024} height={683} loading="eager" /></a>
-        <h3><a href={`/motos/${moto.slug}/`} tabIndex={index < motorcycles.length || index >= motorcycles.length * 2 ? -1 : undefined}>{moto.color}</a></h3><p>{moto.summary}</p>
-        <div className="related-price"><span>A partir de <strong>{formatDailyPrice(moto.dailyPrice)}</strong> /dia</span><a href={`/motos/${moto.slug}/`} tabIndex={index < motorcycles.length || index >= motorcycles.length * 2 ? -1 : undefined} aria-label={`Ver detalhes da ${moto.name}`}><ArrowUpRight size={22} /></a></div>
+        <a href={`/motos/${moto.slug}`} tabIndex={index < motorcycles.length || index >= motorcycles.length * 2 ? -1 : undefined} className="related-photo"><img src={`/images/bmw-r1300gs/cutouts/${moto.slug}.webp`} alt={moto.name} width={1024} height={683} loading="eager" /></a>
+        <h3><a href={`/motos/${moto.slug}`} tabIndex={index < motorcycles.length || index >= motorcycles.length * 2 ? -1 : undefined}>{moto.color}</a></h3><p>{moto.summary}</p>
+        <div className="related-price"><span>A partir de <strong>{formatDailyPrice(moto.dailyPrice)}</strong> /dia</span><a href={`/motos/${moto.slug}`} tabIndex={index < motorcycles.length || index >= motorcycles.length * 2 ? -1 : undefined} aria-label={`Ver detalhes da ${moto.name}`}><ArrowUpRight size={22} /></a></div>
       </article>)}
     </div>
     </div>

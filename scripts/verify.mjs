@@ -7,6 +7,13 @@ const colors = ['light-white', 'triple-black', 'racing-blue-trophy', 'aurelius-g
 const slugs = colors.map(color => `bmw-r1300gs-${color}`);
 const names = ['Light White', 'Triple Black', 'Racing Blue Trophy', 'Aurelius Green', 'Racing Red', 'Light White · rodas pretas'].map(color => `BMW R 1300 GS — ${color}`);
 const files = ['index.html', ...slugs.map(slug => `motos/${slug}/index.html`), '404.html', 'reserva/index.html'];
+const canonicalUrls = ['/', ...slugs.map(slug => `/motos/${slug}`)].map(route => `https://paraibamotorfast.com.br${route}`);
+const sitemap = await readFile(path.join(root, 'sitemap.xml'), 'utf8');
+assert.deepEqual(
+  [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]).sort(),
+  [...canonicalUrls].sort(),
+  'O sitemap deve listar a home e as seis URLs canônicas',
+);
 let localLinks = 0, whatsappLinks = 0;
 for (const [index, file] of files.entries()) {
   const html = await readFile(path.join(root, file), 'utf8');
@@ -33,6 +40,8 @@ for (const [index, file] of files.entries()) {
     }
   }
   if (index <= slugs.length) {
+    const canonical = html.match(/<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"/)?.[1];
+    assert.equal(canonical && new URL(canonical).href, canonicalUrls[index], `URL canônica incorreta em ${file}`);
     assert.doesNotMatch(html, /diárias? ilustrativas?|vitrine demonstrativa/i, `Texto demonstrativo de preço em ${file}`);
     assert.match(html, /R\$(?:&nbsp;|\s|<!-- -->)*619/, `Diária de semana ausente em ${file}`);
     assert.match(html, /R\$(?:&nbsp;|\s|<!-- -->)*719/, `Diária de fim de semana ausente em ${file}`);
@@ -54,8 +63,8 @@ for (const [index, file] of files.entries()) {
     assert.ok(html.includes('class="detail-mobile-summary"'), `Subtítulo abaixo da diária ausente em ${file}`);
     const related = html.match(/<section class="related-motorcycles"[\s\S]*?<\/section>/)?.[0];
     assert.ok(related, `Carrossel de outras motos ausente em ${file}`);
-    assert.ok(!related.includes(`href="/motos/${slugs[index - 1]}/"`), `Carrossel não deve repetir a própria moto em ${file}`);
-    for (const other of slugs.filter(slug => slug !== slugs[index - 1])) assert.ok(related.includes(`href="/motos/${other}/"`), `Cor alternativa ausente: ${other} em ${file}`);
+    assert.ok(!related.includes(`href="/motos/${slugs[index - 1]}"`), `Carrossel não deve repetir a própria moto em ${file}`);
+    for (const other of slugs.filter(slug => slug !== slugs[index - 1])) assert.ok(related.includes(`href="/motos/${other}"`), `Cor alternativa ausente: ${other} em ${file}`);
     const consultationLinks = [...html.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/g)].map(match=>match[0]).filter(link=>link.includes('Consultar pelo WhatsApp'));
     assert.equal(consultationLinks.length,2, `Devem existir dois acessos à reserva em ${file}`);
     for (const link of consultationLinks) {

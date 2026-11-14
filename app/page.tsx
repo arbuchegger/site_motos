@@ -20,7 +20,7 @@ export default function Home() {
     <section className="section rental-guide" aria-labelledby="rental-guide-title">
       <div className="container">
         <div className="rental-guide-content section-heading-centered">
-          <h2 id="rental-guide-title">Aluguel de motos <span className="heading-accent">em João Pessoa</span></h2>
+          <h2 id="rental-guide-title">Aluguel de motos em <span className="heading-accent">João Pessoa</span></h2>
           <p>Explore o litoral e o interior da Paraíba ou planeje uma viagem pelo Nordeste. Compare as seis versões da BMW R 1300 GS e confira as diárias para as datas da sua viagem.</p>
           <p>Você pode incluir equipamentos na estimativa. A disponibilidade e a retirada são combinadas pelo WhatsApp.</p>
           <a className="button button-primary" href="#motos">Ver motos e diárias <ArrowUp size={18} aria-hidden="true" /></a>

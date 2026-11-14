@@ -65,7 +65,7 @@ export function RentalCheckout() {
   ].join('\n');
 
   return <div className="rental-checkout">
-    <a className="rental-back" href={`/motos/${moto.slug}/`}><ArrowLeft size={17} aria-hidden="true"/>Voltar à moto</a>
+    <a className="rental-back" href={`/motos/${moto.slug}`}><ArrowLeft size={17} aria-hidden="true"/>Voltar à moto</a>
     <div className="rental-layout">
       <div className="rental-options">
     <header className="rental-heading"><h1>Prepare sua <span className="accent">viagem.</span></h1><p>Escolha os detalhes. A gente confirma tudo pelo WhatsApp.</p></header>
